@@ -119,7 +119,7 @@ export default function BookSection() {
                                 </p>
 
                                 <p className="mt-1 text-3xl font-light tracking-tight">
-                                    € 39,95
+                                    € 249,99
                                 </p>
                             </div>
                         </div>
