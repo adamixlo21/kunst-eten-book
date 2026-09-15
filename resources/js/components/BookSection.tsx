@@ -3,7 +3,15 @@ import { ShoppingBag } from 'lucide-react';
 import { useBookCart } from '@/components/BookCartContext';
 
 export default function BookSection() {
-    const { openCart } = useBookCart();
+    const { quantity, setQuantity, openCart } = useBookCart();
+
+    const handleOrder = () => {
+        if (quantity === 0) {
+            setQuantity(1);
+        }
+
+        openCart();
+    };
 
     return (
         <section
@@ -129,7 +137,7 @@ export default function BookSection() {
                     <div className="mt-8 flex flex-wrap gap-4">
                         <button
                             type="button"
-                            onClick={openCart}
+                            onClick={handleOrder}
                             className="group flex items-center gap-3 rounded-full bg-stone-900 px-8 py-4 text-sm font-medium text-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-[#8a6a48] hover:shadow-lg"
                         >
                             <ShoppingBag

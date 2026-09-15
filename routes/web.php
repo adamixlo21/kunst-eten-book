@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Order;
 
 
 use App\Http\Controllers\DashboardController;
@@ -23,6 +24,33 @@ Route::get('/checkout', function (Request $request) {
         'quantity' => $quantity,
     ]);
 })->name('checkout');
+
+Route::get('/payment/return/{order}', [OrderController::class, 'paymentReturn'])
+    ->name('payment.return');
+
+Route::get('/checkout/success/{order}', function (Order $order) {
+    return Inertia::render('checkout-success', [
+        'order' => [
+            'id' => $order->id,
+            'name' => $order->name,
+            'quantity' => $order->quantity,
+            'total_price' => $order->total_price,
+            'status' => $order->status,
+        ],
+    ]);
+})->name('checkout.success');
+
+Route::post('/mollie/webhook', [OrderController::class, 'webhook'])
+    ->name('mollie.webhook');
+
+
+
+
+
+
+
+
+
 
 Route::prefix('{current_team}')
     ->middleware(['auth', 'verified', EnsureTeamMembership::class])

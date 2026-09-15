@@ -5,7 +5,7 @@ export default function BackgroundMusic() {
     const audioRef = useRef<HTMLAudioElement>(null);
 
     const [playing, setPlaying] = useState(false);
-    const [volume, setVolume] = useState(10);
+    const [volume, setVolume] = useState(0);
 
     useEffect(() => {
         const audio = audioRef.current;
@@ -13,7 +13,7 @@ export default function BackgroundMusic() {
         if (!audio) return;
 
         audio.muted = false;
-        audio.volume = 0.1;
+        audio.volume = 0;
 
 
         const startMusic = async () => {

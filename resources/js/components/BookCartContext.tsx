@@ -3,6 +3,7 @@ import {
     ReactNode,
     useContext,
     useState,
+    useEffect
 } from 'react';
 
 interface BookCartContextType {
@@ -15,16 +16,35 @@ interface BookCartContextType {
 
     openCart: () => void;
     closeCart: () => void;
+
+    resetCart: () => void;
+
 }
 
 const BookCartContext = createContext<BookCartContextType | null>(null);
 
-export function BookCartProvider({
-                                     children,
-                                 }: {
-    children: ReactNode;
-}) {
-    const [quantity, setQuantity] = useState(1);
+export function BookCartProvider({children,}: { children: ReactNode; })
+{
+    const [quantity, setQuantity] = useState(() => {
+        const savedQuantity = localStorage.getItem('kunst-eten-cart-quantity');
+
+        return savedQuantity ? Number(savedQuantity) : 0;
+    });
+
+    useEffect(() => {
+        localStorage.setItem(
+            'kunst-eten-cart-quantity',
+            quantity.toString(),
+        );
+    }, [quantity]);
+
+    const resetCart = () => {
+        setQuantity(0);
+        setCartOpen(false);
+
+        localStorage.removeItem('kunst-eten-cart-quantity');
+    };
+
     const [cartOpen, setCartOpen] = useState(false);
 
     const increaseQuantity = () => {
@@ -32,7 +52,7 @@ export function BookCartProvider({
     };
 
     const decreaseQuantity = () => {
-        setQuantity((current) => Math.max(1, current - 1));
+        setQuantity((current) => Math.max(0, current - 1));
     };
 
     const openCart = () => {
@@ -42,6 +62,7 @@ export function BookCartProvider({
     const closeCart = () => {
         setCartOpen(false);
     };
+
 
     return (
         <BookCartContext.Provider
@@ -53,6 +74,7 @@ export function BookCartProvider({
                 decreaseQuantity,
                 openCart,
                 closeCart,
+                resetCart,
             }}
         >
             {children}

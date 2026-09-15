@@ -92,7 +92,10 @@ export default function Checkout({ quantity }: CheckoutProps) {
 
                     <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
                         {/* Checkout form */}
-                        <form onSubmit={submit}>
+                        <form
+                            id="checkout-form"
+                            onSubmit={submit}
+                        >
                             <div className="border border-stone-300 bg-white">
                                 {/* Section header */}
                                 <div className="border-b border-stone-200 px-6 py-5 sm:px-8">
