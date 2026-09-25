@@ -1,12 +1,6 @@
 import { Form, Head, usePage } from '@inertiajs/react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import DeleteUser from '@/components/delete-user';
-import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/profile';
 import type { Auth } from '@/types';
 
 type PageProps = {
@@ -18,88 +12,107 @@ export default function Profile() {
 
     return (
         <>
-            <Head title="Profile settings" />
+            <Head title="Profiel" />
 
-            <h1 className="sr-only">Profile settings</h1>
+            <div className="min-h-full bg-[#f7f3ec] p-6 text-stone-900 lg:p-10">
+                <div className="mx-auto max-w-3xl">
+                    <div className="mb-10">
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                            Kunst Eten
+                        </p>
 
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Profile"
-                    description="Update your name and email address"
-                />
+                        <h1 className="mt-3 text-4xl font-light tracking-tight">
+                            Profiel
+                        </h1>
 
-                <Form
-                    {...ProfileController.update.form()}
-                    options={{
-                        preserveScroll: true,
-                    }}
-                    className="space-y-6"
-                >
-                    {({ processing, errors }) => (
-                        <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
+                        <p className="mt-3 text-sm leading-6 text-stone-500">
+                            Wijzig hier je naam en e-mailadres.
+                        </p>
+                    </div>
 
-                                <Input
-                                    id="name"
-                                    className="mt-1 block w-full"
-                                    defaultValue={auth.user.name}
-                                    name="name"
-                                    required
-                                    autoComplete="name"
-                                    placeholder="Full name"
-                                />
+                    <div className="border border-stone-300 bg-white p-6 sm:p-8">
+                        <Form
+                            {...ProfileController.update.form()}
+                            options={{
+                                preserveScroll: true,
+                            }}
+                            className="space-y-6"
+                        >
+                            {({ processing, errors, recentlySuccessful }) => (
+                                <>
+                                    <div>
+                                        <label
+                                            htmlFor="name"
+                                            className="mb-2 block text-sm font-medium"
+                                        >
+                                            Naam
+                                        </label>
 
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.name}
-                                />
-                            </div>
+                                        <input
+                                            id="name"
+                                            name="name"
+                                            type="text"
+                                            defaultValue={auth.user.name}
+                                            required
+                                            autoComplete="name"
+                                            placeholder="Volledige naam"
+                                            className="w-full border border-stone-300 bg-[#fdfcf9] px-4 py-3.5 text-sm outline-none transition focus:border-[#8a6a48] focus:bg-white"
+                                        />
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                        <InputError
+                                            message={errors.name}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    className="mt-1 block w-full"
-                                    defaultValue={auth.user.email}
-                                    name="email"
-                                    required
-                                    autoComplete="username"
-                                    placeholder="Email address"
-                                />
+                                    <div>
+                                        <label
+                                            htmlFor="email"
+                                            className="mb-2 block text-sm font-medium"
+                                        >
+                                            E-mailadres
+                                        </label>
 
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.email}
-                                />
-                            </div>
+                                        <input
+                                            id="email"
+                                            name="email"
+                                            type="email"
+                                            defaultValue={auth.user.email}
+                                            required
+                                            autoComplete="username"
+                                            placeholder="naam@email.nl"
+                                            className="w-full border border-stone-300 bg-[#fdfcf9] px-4 py-3.5 text-sm outline-none transition focus:border-[#8a6a48] focus:bg-white"
+                                        />
 
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    disabled={processing}
-                                    data-test="update-profile-button"
-                                >
-                                    Save
-                                </Button>
-                            </div>
-                        </>
-                    )}
-                </Form>
+                                        <InputError
+                                            message={errors.email}
+                                            className="mt-2"
+                                        />
+                                    </div>
+
+                                    <div className="flex items-center gap-4">
+                                        <button
+                                            type="submit"
+                                            disabled={processing}
+                                            className="bg-stone-900 px-6 py-3.5 text-sm font-medium text-white transition hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            {processing
+                                                ? 'Opslaan...'
+                                                : 'Profiel opslaan'}
+                                        </button>
+
+                                        {recentlySuccessful && (
+                                            <span className="text-sm text-emerald-700">
+                                                Opgeslagen
+                                            </span>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                        </Form>
+                    </div>
+                </div>
             </div>
-
-            <DeleteUser />
         </>
     );
 }
-
-Profile.layout = {
-    breadcrumbs: [
-        {
-            title: 'Profile settings',
-            href: edit(),
-        },
-    ],
-};

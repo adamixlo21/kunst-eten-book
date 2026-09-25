@@ -1,132 +1,156 @@
 import { Form, Head } from '@inertiajs/react';
 import { useRef } from 'react';
+
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
-import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/security';
 
-// oxfmt-ignore
 type Props = {
     passwordRules: string;
-} ;
+};
 
-export default function Security(props: Props) {
+export default function Security({ passwordRules }: Props) {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 
     return (
         <>
-            <Head title="Security settings" />
+            <Head title="Wachtwoord" />
 
-            <h1 className="sr-only">Security settings</h1>
+            <div className="min-h-full bg-[#f7f3ec] p-6 text-stone-900 lg:p-10">
+                <div className="mx-auto max-w-3xl">
+                    <div className="mb-10">
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                            Kunst Eten
+                        </p>
 
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Update password"
-                    description="Ensure your account is using a long, random password to stay secure"
-                />
+                        <h1 className="mt-3 text-4xl font-light tracking-tight">
+                            Wachtwoord wijzigen
+                        </h1>
 
-                <Form
-                    {...SecurityController.update.form()}
-                    options={{
-                        preserveScroll: true,
-                    }}
-                    resetOnError={[
-                        'password',
-                        'password_confirmation',
-                        'current_password',
-                    ]}
-                    resetOnSuccess
-                    onError={(errors) => {
-                        if (errors.password) {
-                            passwordInput.current?.focus();
-                        }
+                        <p className="mt-3 max-w-xl text-sm leading-6 text-stone-500">
+                            Wijzig hier het wachtwoord van je adminaccount.
+                        </p>
+                    </div>
 
-                        if (errors.current_password) {
-                            currentPasswordInput.current?.focus();
-                        }
-                    }}
-                    className="space-y-6"
-                >
-                    {({ errors, processing }) => (
-                        <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="current_password">
-                                    Current password
-                                </Label>
+                    <div className="border border-stone-300 bg-white p-6 sm:p-8">
+                        <Form
+                            {...SecurityController.update.form()}
+                            options={{
+                                preserveScroll: true,
+                            }}
+                            resetOnError={[
+                                'password',
+                                'password_confirmation',
+                                'current_password',
+                            ]}
+                            resetOnSuccess
+                            onError={(errors) => {
+                                if (errors.password) {
+                                    passwordInput.current?.focus();
+                                }
 
-                                <PasswordInput
-                                    id="current_password"
-                                    ref={currentPasswordInput}
-                                    name="current_password"
-                                    className="mt-1 block w-full"
-                                    autoComplete="current-password"
-                                    placeholder="Current password"
-                                />
+                                if (errors.current_password) {
+                                    currentPasswordInput.current?.focus();
+                                }
+                            }}
+                            className="space-y-6"
+                        >
+                            {({ errors, processing, recentlySuccessful }) => (
+                                <>
+                                    <div>
+                                        <label
+                                            htmlFor="current_password"
+                                            className="mb-2 block text-sm font-medium"
+                                        >
+                                            Huidig wachtwoord
+                                        </label>
 
-                                <InputError message={errors.current_password} />
-                            </div>
+                                        <PasswordInput
+                                            id="current_password"
+                                            ref={currentPasswordInput}
+                                            name="current_password"
+                                            autoComplete="current-password"
+                                            placeholder="Huidig wachtwoord"
+                                            className="w-full border-stone-300 bg-[#fdfcf9] focus:border-[#8a6a48]"
+                                        />
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">New password</Label>
+                                        <InputError
+                                            message={errors.current_password}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                <PasswordInput
-                                    id="password"
-                                    ref={passwordInput}
-                                    name="password"
-                                    className="mt-1 block w-full"
-                                    autoComplete="new-password"
-                                    placeholder="New password"
-                                    passwordrules={props.passwordRules}
-                                />
+                                    <div>
+                                        <label
+                                            htmlFor="password"
+                                            className="mb-2 block text-sm font-medium"
+                                        >
+                                            Nieuw wachtwoord
+                                        </label>
 
-                                <InputError message={errors.password} />
-                            </div>
+                                        <PasswordInput
+                                            id="password"
+                                            ref={passwordInput}
+                                            name="password"
+                                            autoComplete="new-password"
+                                            placeholder="Nieuw wachtwoord"
+                                            passwordrules={passwordRules}
+                                            className="w-full border-stone-300 bg-[#fdfcf9] focus:border-[#8a6a48]"
+                                        />
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    Confirm password
-                                </Label>
+                                        <InputError
+                                            message={errors.password}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                <PasswordInput
-                                    id="password_confirmation"
-                                    name="password_confirmation"
-                                    className="mt-1 block w-full"
-                                    autoComplete="new-password"
-                                    placeholder="Confirm password"
-                                    passwordrules={props.passwordRules}
-                                />
+                                    <div>
+                                        <label
+                                            htmlFor="password_confirmation"
+                                            className="mb-2 block text-sm font-medium"
+                                        >
+                                            Bevestig nieuw wachtwoord
+                                        </label>
 
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
+                                        <PasswordInput
+                                            id="password_confirmation"
+                                            name="password_confirmation"
+                                            autoComplete="new-password"
+                                            placeholder="Herhaal nieuw wachtwoord"
+                                            passwordrules={passwordRules}
+                                            className="w-full border-stone-300 bg-[#fdfcf9] focus:border-[#8a6a48]"
+                                        />
 
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    disabled={processing}
-                                    data-test="update-password-button"
-                                >
-                                    Save
-                                </Button>
-                            </div>
-                        </>
-                    )}
-                </Form>
+                                        <InputError
+                                            message={errors.password_confirmation}
+                                            className="mt-2"
+                                        />
+                                    </div>
+
+                                    <div className="flex items-center gap-4">
+                                        <button
+                                            type="submit"
+                                            disabled={processing}
+                                            className="bg-stone-900 px-6 py-3.5 text-sm font-medium text-white transition hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            {processing
+                                                ? 'Opslaan...'
+                                                : 'Wachtwoord wijzigen'}
+                                        </button>
+
+                                        {recentlySuccessful && (
+                                            <span className="text-sm text-emerald-700">
+                                                Wachtwoord gewijzigd
+                                            </span>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                        </Form>
+                    </div>
+                </div>
             </div>
         </>
     );
 }
-
-Security.layout = {
-    breadcrumbs: [
-        {
-            title: 'Security settings',
-            href: edit(),
-        },
-    ],
-};

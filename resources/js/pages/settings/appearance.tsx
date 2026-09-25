@@ -1,32 +1,32 @@
 import { Head } from '@inertiajs/react';
 import AppearanceTabs from '@/components/appearance-tabs';
-import Heading from '@/components/heading';
-import { edit as editAppearance } from '@/routes/appearance';
 
 export default function Appearance() {
     return (
         <>
-            <Head title="Appearance settings" />
+            <Head title="Weergave" />
 
-            <h1 className="sr-only">Appearance settings</h1>
+            <div className="min-h-full bg-[#f7f3ec] p-6 text-stone-900 lg:p-10">
+                <div className="mx-auto max-w-3xl">
+                    <div className="mb-10">
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                            Kunst Eten
+                        </p>
 
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Appearance settings"
-                    description="Update the appearance settings for your account"
-                />
-                <AppearanceTabs />
+                        <h1 className="mt-3 text-4xl font-light tracking-tight">
+                            Weergave
+                        </h1>
+
+                        <p className="mt-3 max-w-xl text-sm leading-6 text-stone-500">
+                            Kies hoe het beheerpaneel wordt weergegeven.
+                        </p>
+                    </div>
+
+                    <div className="border border-stone-300 bg-white p-6 sm:p-8">
+                        <AppearanceTabs />
+                    </div>
+                </div>
             </div>
         </>
     );
 }
-
-Appearance.layout = {
-    breadcrumbs: [
-        {
-            title: 'Appearance settings',
-            href: editAppearance(),
-        },
-    ],
-};

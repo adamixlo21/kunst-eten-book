@@ -1,24 +1,38 @@
-import { usePage } from '@inertiajs/react';
-import { ChevronsUpDown } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
+import {
+    ChevronUp,
+    LogOut,
+    Shield,
+    User,
+} from 'lucide-react';
+
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
 import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    useSidebar,
 } from '@/components/ui/sidebar';
-import { UserInfo } from '@/components/user-info';
-import { UserMenuContent } from '@/components/user-menu-content';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 export function NavUser() {
-    const { auth, currentTeam } = usePage().props;
-    const { state } = useSidebar();
-    const isMobile = useIsMobile();
+    const { auth } = usePage().props as {
+        auth: {
+            user: {
+                name: string;
+                email: string;
+            };
+        };
+    };
+
+    const logout = () => {
+        router.post('/logout');
+    };
 
     return (
         <SidebarMenu>
@@ -27,25 +41,68 @@ export function NavUser() {
                     <DropdownMenuTrigger asChild>
                         <SidebarMenuButton
                             size="lg"
-                            className="group text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent"
-                            data-test="sidebar-menu-button"
+                            className="text-stone-900 hover:bg-stone-200 data-[state=open]:bg-stone-200"
                         >
-                            <UserInfo user={auth.user} team={currentTeam} />
-                            <ChevronsUpDown className="ml-auto size-4" />
+                            <div className="flex min-w-0 flex-1 flex-col text-left">
+                                <span className="truncate text-sm font-medium">
+                                    {auth.user.name}
+                                </span>
+
+                                <span className="truncate text-xs text-stone-500">
+                                    {auth.user.email}
+                                </span>
+                            </div>
+
+                            <ChevronUp className="ml-auto size-4 text-stone-500" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent
-                        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                        side="top"
                         align="end"
-                        side={
-                            isMobile
-                                ? 'bottom'
-                                : state === 'collapsed'
-                                  ? 'left'
-                                  : 'bottom'
-                        }
+                        className="w-64 border-stone-300 bg-[#fdfcf9]"
                     >
-                        <UserMenuContent user={auth.user} />
+                        <div className="px-3 py-2">
+                            <p className="text-sm font-medium text-stone-900">
+                                {auth.user.name}
+                            </p>
+
+                            <p className="mt-1 text-xs text-stone-500">
+                                {auth.user.email}
+                            </p>
+                        </div>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem asChild>
+                            <Link
+                                href="/settings/profile"
+                                className="flex cursor-pointer items-center gap-2"
+                            >
+                                <User size={16} />
+                                Profiel
+                            </Link>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem asChild>
+                            <Link
+                                href="/settings/security"
+                                className="flex cursor-pointer items-center gap-2"
+                            >
+                                <Shield size={16} />
+                                Wachtwoord
+                            </Link>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem
+                            onClick={logout}
+                            className="cursor-pointer text-red-600 focus:text-red-700"
+                        >
+                            <LogOut size={16} />
+                            Uitloggen
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </SidebarMenuItem>
