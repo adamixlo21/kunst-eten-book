@@ -5,6 +5,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import { initializeTheme } from '@/hooks/use-appearance';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Kunst Eten';
 
@@ -53,6 +54,7 @@ void createInertiaApp({
     },
 });
 
-// Kunst Eten uses a light theme.
-document.documentElement.classList.remove('dark');
-document.documentElement.style.colorScheme = 'light';
+// Initialize the saved appearance preference in the browser.
+if (typeof window !== 'undefined') {
+    initializeTheme();
+}

@@ -10,7 +10,7 @@ import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Spinner } from '@/components/ui/spinner';
 import { login } from '@/routes';
-import { store } from '@/routes/register';
+// import { store } from '@/routes/register';
 
 type Props = {
     passwordRules: string;
@@ -108,15 +108,22 @@ export default function Register({ passwordRules }: Props) {
                             </div>
 
                             <div className="mt-9 border border-stone-300 bg-white p-6 shadow-[0_20px_60px_rgba(70,55,40,0.06)] sm:p-8">
-                                <Form
-                                    {...store.form()}
-                                    resetOnSuccess={[
-                                        'password',
-                                        'password_confirmation',
-                                    ]}
-                                    disableWhileProcessing
-                                    className="space-y-5"
-                                >
+                                {/*<Form*/}
+                                {/*    {...store.form()}*/}
+                                {/*    resetOnSuccess={[*/}
+                                {/*        'password',*/}
+                                {/*        'password_confirmation',*/}
+                                {/*    ]}*/}
+                                {/*    disableWhileProcessing*/}
+                                {/*    className="space-y-5"*/}
+                                {/*>*/}
+                                    <Form
+                                        action="/register"
+                                        method="post"
+                                        resetOnSuccess={['password', 'password_confirmation']}
+                                        disableWhileProcessing
+                                        className="space-y-5"
+                                    >
                                     {({ processing, errors }) => (
                                         <>
                                             {/* Name */}

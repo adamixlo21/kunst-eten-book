@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Mollie\Laravel\Facades\Mollie;
 
 class OrderController extends Controller
@@ -32,7 +31,7 @@ class OrderController extends Controller
             'status' => 'pending',
         ]);
 
-        $payment = Mollie::api()->payments->create([
+        $paymentData = [
             'amount' => [
                 'currency' => 'EUR',
                 'value' => number_format($total, 2, '.', ''),
@@ -44,17 +43,22 @@ class OrderController extends Controller
                 'order' => $order->id,
             ]),
 
-
             'metadata' => [
                 'order_id' => $order->id,
             ],
-        ]);
+        ];
+
+        // Mollie can only reach the webhook on the public website.
         if (app()->environment('production')) {
-            $payment['webhookUrl'] = route('mollie.webhook');
+            $paymentData['webhookUrl'] = route('mollie.webhook');
         }
+
+        $payment = Mollie::api()->payments->create($paymentData);
+
         $order->update([
             'mollie_payment_id' => $payment->id,
         ]);
+
         return Inertia::location($payment->getCheckoutUrl());
     }
 
