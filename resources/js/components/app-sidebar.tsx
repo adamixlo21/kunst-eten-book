@@ -1,10 +1,11 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage  } from '@inertiajs/react';
 import {
     LayoutDashboard,
     ShoppingBag,
     User,
     LockKeyhole,
     ExternalLink,
+    Mail
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -22,7 +23,12 @@ import {
 
 import type { NavItem } from '@/types';
 
+
 export function AppSidebar() {
+
+    const { unreadContactCount } = usePage<{
+        unreadContactCount: number;
+    }>().props;
     const mainNavItems: NavItem[] = [
         {
             title: 'Dashboard',
@@ -33,6 +39,13 @@ export function AppSidebar() {
             title: 'Bestellingen',
             href: '/admin/orders',
             icon: ShoppingBag,
+        },
+        {
+            title: 'Contactberichten',
+            href: '/admin/contacts',
+            icon: Mail,
+            badge: unreadContactCount,
+
         },
         {
             title: 'Profiel',

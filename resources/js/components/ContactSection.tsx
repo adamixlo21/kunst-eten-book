@@ -1,9 +1,8 @@
 import { useForm } from '@inertiajs/react';
 import { ArrowRight, Mail, Phone } from 'lucide-react';
-import { FormEvent } from 'react';
-
+import { FormEvent, useState } from 'react';
 export default function ContactSection() {
-    const { data, setData, post, processing, errors, reset, recentlySuccessful } =
+    const { data, setData, post, processing, errors, reset} =
         useForm({
             name: '',
             email: '',
@@ -19,9 +18,12 @@ export default function ContactSection() {
             preserveScroll: true,
             onSuccess: () => {
                 reset();
+                setMessageSent(true);
             },
         });
     };
+
+    const [messageSent, setMessageSent] = useState(false);
 
     return (
         <section
@@ -91,10 +93,28 @@ export default function ContactSection() {
 
                     {/* Form */}
                     <div className="border border-stone-300 bg-white p-7 sm:p-10">
-                        {recentlySuccessful && (
-                            <div className="mb-8 border border-[#8a6a48]/30 bg-[#f7f3ec] px-5 py-4 text-sm text-stone-700">
-                                Bedankt voor je bericht. We nemen zo snel
-                                mogelijk contact met je op.
+                        {messageSent && (
+                            <div className="mb-8 border border-[#8a6a48]/30 bg-[#f7f3ec] p-6">
+                                <div className="flex items-start gap-4">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#8a6a48] text-white">
+                                        ✓
+                                    </div>
+
+                                    <div>
+                                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8a6a48]">
+                                            Bericht verzonden
+                                        </p>
+
+                                        <h3 className="mt-2 font-serif text-xl text-stone-900">
+                                            Bedankt voor je bericht.
+                                        </h3>
+
+                                        <p className="mt-2 text-sm leading-6 text-stone-600">
+                                            We hebben je bericht goed ontvangen en nemen zo snel
+                                            mogelijk contact met je op.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         )}
 

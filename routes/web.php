@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
@@ -67,6 +68,15 @@ Route::middleware(['auth'])
 
         Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
             ->name('orders.update-status');
+
+        Route::get('/contacts', [AdminContactController::class, 'index'])
+            ->name('admin.contacts.index');
+
+        Route::get('/contacts/{contact}', [AdminContactController::class, 'show'])
+            ->name('admin.contacts.show');
+
+        Route::delete('/contacts/{contact}', [AdminContactController::class, 'destroy'])
+            ->name('admin.contacts.destroy');
     });
 
 

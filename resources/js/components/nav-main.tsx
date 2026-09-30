@@ -47,8 +47,22 @@ export function NavMain({ items }: { items: NavItem[] }) {
                                 `}
                             >
                                 <Link href={item.href} prefetch>
-                                    {item.icon && <item.icon size={17} />}
+                                    {item.icon && <item.icon />}
+
                                     <span>{item.title}</span>
+
+                                    {item.badge !== undefined && item.badge > 0 && (
+                                        <span
+                                            className="
+                                                ml-auto flex min-w-5 items-center justify-center
+                                                rounded-full bg-[#8a6a48]
+                                                px-1.5 py-0.5
+                                                text-[10px] font-semibold text-white
+                                            "
+                                                                            >
+                                            {item.badge > 99 ? '99+' : item.badge}
+                                        </span>
+                                    )}
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
