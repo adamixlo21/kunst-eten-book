@@ -17,11 +17,13 @@ class Order extends Model
         'total_price',
         'status',
         'mollie_payment_id',
+        'confirmation_email_sent_at',
 
     ];
 
     protected $casts = [
         'quantity' => 'integer',
         'total_price' => 'decimal:2',
+        'confirmation_email_sent_at' => 'datetime',
     ];
 }

@@ -6,6 +6,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Mollie\Laravel\Facades\Mollie;
+use App\Mail\OrderConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -79,6 +81,16 @@ class OrderController extends Controller
                 'status' => 'paid',
             ]);
 
+            if (!$order->confirmation_email_sent_at) {
+                Mail::to($order->email)->send(
+                    new OrderConfirmation($order)
+                );
+
+                $order->update([
+                    'confirmation_email_sent_at' => now(),
+                ]);
+            }
+
             return redirect()->route('checkout.success', [
                 'order' => $order->id,
             ]);
@@ -112,6 +124,16 @@ class OrderController extends Controller
             $order->update([
                 'status' => 'paid',
             ]);
+
+            if (!$order->confirmation_email_sent_at) {
+                Mail::to($order->email)->send(
+                    new OrderConfirmation($order)
+                );
+
+                $order->update([
+                    'confirmation_email_sent_at' => now(),
+                ]);
+            }
         }
 
         return response()->noContent();
