@@ -18,6 +18,8 @@ void createInertiaApp({
             case name === 'home':
             case name === 'checkout':
             case name === 'checkout-success':
+            case name === 'paintings/index':
+            case name === 'paintings/show':
                 return null;
 
             case name === 'auth/login':

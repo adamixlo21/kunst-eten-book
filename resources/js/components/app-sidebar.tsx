@@ -5,7 +5,8 @@ import {
     User,
     LockKeyhole,
     ExternalLink,
-    Mail
+    Mail,
+    Image,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -39,6 +40,11 @@ export function AppSidebar() {
             title: 'Bestellingen',
             href: '/admin/orders',
             icon: ShoppingBag,
+        },
+        {
+            title: 'Schilderijen',
+            href: '/admin/paintings',
+            icon: Image,
         },
         {
             title: 'Contactberichten',

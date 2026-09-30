@@ -13,10 +13,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\PaintingController as AdminPaintingController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PaintingController;
+use App\Http\Controllers\BidController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -53,6 +56,15 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store');
 
 
+Route::get('/paintings', [PaintingController::class, 'index'])
+    ->name('paintings.index');
+
+Route::get('/paintings/{painting:slug}', [PaintingController::class, 'show'])
+    ->name('paintings.show');
+
+Route::post('/paintings/{painting:slug}/bids', [BidController::class, 'store'])
+    ->name('paintings.bids.store');
+
 Route::middleware(['auth'])
     ->prefix('admin')
     ->name('admin.')
@@ -60,6 +72,7 @@ Route::middleware(['auth'])
         Route::get('/', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
 
+        //orders
         Route::get('/orders', [AdminOrderController::class, 'index'])
             ->name('orders.index');
 
@@ -69,6 +82,8 @@ Route::middleware(['auth'])
         Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
             ->name('orders.update-status');
 
+
+        //contacts
         Route::get('/contacts', [AdminContactController::class, 'index'])
             ->name('admin.contacts.index');
 
@@ -77,6 +92,20 @@ Route::middleware(['auth'])
 
         Route::delete('/contacts/{contact}', [AdminContactController::class, 'destroy'])
             ->name('admin.contacts.destroy');
+
+        //paintings
+        Route::get('/paintings', [AdminPaintingController::class, 'index'])
+            ->name('paintings.index');
+
+        Route::get('/paintings/{painting}/edit', [AdminPaintingController::class, 'edit'])
+            ->name('paintings.edit');
+
+        Route::patch('/paintings/{painting}', [AdminPaintingController::class, 'update'])
+            ->name('paintings.update');
+
+        Route::delete('/paintings/{painting}', [AdminPaintingController::class, 'destroy'])
+            ->name('paintings.destroy');
+
     });
 
 
