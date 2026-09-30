@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -45,6 +46,10 @@ Route::get('/checkout/success/{order}', function (Order $order) {
 
 Route::post('/mollie/webhook', [OrderController::class, 'webhook'])
     ->name('mollie.webhook');
+
+
+Route::post('/contact', [ContactController::class, 'store'])
+    ->name('contact.store');
 
 
 Route::middleware(['auth'])

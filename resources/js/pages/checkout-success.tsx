@@ -1,8 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { BookCartProvider } from '@/components/BookCartContext';
+import { useEffect } from 'react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import {
+    BookCartProvider,
+    useBookCart,
+} from '@/components/BookCartContext';
 
 interface Order {
     id: number;
@@ -15,6 +19,17 @@ interface Order {
 interface CheckoutSuccessProps {
     order: Order;
 }
+function ResetCartAfterPayment({ status }: { status: string }) {
+    const { resetCart } = useBookCart();
+
+    useEffect(() => {
+        if (status === 'paid') {
+            resetCart();
+        }
+    }, [status]);
+
+    return null;
+}
 
 export default function CheckoutSuccess({
                                             order,
@@ -24,6 +39,7 @@ export default function CheckoutSuccess({
     return (
         <>
             <BookCartProvider>
+                <ResetCartAfterPayment status={order.status} />
                 <Head title="Bestelling gelukt" />
 
                 <Navbar/>

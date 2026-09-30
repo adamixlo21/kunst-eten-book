@@ -9,6 +9,7 @@ import Hero from '@/components/Hero';
 import Navbar from '@/components/Navbar';
 import PaintingsSection from '@/components/PaintingsSection';
 import Footer from "@/components/Footer";
+import ContactSection from "@/components/ContactSection";
 
 export default function Home() {
     return (
@@ -24,6 +25,8 @@ export default function Home() {
             <PaintingsSection />
 
             <BookSection />
+
+            <ContactSection />
 
             <BackgroundMusic />
 
