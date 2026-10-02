@@ -1,21 +1,24 @@
 import { useForm } from '@inertiajs/react';
 import { ArrowRight, Mail, Phone } from 'lucide-react';
 import { FormEvent, useState } from 'react';
+
 export default function ContactSection() {
-    const { data, setData, post, processing, errors, reset} =
-        useForm({
-            name: '',
-            email: '',
-            phone: '',
-            subject: 'Vraag over het boek',
-            message: '',
-        });
+    const [messageSent, setMessageSent] = useState(false);
+
+    const { data, setData, post, processing, errors, reset } = useForm({
+        name: '',
+        email: '',
+        phone: '',
+        subject: 'Question about the book',
+        message: '',
+    });
 
     const submit = (e: FormEvent) => {
         e.preventDefault();
 
         post('/contact', {
             preserveScroll: true,
+
             onSuccess: () => {
                 reset();
                 setMessageSent(true);
@@ -23,41 +26,55 @@ export default function ContactSection() {
         });
     };
 
-    const [messageSent, setMessageSent] = useState(false);
-
     return (
         <section
             id="contact"
-            className="bg-[#f7f3ec] px-6 py-24 sm:py-32"
+            className="relative overflow-hidden bg-[#f7f3ec] px-6 py-24 sm:py-32"
         >
-            <div className="mx-auto max-w-6xl">
-                <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-                    {/* Contact information */}
-                    <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                            Contact
-                        </p>
+            {/* Background decoration */}
+            <div className="pointer-events-none absolute -right-40 top-10 h-96 w-96 rounded-full bg-[#8a6a48]/5 blur-3xl" />
 
-                        <h2 className="mt-5 max-w-md font-serif text-4xl font-normal leading-tight text-stone-900 sm:text-5xl">
-                            Een vraag over Kunst Eten?
+            <div className="relative mx-auto max-w-6xl">
+                <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
+
+                    {/* CONTACT INFORMATION */}
+                    <div>
+                        <div className="flex items-center gap-4">
+                            <span className="h-px w-10 bg-[#8a6a48]" />
+
+                            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                                Contact
+                            </p>
+                        </div>
+
+                        <h2 className="mt-6 max-w-md font-serif text-4xl font-normal leading-tight text-stone-900 sm:text-5xl">
+                            Let&apos;s start a
+                            <span className="block italic text-[#8a6a48]">
+                                conversation.
+                            </span>
                         </h2>
 
                         <p className="mt-6 max-w-md text-base leading-8 text-stone-600">
-                            Heb je een vraag over het boek, je bestelling of wil
-                            je contact opnemen voor een samenwerking? We horen
-                            graag van je.
+                            Have a question about The Taste of Inspiration,
+                            your order, one of the original artworks, or a
+                            possible collaboration? We would love to hear from
+                            you.
                         </p>
 
                         <div className="mt-10 space-y-6 border-t border-stone-300 pt-8">
+
+                            {/* Email */}
                             <div className="flex items-start gap-4">
-                                <Mail
-                                    size={19}
-                                    className="mt-1 text-[#8a6a48]"
-                                />
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white">
+                                    <Mail
+                                        size={18}
+                                        className="text-[#8a6a48]"
+                                    />
+                                </div>
 
                                 <div>
-                                    <p className="text-xs uppercase tracking-[0.2em] text-stone-400">
-                                        E-mail
+                                    <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400">
+                                        Email
                                     </p>
 
                                     <a
@@ -69,15 +86,18 @@ export default function ContactSection() {
                                 </div>
                             </div>
 
+                            {/* Phone */}
                             <div className="flex items-start gap-4">
-                                <Phone
-                                    size={19}
-                                    className="mt-1 text-[#8a6a48]"
-                                />
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white">
+                                    <Phone
+                                        size={18}
+                                        className="text-[#8a6a48]"
+                                    />
+                                </div>
 
                                 <div>
-                                    <p className="text-xs uppercase tracking-[0.2em] text-stone-400">
-                                        Telefoon
+                                    <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400">
+                                        Phone
                                     </p>
 
                                     <a
@@ -89,29 +109,51 @@ export default function ContactSection() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Small message */}
+                        <div className="mt-12 border-l-2 border-[#8a6a48] pl-6">
+                            <p className="max-w-sm font-serif text-xl italic leading-8 text-stone-600">
+                                “Where flavour becomes colour, and food becomes
+                                art.”
+                            </p>
+                        </div>
                     </div>
 
-                    {/* Form */}
-                    <div className="border border-stone-300 bg-white p-7 sm:p-10">
+                    {/* CONTACT FORM */}
+                    <div className="border border-stone-300 bg-white p-7 shadow-[0_20px_60px_rgba(68,55,40,0.05)] sm:p-10">
+
+                        <div className="mb-8">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
+                                Send a Message
+                            </p>
+
+                            <h3 className="mt-3 font-serif text-3xl text-stone-900">
+                                How can we help?
+                            </h3>
+                        </div>
+
+                        {/* SUCCESS MESSAGE */}
                         {messageSent && (
                             <div className="mb-8 border border-[#8a6a48]/30 bg-[#f7f3ec] p-6">
                                 <div className="flex items-start gap-4">
-                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#8a6a48] text-white">
+
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#66765d] text-white">
                                         ✓
                                     </div>
 
                                     <div>
-                                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8a6a48]">
-                                            Bericht verzonden
+                                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#66765d]">
+                                            Message Sent
                                         </p>
 
                                         <h3 className="mt-2 font-serif text-xl text-stone-900">
-                                            Bedankt voor je bericht.
+                                            Thank you for getting in touch.
                                         </h3>
 
                                         <p className="mt-2 text-sm leading-6 text-stone-600">
-                                            We hebben je bericht goed ontvangen en nemen zo snel
-                                            mogelijk contact met je op.
+                                            We have received your message and
+                                            will get back to you as soon as
+                                            possible.
                                         </p>
                                     </div>
                                 </div>
@@ -119,40 +161,50 @@ export default function ContactSection() {
                         )}
 
                         <form onSubmit={submit} className="space-y-6">
+
+                            {/* NAME + EMAIL */}
                             <div className="grid gap-6 sm:grid-cols-2">
+
                                 <Field
-                                    label="Naam"
+                                    label="Name"
                                     error={errors.name}
                                 >
                                     <input
                                         type="text"
                                         value={data.name}
                                         onChange={(e) =>
-                                            setData('name', e.target.value)
+                                            setData(
+                                                'name',
+                                                e.target.value,
+                                            )
                                         }
                                         className={inputClass}
-                                        placeholder="Je naam"
+                                        placeholder="Your name"
                                     />
                                 </Field>
 
                                 <Field
-                                    label="E-mailadres"
+                                    label="Email Address"
                                     error={errors.email}
                                 >
                                     <input
                                         type="email"
                                         value={data.email}
                                         onChange={(e) =>
-                                            setData('email', e.target.value)
+                                            setData(
+                                                'email',
+                                                e.target.value,
+                                            )
                                         }
                                         className={inputClass}
-                                        placeholder="naam@email.nl"
+                                        placeholder="name@email.com"
                                     />
                                 </Field>
                             </div>
 
+                            {/* PHONE */}
                             <Field
-                                label="Telefoonnummer"
+                                label="Phone Number"
                                 optional
                                 error={errors.phone}
                             >
@@ -160,63 +212,101 @@ export default function ContactSection() {
                                     type="tel"
                                     value={data.phone}
                                     onChange={(e) =>
-                                        setData('phone', e.target.value)
+                                        setData(
+                                            'phone',
+                                            e.target.value,
+                                        )
                                     }
                                     className={inputClass}
-                                    placeholder="+31 612345678"
+                                    placeholder="+31 6 12345678"
                                 />
                             </Field>
 
+                            {/* SUBJECT */}
                             <Field
-                                label="Onderwerp"
+                                label="Subject"
                                 error={errors.subject}
                             >
                                 <select
                                     value={data.subject}
                                     onChange={(e) =>
-                                        setData('subject', e.target.value)
+                                        setData(
+                                            'subject',
+                                            e.target.value,
+                                        )
                                     }
                                     className={inputClass}
                                 >
-                                    <option>Vraag over het boek</option>
-                                    <option>Vraag over mijn bestelling</option>
-                                    <option>Samenwerking</option>
-                                    <option>Pers & media</option>
-                                    <option>Anders</option>
+                                    <option>
+                                        Question about the book
+                                    </option>
+
+                                    <option>
+                                        Question about my order
+                                    </option>
+
+                                    <option>
+                                        Question about an artwork
+                                    </option>
+
+                                    <option>
+                                        Collaboration
+                                    </option>
+
+                                    <option>
+                                        Press & Media
+                                    </option>
+
+                                    <option>
+                                        Other
+                                    </option>
                                 </select>
                             </Field>
 
+                            {/* MESSAGE */}
                             <Field
-                                label="Bericht"
+                                label="Message"
                                 error={errors.message}
                             >
                                 <textarea
                                     rows={6}
                                     value={data.message}
                                     onChange={(e) =>
-                                        setData('message', e.target.value)
+                                        setData(
+                                            'message',
+                                            e.target.value,
+                                        )
                                     }
                                     className={`${inputClass} resize-none`}
-                                    placeholder="Waar kunnen we je mee helpen?"
+                                    placeholder="How can we help you?"
                                 />
                             </Field>
 
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="group flex w-full items-center justify-center gap-3 bg-stone-900 px-7 py-4 text-sm font-medium text-white transition hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
-                            >
-                                {processing
-                                    ? 'Versturen...'
-                                    : 'Bericht versturen'}
+                            {/* SUBMIT */}
+                            <div className="flex flex-col gap-4 border-t border-stone-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
 
-                                {!processing && (
-                                    <ArrowRight
-                                        size={16}
-                                        className="transition-transform group-hover:translate-x-1"
-                                    />
-                                )}
-                            </button>
+                                <p className="max-w-xs text-xs leading-5 text-stone-400">
+                                    We&apos;ll only use your information to
+                                    respond to your message.
+                                </p>
+
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="group flex items-center justify-center gap-3 bg-stone-900 px-7 py-4 text-sm font-medium text-white transition hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    {processing
+                                        ? 'Sending...'
+                                        : 'Send Message'}
+
+                                    {!processing && (
+                                        <ArrowRight
+                                            size={16}
+                                            className="transition-transform group-hover:translate-x-1"
+                                        />
+                                    )}
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -248,7 +338,7 @@ function Field({
 
                 {optional && (
                     <span className="text-xs text-stone-400">
-                        Optioneel
+                        Optional
                     </span>
                 )}
             </div>

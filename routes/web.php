@@ -3,12 +3,13 @@
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Order;
+use Illuminate\Support\Facades\Route;
+
 
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Teams\TeamInvitationController;
 use App\Http\Middleware\EnsureTeamMembership;
-use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -64,6 +65,24 @@ Route::get('/paintings/{painting:slug}', [PaintingController::class, 'show'])
 
 Route::post('/paintings/{painting:slug}/bids', [BidController::class, 'store'])
     ->name('paintings.bids.store');
+
+
+
+// legal
+
+Route::get('/privacy-policy', function () {
+    return Inertia::render('legal/privacy-policy');
+})->name('privacy-policy');
+
+Route::get('/terms-and-conditions', function () {
+    return Inertia::render('legal/terms-and-conditions');
+})->name('terms-and-conditions');
+
+Route::get('/shipping-and-returns', function () {
+    return Inertia::render('legal/shipping-and-returns');
+})->name('shipping-and-returns');
+
+
 
 Route::middleware(['auth'])
     ->prefix('admin')

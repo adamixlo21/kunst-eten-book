@@ -11,7 +11,7 @@ class BidController extends Controller
     {
         if (! $painting->bidding_open) {
             return back()->withErrors([
-                'amount' => 'Bieden op dit kunstwerk is gesloten.',
+                'amount' => 'Bidding for this artwork is currently closed.',
             ]);
         }
 
@@ -25,14 +25,19 @@ class BidController extends Controller
                 'min:' . $painting->starting_price,
             ],
         ], [
-            'name.required' => 'Vul je naam in.',
-            'email.required' => 'Vul je e-mailadres in.',
-            'email.email' => 'Vul een geldig e-mailadres in.',
-            'amount.required' => 'Vul een bedrag in.',
-            'amount.numeric' => 'Vul een geldig bedrag in.',
-            'amount.min' => 'Je bod moet minimaal €' .
-                number_format((float) $painting->starting_price, 0, ',', '.') .
-                ' zijn.',
+            'name.required' => 'Please enter your name.',
+            'email.required' => 'Please enter your email address.',
+            'email.email' => 'Please enter a valid email address.',
+            'amount.required' => 'Please enter your offer amount.',
+            'amount.numeric' => 'Please enter a valid amount.',
+            'amount.min' => 'Your offer must be at least €' .
+                number_format(
+                    (float) $painting->starting_price,
+                    0,
+                    '.',
+                    ','
+                ) .
+                '.',
         ]);
 
         $painting->bids()->create([
@@ -44,7 +49,7 @@ class BidController extends Controller
 
         return back()->with(
             'success',
-            'Je privébod is ontvangen.'
+            'Your private offer has been received.'
         );
     }
 }

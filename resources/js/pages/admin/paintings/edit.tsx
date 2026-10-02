@@ -223,7 +223,7 @@ export default function PaintingEdit({ painting }: Props) {
                                         />
 
                                         <p className="mt-3 text-xs leading-5 text-[#8a847c]">
-                                            JPG, PNG of WebP. Maximaal 5 MB.
+                                            JPG, PNG of WebP. Maximaal 10 MB.
                                         </p>
 
                                         {painting.image && !data.image && (

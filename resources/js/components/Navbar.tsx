@@ -14,80 +14,106 @@ export default function Navbar() {
         openCart();
     };
 
+    const desktopLink =
+        'group relative text-sm font-medium text-stone-600 transition hover:text-stone-950';
+
+    const mobileLink =
+        'border-b border-stone-200 py-4 text-base font-medium text-stone-700 transition hover:pl-2 hover:text-[#8a6a48]';
+
     return (
-        <header className="fixed top-0 left-0 z-50 w-full border-b border-stone-200/60 bg-[#f7f3ec]/85 backdrop-blur-xl">
+        <header className="fixed top-0 left-0 z-50 w-full border-b border-stone-200/60 bg-[#f7f3ec]/90 backdrop-blur-xl">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-6 lg:px-10">
-                {/* Logo */}
+
+                {/* BRAND */}
                 <Link
                     href="/"
                     className="group flex items-center gap-3"
+                    onClick={() => setMenuOpen(false)}
                 >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#8a6a48]/30 bg-white/70 shadow-sm transition duration-300 group-hover:scale-105 group-hover:border-[#8a6a48]"
-                    >
-                        <div className="h-2.5 w-2.5 rounded-full bg-[#8a6a48]" />
+                    {/* Brand symbol */}
+                    <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#8a6a48]/30 bg-white/70 shadow-sm transition duration-300 group-hover:scale-105 group-hover:border-[#8a6a48]">
+                        <div className="absolute h-4 w-4 rounded-full border border-[#8a6a48]/50" />
+
+                        <div className="h-1.5 w-1.5 rounded-full bg-[#8a6a48]" />
                     </div>
 
+                    {/* Brand text */}
                     <div>
-                        <p className="text-lg font-semibold tracking-[0.22em] text-stone-900 uppercase">
-                            Kunst Eten
+                        <p className="text-xs font-semibold tracking-[0.14em] text-stone-900 uppercase sm:text-sm lg:text-base">
+                            The Taste of Inspiration
                         </p>
 
-                        <p className="hidden text-[10px] tracking-[0.22em] text-stone-400 uppercase sm:block">
-                            Kunst × Gastronomie
+                        <p className="hidden text-[9px] tracking-[0.2em] text-stone-400 uppercase sm:block">
+                            Food × Art × Inspiration
                         </p>
                     </div>
                 </Link>
 
-                {/* Desktop menu */}
-                <nav className="hidden items-center gap-8 md:flex">
+                {/* DESKTOP NAVIGATION */}
+                <nav className="hidden items-center gap-7 md:flex">
+
+                    {/* Our Story */}
                     <a
-                        href="#over"
-                        className="group relative text-sm font-medium text-stone-600 transition hover:text-stone-950"
+                        href="/#story"
+                        className={desktopLink}
                     >
-                        Over het boek
+                        Our Story
 
                         <span className="absolute -bottom-2 left-0 h-px w-0 bg-[#8a6a48] transition-all duration-300 group-hover:w-full" />
                     </a>
 
+                    {/* Journey */}
                     <a
-                        href="#kunstwerken"
-                        className="group relative text-sm font-medium text-stone-600 transition hover:text-stone-950"
+                        href="/#journey"
+                        className={desktopLink}
                     >
-                        Kunstwerken
+                        The Journey
 
                         <span className="absolute -bottom-2 left-0 h-px w-0 bg-[#8a6a48] transition-all duration-300 group-hover:w-full" />
                     </a>
 
-                    <a
-                        href="#boek"
-                        className="group relative text-sm font-medium text-stone-600 transition hover:text-stone-950"
+                    {/* Paintings */}
+                    <Link
+                        href="/paintings"
+                        className={desktopLink}
                     >
-                        Het boek
+                        Paintings
+
+                        <span className="absolute -bottom-2 left-0 h-px w-0 bg-[#8a6a48] transition-all duration-300 group-hover:w-full" />
+                    </Link>
+
+                    {/* Book */}
+                    <a
+                        href="/#book"
+                        className={desktopLink}
+                    >
+                        The Book
 
                         <span className="absolute -bottom-2 left-0 h-px w-0 bg-[#8a6a48] transition-all duration-300 group-hover:w-full" />
                     </a>
 
+                    {/* Contact */}
                     <a
-                        href="#contact"
-                        className="group relative text-sm font-medium text-stone-600 transition hover:text-stone-950"
+                        href="/#contact"
+                        className={desktopLink}
                     >
                         Contact
 
                         <span className="absolute -bottom-2 left-0 h-px w-0 bg-[#8a6a48] transition-all duration-300 group-hover:w-full" />
                     </a>
 
-                    {/* Cart */}
+                    {/* CART */}
                     <button
                         type="button"
                         onClick={handleOpenCart}
-                        className="group relative ml-2 flex items-center gap-3 rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-[#8a6a48] hover:shadow-lg"
+                        className="group relative ml-1 flex items-center gap-3 rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-[#8a6a48] hover:shadow-lg"
                     >
                         <ShoppingBag
                             size={17}
-                            className="transition group-hover:scale-110"
+                            className="transition duration-300 group-hover:scale-110"
                         />
 
-                        <span>Winkelwagen</span>
+                        <span>Cart</span>
 
                         <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-white/15 px-1.5 text-[11px] font-semibold">
                             {quantity}
@@ -95,25 +121,36 @@ export default function Navbar() {
                     </button>
                 </nav>
 
-                {/* Mobile buttons */}
+                {/* MOBILE BUTTONS */}
                 <div className="flex items-center gap-2 md:hidden">
+
+                    {/* Mobile cart */}
                     <button
                         type="button"
                         onClick={handleOpenCart}
                         className="relative flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white/60 text-stone-900 shadow-sm transition hover:border-stone-900 hover:bg-stone-900 hover:text-white"
+                        aria-label="Open cart"
                     >
                         <ShoppingBag size={18} />
 
-                        <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#8a6a48] px-1 text-[10px] font-bold text-white">
-                            {quantity}
-                        </span>
+                        {quantity > 0 && (
+                            <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#8a6a48] px-1 text-[10px] font-bold text-white">
+                                {quantity}
+                            </span>
+                        )}
                     </button>
 
+                    {/* Mobile menu toggle */}
                     <button
                         type="button"
                         onClick={() => setMenuOpen(!menuOpen)}
                         className="flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white/60 text-stone-900 shadow-sm transition hover:border-stone-900 hover:bg-stone-900 hover:text-white"
-                        aria-label="Menu openen"
+                        aria-label={
+                            menuOpen
+                                ? 'Close menu'
+                                : 'Open menu'
+                        }
+                        aria-expanded={menuOpen}
                     >
                         {menuOpen ? (
                             <X size={20} />
@@ -124,60 +161,96 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile menu */}
+            {/* MOBILE NAVIGATION */}
             <div
-                className={`overflow-hidden border-t border-stone-200 bg-[#f7f3ec]/98 transition-all duration-300 md:hidden ${
+                className={`overflow-hidden border-t bg-[#f7f3ec]/98 transition-all duration-300 md:hidden ${
                     menuOpen
-                        ? 'max-h-[500px] opacity-100'
+                        ? 'max-h-[650px] border-stone-200 opacity-100'
                         : 'max-h-0 border-transparent opacity-0'
                 }`}
             >
                 <nav className="flex flex-col px-6 py-6">
+
+                    {/* Our Story */}
                     <a
-                        href="#over"
+                        href="/#story"
                         onClick={() => setMenuOpen(false)}
-                        className="border-b border-stone-200 py-4 text-base font-medium text-stone-700 transition hover:pl-2 hover:text-[#8a6a48]"
+                        className={mobileLink}
                     >
-                        Over het boek
+                        Our Story
                     </a>
 
+                    {/* Journey */}
                     <a
-                        href="#kunstwerken"
+                        href="/#journey"
                         onClick={() => setMenuOpen(false)}
-                        className="border-b border-stone-200 py-4 text-base font-medium text-stone-700 transition hover:pl-2 hover:text-[#8a6a48]"
+                        className={mobileLink}
                     >
-                        Kunstwerken
+                        The Journey
                     </a>
 
-                    <a
-                        href="#boek"
+                    {/* Paintings */}
+                    <Link
+                        href="/paintings"
                         onClick={() => setMenuOpen(false)}
-                        className="border-b border-stone-200 py-4 text-base font-medium text-stone-700 transition hover:pl-2 hover:text-[#8a6a48]"
+                        className={mobileLink}
                     >
-                        Het boek
+                        <div className="flex items-center justify-between">
+                            <span>
+                                Paintings
+                            </span>
+
+                            <span className="text-[10px] font-medium tracking-[0.18em] text-[#8a6a48] uppercase">
+                                Collection
+                            </span>
+                        </div>
+                    </Link>
+
+                    {/* Book */}
+                    <a
+                        href="/#book"
+                        onClick={() => setMenuOpen(false)}
+                        className={mobileLink}
+                    >
+                        The Book
                     </a>
 
+                    {/* Contact */}
                     <a
-                        href="#contact"
+                        href="/#contact"
                         onClick={() => setMenuOpen(false)}
-                        className="border-b border-stone-200 py-4 text-base font-medium text-stone-700 transition hover:pl-2 hover:text-[#8a6a48]"
+                        className={mobileLink}
                     >
                         Contact
                     </a>
 
+                    {/* Mobile cart button */}
                     <button
                         type="button"
                         onClick={handleOpenCart}
-                        className="mt-6 flex items-center justify-center gap-3 rounded-full bg-stone-900 px-6 py-4 text-sm font-medium text-white shadow-sm transition hover:bg-[#8a6a48]"
+                        className="mt-6 flex items-center justify-center gap-3 rounded-full bg-stone-900 px-6 py-4 text-sm font-medium text-white shadow-sm transition duration-300 hover:bg-[#8a6a48]"
                     >
                         <ShoppingBag size={18} />
 
-                        Winkelwagen
+                        Cart
 
                         <span className="rounded-full bg-white/15 px-2 py-0.5 text-xs">
                             {quantity}
                         </span>
                     </button>
+
+                    {/* Brand footer inside mobile menu */}
+                    <div className="mt-7 text-center">
+                        <p className="text-[9px] font-medium uppercase tracking-[0.25em] text-stone-400">
+                            The Taste of Inspiration
+                        </p>
+
+                        <p className="mt-2 font-serif text-sm italic text-[#8a6a48]">
+                            Where flavour becomes colour,
+                            <br />
+                            and food becomes art.
+                        </p>
+                    </div>
                 </nav>
             </div>
         </header>

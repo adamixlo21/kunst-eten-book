@@ -20,6 +20,9 @@ void createInertiaApp({
             case name === 'checkout-success':
             case name === 'paintings/index':
             case name === 'paintings/show':
+            case name === 'legal/privacy-policy':
+            case name === 'legal/shipping-and-returns':
+            case name === 'legal/terms-and-conditions':
                 return null;
 
             case name === 'auth/login':

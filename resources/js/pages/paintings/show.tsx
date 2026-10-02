@@ -1,9 +1,9 @@
 import { FormEvent, useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import {BookCartProvider} from "@/components/BookCartContext";
-import BookCart from "@/components/BookCart";
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { BookCartProvider } from '@/components/BookCartContext';
+import BookCart from '@/components/BookCart';
 
 interface Painting {
     id: number;
@@ -20,47 +20,50 @@ interface Props {
 }
 
 export default function PaintingShow({ painting }: Props) {
+    const [bidSent, setBidSent] = useState(false);
 
-    const { data, setData, post, processing, errors, reset } =
-        useForm({
-            name: '',
-            email: '',
-            phone: '',
-            amount: painting.starting_price,
-        });
+    const { data, setData, post, processing, errors, reset } = useForm({
+        name: '',
+        email: '',
+        phone: '',
+        amount: painting.starting_price,
+    });
 
     const submitBid = (e: FormEvent) => {
         e.preventDefault();
 
         post(`/paintings/${painting.slug}/bids`, {
             preserveScroll: true,
+
             onSuccess: () => {
                 reset('name', 'email', 'phone');
                 setBidSent(true);
             },
         });
     };
+
     const formatPrice = (price: string) =>
-        new Intl.NumberFormat('nl-NL', {
+        new Intl.NumberFormat('en-GB', {
             style: 'currency',
             currency: 'EUR',
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
         }).format(Number(price));
 
-    const [bidSent, setBidSent] = useState(false);
-
     return (
         <BookCartProvider>
-            <Head title={`${painting.title} | Kunst Eten`} />
+            <Head
+                title={`${painting.title} | The Taste of Inspiration`}
+            />
 
-            <Navbar/>
+            <Navbar />
 
             <main className="min-h-screen bg-[#f6f1e9] text-[#25231f]">
 
                 {/* Top navigation */}
                 <div className="border-b border-[#d9d0c3]">
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:px-10 lg:px-16">
+
                         <Link
                             href="/paintings"
                             className="group flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#625e57]"
@@ -69,11 +72,11 @@ export default function PaintingShow({ painting }: Props) {
                                 ←
                             </span>
 
-                            Terug naar collectie
+                            Back to the Collection
                         </Link>
 
                         <p className="hidden text-[10px] uppercase tracking-[0.25em] text-[#9a9186] sm:block">
-                            Kunst Eten
+                            The Taste of Inspiration
                         </p>
                     </div>
                 </div>
@@ -97,7 +100,7 @@ export default function PaintingShow({ painting }: Props) {
                                     ) : (
                                         <div className="flex aspect-[4/5] items-center justify-center">
                                             <span className="text-xs uppercase tracking-[0.25em] text-[#948b80]">
-                                                Afbeelding volgt
+                                                Artwork coming soon
                                             </span>
                                         </div>
                                     )}
@@ -107,6 +110,8 @@ export default function PaintingShow({ painting }: Props) {
 
                         {/* Information */}
                         <div className="flex flex-col justify-center lg:py-10">
+
+                            {/* Label */}
                             <div className="flex items-center gap-3">
                                 <span className="h-px w-8 bg-[#a78967]" />
 
@@ -115,6 +120,7 @@ export default function PaintingShow({ painting }: Props) {
                                 </p>
                             </div>
 
+                            {/* Title */}
                             <h1 className="mt-6 font-serif text-5xl leading-[0.95] tracking-[-0.03em] md:text-6xl">
                                 {painting.title}
                             </h1>
@@ -131,8 +137,8 @@ export default function PaintingShow({ painting }: Props) {
 
                                 <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#77716a]">
                                     {painting.bidding_open
-                                        ? 'Beschikbaar voor privébod'
-                                        : 'Bieden gesloten'}
+                                        ? 'Available for Private Bidding'
+                                        : 'Bidding Closed'}
                                 </span>
                             </div>
 
@@ -145,12 +151,13 @@ export default function PaintingShow({ painting }: Props) {
                                 </div>
                             )}
 
-                            {/* Price */}
+                            {/* Starting price */}
                             <div className="mt-10 border-y border-[#d9d0c3] py-7">
                                 <div className="flex items-end justify-between gap-5">
+
                                     <div>
                                         <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#918a81]">
-                                            Startprijs
+                                            Starting Price
                                         </p>
 
                                         <p className="mt-2 font-serif text-3xl text-[#6f5237]">
@@ -160,32 +167,37 @@ export default function PaintingShow({ painting }: Props) {
                                         </p>
                                     </div>
 
-                                    <p className="max-w-[180px] text-right text-xs leading-5 text-[#918a81]">
-                                        Biedingen worden volledig privé
-                                        behandeld.
+                                    <p className="max-w-[190px] text-right text-xs leading-5 text-[#918a81]">
+                                        All offers are handled privately.
                                     </p>
                                 </div>
                             </div>
+
                             {/* Private bid form */}
                             {painting.bidding_open ? (
                                 <div className="mt-8 bg-[#eee6da] p-6 md:p-8">
+
                                     <p className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
-                                        Private acquisition
+                                        Private Acquisition
                                     </p>
 
                                     <h2 className="mt-3 font-serif text-2xl">
-                                        Plaats een privébod
+                                        Place a Private Bid
                                     </h2>
 
                                     <p className="mt-3 text-sm leading-6 text-[#716a61]">
-                                        Je bod en persoonlijke gegevens zijn niet zichtbaar
-                                        voor andere bezoekers. Er vindt geen automatische
-                                        betaling plaats.
+                                        Your offer and personal information
+                                        remain completely private and are
+                                        never shown to other visitors. No
+                                        automatic payment will be made.
                                     </p>
 
+                                    {/* Success */}
                                     {bidSent && (
                                         <div className="mt-6 overflow-hidden border border-[#8b9b7c] bg-[#f5f7f2]">
+
                                             <div className="flex items-start gap-4 p-5 md:p-6">
+
                                                 {/* Check icon */}
                                                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#66765d] text-white">
                                                     <svg
@@ -205,46 +217,63 @@ export default function PaintingShow({ painting }: Props) {
 
                                                 <div>
                                                     <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#66765d]">
-                                                        Bod verzonden
+                                                        Offer Received
                                                     </p>
 
                                                     <h3 className="mt-1 font-serif text-xl text-[#2f382b]">
-                                                        Je privébod is succesvol ontvangen.
+                                                        Your private offer has
+                                                        been received.
                                                     </h3>
 
                                                     <p className="mt-2 max-w-md text-sm leading-6 text-[#687062]">
-                                                        Bedankt voor je interesse in{' '}
+                                                        Thank you for your
+                                                        interest in{' '}
+
                                                         <span className="font-medium text-[#454d40]">
                                                             {painting.title}
                                                         </span>
-                                                        . Je bod is privé opgeslagen en is niet zichtbaar
-                                                        voor andere bezoekers.
+
+                                                        . Your offer has been
+                                                        stored privately and is
+                                                        not visible to other
+                                                        visitors.
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <div className="border-t border-[#d7ded0] bg-[#edf1e9] px-5 py-3 md:px-6">
                                                 <p className="text-xs leading-5 text-[#65705e]">
-                                                    We nemen persoonlijk contact met je op als er meer
-                                                    informatie nodig is over je bod.
+                                                    We will contact you
+                                                    personally if we need any
+                                                    additional information
+                                                    regarding your offer.
                                                 </p>
                                             </div>
                                         </div>
                                     )}
-                                    <form onSubmit={submitBid} className="mt-7 space-y-5">
+
+                                    {/* Form */}
+                                    <form
+                                        onSubmit={submitBid}
+                                        className="mt-7 space-y-5"
+                                    >
+                                        {/* Name */}
                                         <div>
                                             <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-[#746b61]">
-                                                Naam *
+                                                Name *
                                             </label>
 
                                             <input
                                                 type="text"
                                                 value={data.name}
                                                 onChange={(e) =>
-                                                    setData('name', e.target.value)
+                                                    setData(
+                                                        'name',
+                                                        e.target.value,
+                                                    )
                                                 }
                                                 className="w-full border border-[#d1c5b6] bg-[#f8f4ee] px-4 py-3 text-sm text-[#25231f] outline-none transition focus:border-[#8a6a48]"
-                                                placeholder="Jouw naam"
+                                                placeholder="Your name"
                                             />
 
                                             {errors.name && (
@@ -254,19 +283,23 @@ export default function PaintingShow({ painting }: Props) {
                                             )}
                                         </div>
 
+                                        {/* Email */}
                                         <div>
                                             <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-[#746b61]">
-                                                E-mailadres *
+                                                Email Address *
                                             </label>
 
                                             <input
                                                 type="email"
                                                 value={data.email}
                                                 onChange={(e) =>
-                                                    setData('email', e.target.value)
+                                                    setData(
+                                                        'email',
+                                                        e.target.value,
+                                                    )
                                                 }
                                                 className="w-full border border-[#d1c5b6] bg-[#f8f4ee] px-4 py-3 text-sm text-[#25231f] outline-none transition focus:border-[#8a6a48]"
-                                                placeholder="naam@email.nl"
+                                                placeholder="name@email.com"
                                             />
 
                                             {errors.email && (
@@ -276,16 +309,20 @@ export default function PaintingShow({ painting }: Props) {
                                             )}
                                         </div>
 
+                                        {/* Phone */}
                                         <div>
                                             <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-[#746b61]">
-                                                Telefoonnummer
+                                                Phone Number (optional)
                                             </label>
 
                                             <input
                                                 type="tel"
                                                 value={data.phone}
                                                 onChange={(e) =>
-                                                    setData('phone', e.target.value)
+                                                    setData(
+                                                        'phone',
+                                                        e.target.value,
+                                                    )
                                                 }
                                                 className="w-full border border-[#d1c5b6] bg-[#f8f4ee] px-4 py-3 text-sm text-[#25231f] outline-none transition focus:border-[#8a6a48]"
                                                 placeholder="+31 6 ..."
@@ -298,30 +335,39 @@ export default function PaintingShow({ painting }: Props) {
                                             )}
                                         </div>
 
+                                        {/* Bid amount */}
                                         <div>
                                             <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-[#746b61]">
-                                                Jouw bod *
+                                                Your Offer *
                                             </label>
 
                                             <div className="relative">
-                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-serif text-xl text-[#8a6a48]">
+                                                <span className="absolute top-1/2 left-4 -translate-y-1/2 font-serif text-xl text-[#8a6a48]">
                                                     €
                                                 </span>
 
                                                 <input
                                                     type="number"
-                                                    min={Number(painting.starting_price)}
+                                                    min={Number(
+                                                        painting.starting_price,
+                                                    )}
                                                     step="1"
                                                     value={data.amount}
                                                     onChange={(e) =>
-                                                        setData('amount', e.target.value)
+                                                        setData(
+                                                            'amount',
+                                                            e.target.value,
+                                                        )
                                                     }
-                                                    className="w-full border border-[#d1c5b6] bg-[#f8f4ee] py-4 pl-10 pr-4 font-serif text-xl text-[#25231f] outline-none transition focus:border-[#8a6a48]"
+                                                    className="w-full border border-[#d1c5b6] bg-[#f8f4ee] py-4 pr-4 pl-10 font-serif text-xl text-[#25231f] outline-none transition focus:border-[#8a6a48]"
                                                 />
                                             </div>
 
                                             <p className="mt-2 text-xs text-[#857c72]">
-                                                Minimaal {formatPrice(painting.starting_price)}
+                                                Minimum{' '}
+                                                {formatPrice(
+                                                    painting.starting_price,
+                                                )}
                                             </p>
 
                                             {errors.amount && (
@@ -331,26 +377,30 @@ export default function PaintingShow({ painting }: Props) {
                                             )}
                                         </div>
 
+                                        {/* Submit */}
                                         <button
                                             type="submit"
                                             disabled={processing}
                                             className="w-full bg-[#8a6a48] px-6 py-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-white transition hover:bg-[#75583c] disabled:cursor-not-allowed disabled:opacity-50"
                                         >
                                             {processing
-                                                ? 'Bod versturen...'
-                                                : 'Privébod versturen'}
+                                                ? 'Sending Offer...'
+                                                : 'Place Private Bid'}
                                         </button>
 
                                         <p className="text-center text-[10px] leading-5 text-[#91887e]">
-                                            Je bod wordt privé geregistreerd. Andere bezoekers
-                                            kunnen jouw bod niet bekijken.
+                                            Your offer is private. Other
+                                            visitors cannot see the amount you
+                                            submit.
                                         </p>
                                     </form>
                                 </div>
                             ) : (
+                                /* Closed bidding */
                                 <div className="mt-8 border border-[#d9d0c3] p-6 text-center">
                                     <p className="text-xs uppercase tracking-[0.18em] text-[#918a81]">
-                                        Bieden op dit kunstwerk is momenteel gesloten.
+                                        Bidding for this artwork is currently
+                                        closed.
                                     </p>
                                 </div>
                             )}
@@ -361,26 +411,28 @@ export default function PaintingShow({ painting }: Props) {
                 {/* Privacy */}
                 <section className="mt-8 border-t border-[#d9d0c3] bg-[#eee6da] px-6 py-16 md:py-20">
                     <div className="mx-auto max-w-2xl text-center">
+
                         <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                            Private bidding
+                            Private Bidding
                         </p>
 
                         <h2 className="mt-4 font-serif text-3xl">
-                            Jouw bod blijft privé.
+                            Your offer remains private.
                         </h2>
 
                         <p className="mx-auto mt-5 max-w-lg text-sm leading-7 text-[#716a61]">
-                            Bedragen en gegevens van bieders worden niet
-                            openbaar weergegeven. Na het plaatsen van een bod
-                            kan er persoonlijk contact met je worden
-                            opgenomen.
+                            Offer amounts and bidder information are never
+                            displayed publicly. After submitting an offer, we
+                            may contact you personally to discuss the artwork
+                            and the next steps.
                         </p>
                     </div>
                 </section>
             </main>
-            <BookCart/>
-            <Footer/>
+
+            <BookCart />
+
+            <Footer />
         </BookCartProvider>
     );
 }
-

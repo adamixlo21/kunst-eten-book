@@ -1,7 +1,6 @@
 import { Head } from '@inertiajs/react';
 
-import AboutBook from '@/components/AboutBook';
-import BackgroundMusic from '@/components/BackgroundMusic';
+
 import BookCart from '@/components/BookCart';
 import { BookCartProvider } from '@/components/BookCartContext';
 import BookSection from '@/components/BookSection';
@@ -10,6 +9,10 @@ import Navbar from '@/components/Navbar';
 import PaintingsSection from '@/components/PaintingsSection';
 import Footer from "@/components/Footer";
 import ContactSection from "@/components/ContactSection";
+import Story from "@/components/Story";
+import Journey from "@/components/Journey";
+import ClosingSection from "@/components/ClosingSection";
+
 
 export default function Home() {
     return (
@@ -20,15 +23,17 @@ export default function Home() {
 
             <Hero />
 
-            <AboutBook />
+            <Story/>
+
+            <Journey/>
 
             <PaintingsSection />
 
             <BookSection />
 
-            <ContactSection />
+            <ClosingSection />
 
-            <BackgroundMusic />
+            <ContactSection />
 
             <BookCart />
 
