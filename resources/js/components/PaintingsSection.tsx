@@ -1,202 +1,340 @@
 import { Link } from '@inertiajs/react';
+import { ArrowUpRight } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 const paintings = [
     {
         title: 'Beyond the Surface',
         slug: 'beyond-the-surface',
         course: 'The Starters',
-        description:
-            'An invitation to look beyond what is immediately visible — to pause, observe and discover what lies beneath the surface.',
         image: '/images/paintings/beyond-the-surface.jpg',
     },
     {
         title: 'Essence',
         slug: 'essence',
         course: 'The Starters',
-        description:
-            'A celebration of the human form, presence and feeling. Some things do not need to be explained — only experienced.',
         image: '/images/paintings/essence.jpg',
     },
     {
         title: 'The Silent Melody',
         slug: 'the-silent-melody',
         course: 'The Main Courses',
-        description:
-            'A melody suspended between silence and memory — a quiet moment where emotion speaks without words.',
         image: '/images/paintings/the-silent-melody.jpg',
     },
     {
         title: 'A Moment to Savour',
         slug: 'a-moment-to-savour',
         course: 'The Main Courses',
-        description:
-            'A moment to slow down, taste, feel and simply be present — because some experiences are meant to be savoured.',
         image: '/images/paintings/a-moment-to-savour.jpg',
     },
     {
         title: 'In Bloom',
         slug: 'in-bloom',
         course: 'The Dessert',
-        description:
-            'A quiet expression of beauty, growth and renewal — a reminder to pause and notice what is unfolding around us.',
         image: '/images/paintings/in-bloom.jpg',
     },
 ];
 
 export default function PaintingsSection() {
+    const reduceMotion = useReducedMotion();
+
     return (
         <section
             id="paintings"
-            className="relative overflow-hidden bg-[#f7f3ec] px-6 py-24 text-stone-900 lg:px-10 lg:py-32"
+            className="relative overflow-hidden bg-[#eee7dc] text-[#25221f]"
         >
-            {/* Background decoration */}
-            <div className="absolute top-1/3 -left-32 h-80 w-80 rounded-full bg-[#8a6a48]/5 blur-3xl" />
+            <div className="mx-auto max-w-[1500px] px-6 py-24 sm:px-8 lg:px-16 lg:py-28">
 
-            <div className="absolute -right-40 bottom-20 h-96 w-96 rounded-full bg-white/60 blur-3xl" />
+                {/* =====================================================
+                    CHAPTER HEADER
+                ===================================================== */}
+                <motion.div
+                    initial={
+                        reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                y: 20,
+                            }
+                    }
+                    whileInView={{
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    viewport={{
+                        once: true,
+                        amount: 0.4,
+                    }}
+                    transition={{
+                        duration: 0.9,
+                        ease,
+                    }}
+                    className="flex items-center justify-between border-b border-[#8a6a48]/25 pb-4"
+                >
+                    <div className="flex items-center gap-4">
+                        <span className="text-[9px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
+                            03 / The Collection
+                        </span>
 
-            <div className="relative mx-auto max-w-7xl">
+                        <span className="hidden h-px w-10 bg-[#8a6a48]/40 sm:block" />
 
-                {/* Heading */}
-                <div className="mb-20 grid gap-8 lg:grid-cols-[1fr_0.6fr] lg:items-end">
-                    <div>
-                        <div className="mb-5 flex items-center gap-4">
-                            <div className="h-px w-10 bg-[#8a6a48]" />
+                        <span className="hidden text-[9px] uppercase tracking-[0.28em] text-stone-400 sm:block">
+                            Five Original Paintings
+                        </span>
+                    </div>
 
-                            <p className="text-xs font-semibold tracking-[0.35em] text-[#8a6a48] uppercase">
-                                The Paintings
+                    <span className="text-[8px] uppercase tracking-[0.28em] text-stone-400">
+                        01 — 05
+                    </span>
+                </motion.div>
+
+                {/* =====================================================
+                    TITLE
+                ===================================================== */}
+                <motion.div
+                    initial={
+                        reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                y: 30,
+                            }
+                    }
+                    whileInView={{
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    viewport={{
+                        once: true,
+                        amount: 0.4,
+                    }}
+                    transition={{
+                        duration: 0.9,
+                        ease,
+                    }}
+                    className="pb-16 pt-16 lg:pb-20 lg:pt-20"
+                >
+                    <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+
+                        <div>
+                            <p className="mb-5 text-[8px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
+                                The Art
                             </p>
+
+                            <h2 className="font-serif text-5xl font-light leading-[0.9] tracking-[-0.055em] sm:text-6xl lg:text-7xl xl:text-8xl">
+                                The
+                                <span className="ml-3 italic text-[#8a6a48] sm:ml-5">
+                                    Collection.
+                                </span>
+                            </h2>
                         </div>
 
-                        <h2 className="max-w-3xl text-4xl leading-[1.08] font-light tracking-[-0.03em] sm:text-5xl lg:text-6xl">
-                            Five dishes.
-                            <br />
+                        <div className="flex items-center gap-5">
+                            <span className="h-px w-10 bg-[#8a6a48]/50" />
 
-                            <span className="text-stone-500">
-                                Five artistic responses.
-                            </span>
-                        </h2>
+                            <p className="text-[8px] uppercase tracking-[0.3em] text-stone-400">
+                                Food → Feeling → Art
+                            </p>
+                        </div>
                     </div>
+                </motion.div>
 
-                    <p className="max-w-md text-sm leading-7 text-stone-500 lg:justify-self-end">
-                        Each painting began with an experience at the table.
-                        Nour translated flavour, colour, atmosphere and
-                        emotion into a new creation on canvas.
-                    </p>
-                </div>
+                {/* =====================================================
+                    AUTOMATIC MOVING GALLERY
+                    LEFT → RIGHT
+                ===================================================== */}
+                <div className="relative overflow-hidden">
 
-                {/* Paintings */}
-                <div className="grid gap-x-10 gap-y-20 md:grid-cols-2 lg:grid-cols-3">
-                    {paintings.map((painting, index) => (
-                        <article
-                            key={painting.slug}
-                            className={`group ${
-                                index === 1 || index === 4
-                                    ? 'lg:mt-20'
-                                    : ''
-                            }`}
-                        >
-                            <Link
-                                href={`/paintings/${painting.slug}`}
-                                className="block"
-                            >
-                                {/* Image */}
-                                <div className="relative overflow-hidden rounded-[2rem] bg-stone-200 shadow-[0_20px_50px_rgba(70,55,40,0.08)]">
-                                    <img
-                                        src={painting.image}
-                                        alt={painting.title}
-                                        className="aspect-[4/5] h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.04]"
-                                    />
+                    {/* LEFT FADE */}
+                    <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-[#eee7dc] via-[#eee7dc]/70 to-transparent sm:w-24" />
 
-                                    {/* Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
+                    {/* RIGHT FADE */}
+                    <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 bg-gradient-to-l from-[#eee7dc] via-[#eee7dc]/70 to-transparent sm:w-24" />
 
-                                    {/* Number */}
-                                    <div className="absolute top-5 left-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/20 text-xs font-medium text-white backdrop-blur-md">
-                                        {String(index + 1).padStart(2, '0')}
-                                    </div>
-
-                                    {/* Course */}
-                                    <div className="absolute top-5 right-5 rounded-full border border-white/20 bg-black/20 px-4 py-2 backdrop-blur-md">
-                                        <p className="text-[9px] font-semibold tracking-[0.2em] text-white uppercase">
-                                            {painting.course}
-                                        </p>
-                                    </div>
-
-                                    {/* Hover text */}
-                                    <div className="absolute inset-x-0 bottom-0 translate-y-4 p-7 opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                                        <p className="text-xs font-medium tracking-[0.2em] text-white/80 uppercase">
-                                            Discover the Story
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Content */}
-                                <div className="px-1 pt-6">
-                                    <p className="mb-3 text-[10px] font-semibold tracking-[0.25em] text-[#8a6a48] uppercase">
-                                        {painting.course}
-                                    </p>
-
-                                    <div className="flex items-start justify-between gap-5">
-                                        <div>
-                                            <h3 className="text-2xl font-light tracking-[-0.02em] text-stone-900">
-                                                {painting.title}
-                                            </h3>
-
-                                            <p className="mt-4 max-w-sm text-sm leading-7 text-stone-500">
-                                                {painting.description}
-                                            </p>
-                                        </div>
-
-                                        <span className="text-xs font-medium text-[#8a6a48]">
-                                            {String(index + 1).padStart(
-                                                2,
-                                                '0',
-                                            )}
-                                        </span>
-                                    </div>
-
-                                    <div className="mt-6 flex items-center justify-between">
-                                        <span className="text-sm font-medium text-stone-800">
-                                            Discover the Story
-                                        </span>
-
-                                        <span className="transition-transform duration-300 group-hover:translate-x-1">
-                                            →
-                                        </span>
-                                    </div>
-
-                                    <div className="mt-5 h-px w-full bg-stone-300/70 transition duration-500 group-hover:bg-[#8a6a48]" />
-                                </div>
-                            </Link>
-                        </article>
-                    ))}
-                </div>
-
-                {/* Bottom */}
-                <div className="mt-24 flex flex-col gap-6 border-t border-stone-300/70 pt-9 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <p className="text-xs font-semibold tracking-[0.2em] text-[#8a6a48] uppercase">
-                            The Collection
-                        </p>
-
-                        <p className="mt-2 text-sm text-stone-500">
-                            Discover the stories behind all five original
-                            paintings.
-                        </p>
-                    </div>
-
-                    <Link
-                        href="/paintings"
-                        className="group inline-flex items-center gap-3 text-sm font-medium text-stone-900"
+                    <motion.div
+                        initial={{
+                            x: '-50%',
+                        }}
+                        animate={
+                            reduceMotion
+                                ? {
+                                    x: '-50%',
+                                }
+                                : {
+                                    x: ['-50%', '0%'],
+                                }
+                        }
+                        transition={
+                            reduceMotion
+                                ? undefined
+                                : {
+                                    duration: 32,
+                                    ease: 'linear',
+                                    repeat: Infinity,
+                                }
+                        }
+                        className="flex w-max"
                     >
-                        Explore All Paintings
+                        {/* FIRST COPY */}
+                        <div className="flex shrink-0 gap-6 pr-6 lg:gap-8 lg:pr-8">
+                            {paintings.map((painting, index) => (
+                                <PaintingCard
+                                    key={`first-${painting.slug}`}
+                                    painting={painting}
+                                    index={index}
+                                />
+                            ))}
+                        </div>
 
-                        <span className="transition-transform duration-300 group-hover:translate-x-1">
-                            →
-                        </span>
-                    </Link>
+                        {/* SECOND COPY
+                            Makes the animation loop seamlessly
+                        */}
+                        <div className="flex shrink-0 gap-6 pr-6 lg:gap-8 lg:pr-8">
+                            {paintings.map((painting, index) => (
+                                <PaintingCard
+                                    key={`second-${painting.slug}`}
+                                    painting={painting}
+                                    index={index}
+                                />
+                            ))}
+                        </div>
+                    </motion.div>
                 </div>
+
+                {/* =====================================================
+                    BOTTOM
+                ===================================================== */}
+                <motion.div
+                    initial={
+                        reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                y: 20,
+                            }
+                    }
+                    whileInView={{
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    viewport={{
+                        once: true,
+                        amount: 0.4,
+                    }}
+                    transition={{
+                        duration: 0.9,
+                        ease,
+                    }}
+                    className="mt-16 border-t border-[#8a6a48]/25 pt-8"
+                >
+                    <div className="flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
+
+                        {/* LEFT */}
+                        <div>
+                            <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-stone-400">
+                                03 / The Collection
+                            </p>
+
+                            <h3 className="mt-3 font-serif text-3xl font-light tracking-[-0.03em] sm:text-4xl">
+                                Five moments.
+                                <span className="ml-2 italic text-[#8a6a48]">
+                                    Five expressions.
+                                </span>
+                            </h3>
+                        </div>
+
+                        {/* LINK */}
+                        <Link
+                            href="/paintings"
+                            className="group inline-flex w-fit items-center gap-3 border-b border-[#25221f] pb-2 text-[8px] font-semibold uppercase tracking-[0.28em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48]"
+                        >
+                            Explore All Paintings
+
+                            <ArrowUpRight
+                                size={13}
+                                strokeWidth={1.4}
+                                className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                            />
+                        </Link>
+                    </div>
+                </motion.div>
             </div>
         </section>
+    );
+}
+
+/* =========================================================
+    PAINTING CARD
+========================================================= */
+
+function PaintingCard({
+                          painting,
+                          index,
+                      }: {
+    painting: (typeof paintings)[number];
+    index: number;
+}) {
+    return (
+        <article className="group w-[220px] shrink-0 sm:w-[245px] lg:w-[265px] xl:w-[280px]">
+            <Link
+                href={`/paintings/${painting.slug}`}
+                className="block"
+            >
+                {/* IMAGE */}
+                <div className="relative aspect-[4/5] overflow-hidden bg-[#e5ded3]">
+
+                    <img
+                        src={painting.image}
+                        alt={painting.title}
+                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+                    />
+
+                    {/* NUMBER */}
+                    <div className="absolute left-0 top-0 bg-[#eee7dc] px-4 py-3">
+                        <span className="text-[8px] font-semibold tracking-[0.3em] text-[#8a6a48]">
+                            {String(index + 1).padStart(2, '0')}
+                        </span>
+                    </div>
+
+                    {/* HOVER OVERLAY */}
+                    <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+
+                        <div className="flex w-full items-center justify-between p-5 text-white">
+                            <span className="text-[8px] font-semibold uppercase tracking-[0.25em]">
+                                View Artwork
+                            </span>
+
+                            <ArrowUpRight
+                                size={15}
+                                strokeWidth={1.4}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* CAPTION */}
+                <div className="mt-4 border-t border-[#8a6a48]/20 pt-4">
+
+                    <p className="text-[7px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                        {painting.course}
+                    </p>
+
+                    <div className="mt-2 flex items-start justify-between gap-4">
+
+                        <h3 className="font-serif text-xl font-light leading-tight tracking-[-0.025em] sm:text-2xl">
+                            {painting.title}
+                        </h3>
+
+                        <ArrowUpRight
+                            size={14}
+                            strokeWidth={1.3}
+                            className="mt-1 shrink-0 text-[#8a6a48] transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                        />
+                    </div>
+                </div>
+            </Link>
+        </article>
     );
 }

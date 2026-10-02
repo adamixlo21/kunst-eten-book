@@ -50,6 +50,15 @@ export default function PaintingShow({ painting }: Props) {
             maximumFractionDigits: 0,
         }).format(Number(price));
 
+
+    const paintingImages: Record<string, string> = {
+        'beyond-the-surface': '/images/paintings/beyond-the-surface.jpg',
+        'essence': '/images/paintings/essence.jpg',
+        'the-silent-melody': '/images/paintings/the-silent-melody.jpg',
+        'a-moment-to-savour': '/images/paintings/a-moment-to-savour.jpg',
+        'in-bloom': '/images/paintings/in-bloom.jpg',
+    };
+
     return (
         <BookCartProvider>
             <Head
@@ -93,7 +102,7 @@ export default function PaintingShow({ painting }: Props) {
                                 <div className="relative overflow-hidden bg-[#e8e0d5] shadow-[0_25px_80px_rgba(68,55,40,0.12)]">
                                     {painting.image ? (
                                         <img
-                                            src={`/storage/${painting.image}`}
+                                            src={paintingImages[painting.slug]}
                                             alt={painting.title}
                                             className="h-auto w-full object-contain"
                                         />
