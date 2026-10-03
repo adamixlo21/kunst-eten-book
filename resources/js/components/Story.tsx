@@ -11,7 +11,7 @@ export default function OurStory() {
             id="story"
             className="relative overflow-hidden bg-[#eee7dc] text-[#25221f]"
         >
-            <div className="mx-auto max-w-[1500px] px-6 py-24 sm:px-8 lg:px-16 lg:py-36">
+            <div className="mx-auto max-w-[1500px] px-6 py-24 sm:px-8 lg:px-16 lg:py-32">
 
                 {/* =====================================================
                     CHAPTER HEADER
@@ -59,40 +59,41 @@ export default function OurStory() {
                 {/* =====================================================
                     TITLE
                 ===================================================== */}
-                <div className="pb-24 pt-14 lg:pb-36 lg:pt-20">
-                    <div className="overflow-hidden">
-                        <motion.h2
-                            initial={
-                                reduceMotion
-                                    ? false
-                                    : {
-                                        y: '110%',
-                                    }
-                            }
-                            whileInView={{
-                                y: 0,
-                            }}
-                            viewport={{
-                                once: true,
-                            }}
-                            transition={{
-                                duration: 1.1,
-                                ease,
-                            }}
-                            className="font-serif text-[15vw] font-light leading-[0.8] tracking-[-0.07em] sm:text-[12vw] lg:text-[8rem] xl:text-[10rem]"
-                        >
+                <div className="pb-20 pt-14 lg:pb-28 lg:pt-20">
+                    <motion.h2
+                        initial={
+                            reduceMotion
+                                ? false
+                                : {
+                                    y: '110%',
+                                }
+                        }
+                        whileInView={{
+                            y: 0,
+                        }}
+                        viewport={{
+                            once: true,
+                        }}
+                        transition={{
+                            duration: 1.1,
+                            ease,
+                        }}
+                        className="font-serif font-light"
+                    >
+                        <span className="block text-[15vw] leading-[0.95] tracking-[-0.045em] sm:text-[12vw] lg:text-[8rem] xl:text-[10rem]">
                             Two passions.
-                            <span className="block italic text-[#8a6a48] lg:ml-[13%]">
-                                One journey.
-                            </span>
-                        </motion.h2>
-                    </div>
+                        </span>
+
+                        <span className="mt-2 block text-[15vw] italic leading-[0.95] tracking-[-0.035em] text-[#8a6a48] sm:text-[12vw] lg:ml-[13%] lg:text-[8rem] xl:text-[10rem]">
+                            One journey.
+                        </span>
+                    </motion.h2>
                 </div>
 
                 {/* =====================================================
                     NOUR
                 ===================================================== */}
-                <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:items-end lg:gap-20">
+                <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-20">
 
                     {/* PHOTO */}
                     <motion.div
@@ -116,6 +117,7 @@ export default function OurStory() {
                             duration: 1.1,
                             ease,
                         }}
+                        className="w-full max-w-[520px]"
                     >
                         <div className="overflow-hidden">
                             <motion.img
@@ -138,10 +140,11 @@ export default function OurStory() {
                                 }}
                                 src="/images/nour.jpg"
                                 alt="Nour, artist behind The Taste of Inspiration"
-                                className="aspect-[4/5] w-full object-cover lg:aspect-[5/6]"
+                                className="h-[420px] w-full object-cover sm:h-[500px] lg:h-[560px]"
                             />
                         </div>
 
+                        {/* PHOTO CAPTION */}
                         <div className="mt-4 flex items-start justify-between gap-6">
                             <div>
                                 <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
@@ -186,7 +189,7 @@ export default function OurStory() {
                             delay: 0.1,
                             ease,
                         }}
-                        className="pb-4 lg:pb-16"
+                        className="pb-4"
                     >
                         <div className="mb-8 flex items-center gap-4">
                             <span className="h-px w-10 bg-[#8a6a48]" />
@@ -196,7 +199,7 @@ export default function OurStory() {
                             </span>
                         </div>
 
-                        <blockquote className="font-serif text-4xl font-light leading-[1.05] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+                        <blockquote className="max-w-2xl font-serif text-4xl font-light leading-[1.08] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
                             “Painting gives me
                             <span className="block italic text-[#8a6a48]">
                                 peace, joy
@@ -209,7 +212,7 @@ export default function OurStory() {
                 {/* =====================================================
                     TRANSITION
                 ===================================================== */}
-                <div className="py-24 lg:py-40">
+                <div className="py-16 lg:py-24">
                     <div className="flex items-center gap-5">
                         <span className="text-[8px] uppercase tracking-[0.3em] text-stone-400">
                             Canvas
@@ -254,7 +257,7 @@ export default function OurStory() {
                 {/* =====================================================
                     PATRICK
                 ===================================================== */}
-                <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-end lg:gap-20">
+                <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-20">
 
                     {/* QUOTE */}
                     <motion.div
@@ -278,7 +281,7 @@ export default function OurStory() {
                             duration: 1,
                             ease,
                         }}
-                        className="order-2 pb-4 lg:order-1 lg:pb-16"
+                        className="order-2 pb-4 lg:order-1"
                     >
                         <div className="mb-8 flex items-center gap-4">
                             <span className="h-px w-10 bg-[#8a6a48]" />
@@ -288,7 +291,7 @@ export default function OurStory() {
                             </span>
                         </div>
 
-                        <blockquote className="font-serif text-4xl font-light leading-[1.05] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+                        <blockquote className="max-w-2xl font-serif text-4xl font-light leading-[1.08] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
                             “Cook from
                             <span className="block italic text-[#8a6a48]">
                                 the heart,
@@ -319,7 +322,7 @@ export default function OurStory() {
                             duration: 1.1,
                             ease,
                         }}
-                        className="order-1 lg:order-2"
+                        className="order-1 w-full max-w-[520px] lg:order-2 lg:justify-self-end"
                     >
                         <div className="overflow-hidden">
                             <motion.img
@@ -342,10 +345,11 @@ export default function OurStory() {
                                 }}
                                 src="/images/patrick.jpg"
                                 alt="Patrick, chef behind The Taste of Inspiration"
-                                className="aspect-[4/5] w-full object-cover lg:aspect-[5/6]"
+                                className="h-[420px] w-full object-cover sm:h-[500px] lg:h-[560px]"
                             />
                         </div>
 
+                        {/* PHOTO CAPTION */}
                         <div className="mt-4 flex items-start justify-between gap-6">
                             <div>
                                 <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
@@ -368,75 +372,6 @@ export default function OurStory() {
                     </motion.div>
                 </div>
 
-                {/* =====================================================
-                    CONNECTION
-                ===================================================== */}
-                <motion.div
-                    initial={
-                        reduceMotion
-                            ? false
-                            : {
-                                opacity: 0,
-                                y: 40,
-                            }
-                    }
-                    whileInView={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    viewport={{
-                        once: true,
-                        amount: 0.3,
-                    }}
-                    transition={{
-                        duration: 1,
-                        ease,
-                    }}
-                    className="mt-28 border-t border-[#8a6a48]/25 pt-10 lg:mt-40"
-                >
-                    <div className="grid gap-10 lg:grid-cols-[0.4fr_1.6fr]">
-                        <div>
-                            <p className="text-[9px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
-                                The Connection
-                            </p>
-
-                            <p className="mt-3 text-[8px] uppercase tracking-[0.25em] text-stone-400">
-                                01 / Closing
-                            </p>
-                        </div>
-
-                        <div>
-                            <h3 className="font-serif text-4xl font-light leading-[1.05] tracking-[-0.04em] sm:text-5xl lg:text-7xl">
-                                He creates on a plate.
-                                <span className="block italic text-[#8a6a48]">
-                                    She responds on canvas.
-                                </span>
-                            </h3>
-
-                            <div className="mt-9 flex flex-wrap items-center gap-8">
-                                <p className="max-w-sm text-sm leading-7 text-stone-500">
-                                    Two creative worlds meet in
-                                    <span className="text-stone-800">
-                                        {' '}The Taste of Inspiration.
-                                    </span>
-                                </p>
-
-                                <a
-                                    href="/#journey"
-                                    className="group inline-flex items-center gap-4 border-b border-stone-900 pb-2 text-[9px] font-semibold uppercase tracking-[0.25em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48]"
-                                >
-                                    Discover the Journey
-
-                                    <ArrowDownRight
-                                        size={14}
-                                        strokeWidth={1.5}
-                                        className="transition-transform duration-300 group-hover:translate-x-1 group-hover:translate-y-1"
-                                    />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </motion.div>
             </div>
         </section>
     );
