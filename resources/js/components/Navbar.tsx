@@ -30,13 +30,12 @@ export default function Navbar() {
                     className="group flex items-center gap-3"
                     onClick={() => setMenuOpen(false)}
                 >
-                    {/* Brand symbol */}
-                    <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#8a6a48]/30 bg-white/70 shadow-sm transition duration-300 group-hover:scale-105 group-hover:border-[#8a6a48]">
-                        <div className="absolute h-4 w-4 rounded-full border border-[#8a6a48]/50" />
-
-                        <div className="h-1.5 w-1.5 rounded-full bg-[#8a6a48]" />
-                    </div>
-
+                    {/* Brand logo */}
+                    <img
+                        src="/favicon.png"
+                        alt="The Taste of Inspiration"
+                        className="h-11 w-11 shrink-0 object-contain transition duration-300 group-hover:scale-105"
+                    />
                     {/* Brand text */}
                     <div>
                         <p className="text-xs font-semibold tracking-[0.14em] text-stone-900 uppercase sm:text-sm lg:text-base">
