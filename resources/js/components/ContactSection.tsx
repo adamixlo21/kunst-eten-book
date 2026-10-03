@@ -1,9 +1,13 @@
 import { useForm } from '@inertiajs/react';
-import { ArrowRight, Mail, Phone } from 'lucide-react';
-import { FormEvent, useState } from 'react';
+import { ArrowUpRight, Mail, Phone } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+import { FormEvent, ReactNode, useState } from 'react';
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function ContactSection() {
     const [messageSent, setMessageSent] = useState(false);
+    const reduceMotion = useReducedMotion();
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -29,80 +33,176 @@ export default function ContactSection() {
     return (
         <section
             id="contact"
-            className="relative overflow-hidden bg-[#f7f3ec] px-6 py-24 sm:py-32"
+            className="relative overflow-hidden bg-[#f7f3ec] text-[#25221f]"
         >
-            {/* Background decoration */}
-            <div className="pointer-events-none absolute -right-40 top-10 h-96 w-96 rounded-full bg-[#8a6a48]/5 blur-3xl" />
+            {/* =====================================================
+                BACKGROUND DETAIL
+            ===================================================== */}
+            <div className="pointer-events-none absolute inset-0">
+                <div className="absolute -left-40 top-32 h-[380px] w-[380px] rounded-full border border-[#8a6a48]/10" />
 
-            <div className="relative mx-auto max-w-6xl">
-                <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
+                <div className="absolute -left-20 top-52 h-[200px] w-[200px] rounded-full border border-[#8a6a48]/10" />
+            </div>
 
-                    {/* CONTACT INFORMATION */}
-                    <div>
-                        <div className="flex items-center gap-4">
-                            <span className="h-px w-10 bg-[#8a6a48]" />
+            <div className="relative mx-auto max-w-[1500px] px-6 py-20 sm:px-8 lg:px-16 lg:py-28">
+                {/* =====================================================
+                    SECTION HEADER
+                ===================================================== */}
+                <motion.div
+                    initial={
+                        reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                y: 20,
+                            }
+                    }
+                    whileInView={{
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    viewport={{
+                        once: true,
+                        amount: 0.4,
+                    }}
+                    transition={{
+                        duration: 0.9,
+                        ease,
+                    }}
+                    className="flex items-center justify-between border-b border-[#8a6a48]/25 pb-4"
+                >
+                    <div className="flex items-center gap-4">
+                        <span className="text-[9px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
+                            Contact
+                        </span>
 
-                            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                Contact
-                            </p>
-                        </div>
+                        <span className="hidden h-px w-10 bg-[#8a6a48]/40 sm:block" />
 
-                        <h2 className="mt-6 max-w-md font-serif text-4xl font-normal leading-tight text-stone-900 sm:text-5xl">
-                            Let&apos;s start a
+                        <span className="hidden text-[9px] uppercase tracking-[0.28em] text-stone-400 sm:block">
+                            Enquiries & Collaborations
+                        </span>
+                    </div>
+
+                    <span className="text-[8px] uppercase tracking-[0.28em] text-stone-400">
+                        Get in touch
+                    </span>
+                </motion.div>
+
+                {/* =====================================================
+                    TITLE
+                ===================================================== */}
+                <motion.div
+                    initial={
+                        reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                y: 30,
+                            }
+                    }
+                    whileInView={{
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    viewport={{
+                        once: true,
+                        amount: 0.2,
+                    }}
+                    transition={{
+                        duration: 1,
+                        ease,
+                    }}
+                    className="py-12 lg:py-16"
+                >
+                    <p className="mb-5 text-[8px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
+                        Start a conversation
+                    </p>
+
+                    <h2 className="max-w-5xl font-serif text-[12vw] font-light leading-[0.9] tracking-[-0.045em] sm:text-[9vw] lg:text-[6.5rem] xl:text-[7.5rem]">
+                        Let&apos;s talk.
+                    </h2>
+                </motion.div>
+
+                {/* =====================================================
+                    CONTENT
+                ===================================================== */}
+                <div className="grid border-t border-[#8a6a48]/25 lg:grid-cols-[0.72fr_1.28fr]">
+                    {/* =================================================
+                        LEFT
+                    ================================================= */}
+                    <motion.div
+                        initial={
+                            reduceMotion
+                                ? false
+                                : {
+                                    opacity: 0,
+                                    y: 25,
+                                }
+                        }
+                        whileInView={{
+                            opacity: 1,
+                            y: 0,
+                        }}
+                        viewport={{
+                            once: true,
+                            amount: 0.25,
+                        }}
+                        transition={{
+                            duration: 0.9,
+                            ease,
+                        }}
+                        className="py-10 lg:pr-16 lg:py-14"
+                    >
+                        <p className="max-w-sm font-serif text-2xl font-light leading-[1.2] tracking-[-0.025em] sm:text-3xl">
+                            Questions about the book,
                             <span className="block italic text-[#8a6a48]">
-                                conversation.
+                                the art or a collaboration?
                             </span>
-                        </h2>
-
-                        <p className="mt-6 max-w-md text-base leading-8 text-stone-600">
-                            Have a question about The Taste of Inspiration,
-                            your order, one of the original artworks, or a
-                            possible collaboration? We would love to hear from
-                            you.
                         </p>
 
-                        <div className="mt-10 space-y-6 border-t border-stone-300 pt-8">
+                        <p className="mt-6 max-w-sm text-sm leading-7 text-stone-500">
+                            Send us a message and we&apos;ll get back to you as
+                            soon as possible.
+                        </p>
 
-                            {/* Email */}
-                            <div className="flex items-start gap-4">
-                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white">
-                                    <Mail
-                                        size={18}
-                                        className="text-[#8a6a48]"
-                                    />
-                                </div>
+                        {/* CONTACT DETAILS */}
+                        <div className="mt-10 space-y-7 border-t border-[#8a6a48]/20 pt-8">
+                            <div className="group flex items-start gap-4">
+                                <Mail
+                                    size={17}
+                                    strokeWidth={1.4}
+                                    className="mt-0.5 text-[#8a6a48]"
+                                />
 
                                 <div>
-                                    <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400">
+                                    <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-stone-400">
                                         Email
                                     </p>
 
                                     <a
                                         href="mailto:info@jouwdomein.nl"
-                                        className="mt-1 block text-sm text-stone-800 transition hover:text-[#8a6a48]"
+                                        className="mt-2 inline-block text-sm text-[#25221f] transition-colors duration-300 hover:text-[#8a6a48]"
                                     >
                                         info@jouwdomein.nl
                                     </a>
                                 </div>
                             </div>
 
-                            {/* Phone */}
-                            <div className="flex items-start gap-4">
-                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white">
-                                    <Phone
-                                        size={18}
-                                        className="text-[#8a6a48]"
-                                    />
-                                </div>
+                            <div className="group flex items-start gap-4">
+                                <Phone
+                                    size={17}
+                                    strokeWidth={1.4}
+                                    className="mt-0.5 text-[#8a6a48]"
+                                />
 
                                 <div>
-                                    <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400">
+                                    <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-stone-400">
                                         Phone
                                     </p>
 
                                     <a
                                         href="tel:+31600000000"
-                                        className="mt-1 block text-sm text-stone-800 transition hover:text-[#8a6a48]"
+                                        className="mt-2 inline-block text-sm text-[#25221f] transition-colors duration-300 hover:text-[#8a6a48]"
                                     >
                                         +31 6 00 00 00 00
                                     </a>
@@ -110,61 +210,96 @@ export default function ContactSection() {
                             </div>
                         </div>
 
-                        {/* Small message */}
-                        <div className="mt-12 border-l-2 border-[#8a6a48] pl-6">
-                            <p className="max-w-sm font-serif text-xl italic leading-8 text-stone-600">
-                                “Where flavour becomes colour, and food becomes
-                                art.”
+                        {/* QUOTE */}
+                        <div className="mt-12">
+                            <span className="block h-px w-10 bg-[#8a6a48]" />
+
+                            <p className="mt-5 max-w-xs font-serif text-lg italic leading-7 text-stone-500">
+                                “Where flavour becomes colour,
+                                <span className="block">
+                                    and food becomes art.”
+                                </span>
                             </p>
                         </div>
-                    </div>
+                    </motion.div>
 
-                    {/* CONTACT FORM */}
-                    <div className="border border-stone-300 bg-white p-7 shadow-[0_20px_60px_rgba(68,55,40,0.05)] sm:p-10">
+                    {/* =================================================
+                        FORM
+                    ================================================= */}
+                    <motion.div
+                        initial={
+                            reduceMotion
+                                ? false
+                                : {
+                                    opacity: 0,
+                                    y: 30,
+                                }
+                        }
+                        whileInView={{
+                            opacity: 1,
+                            y: 0,
+                        }}
+                        viewport={{
+                            once: true,
+                            amount: 0.15,
+                        }}
+                        transition={{
+                            duration: 1,
+                            delay: 0.1,
+                            ease,
+                        }}
+                        className="border-t border-[#8a6a48]/25 py-10 lg:border-l lg:border-t-0 lg:py-14 lg:pl-16"
+                    >
+                        {/* FORM HEADER */}
+                        <div className="mb-9 flex items-end justify-between border-b border-[#8a6a48]/20 pb-5">
+                            <div>
+                                <p className="text-[8px] font-semibold uppercase tracking-[0.32em] text-[#8a6a48]">
+                                    Send a message
+                                </p>
 
-                        <div className="mb-8">
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
-                                Send a Message
-                            </p>
+                                <h3 className="mt-3 font-serif text-3xl font-light tracking-[-0.025em] sm:text-4xl">
+                                    How can we help?
+                                </h3>
+                            </div>
 
-                            <h3 className="mt-3 font-serif text-3xl text-stone-900">
-                                How can we help?
-                            </h3>
+                            <ArrowUpRight
+                                size={20}
+                                strokeWidth={1.2}
+                                className="hidden text-[#8a6a48] sm:block"
+                            />
                         </div>
 
                         {/* SUCCESS MESSAGE */}
                         {messageSent && (
-                            <div className="mb-8 border border-[#8a6a48]/30 bg-[#f7f3ec] p-6">
-                                <div className="flex items-start gap-4">
+                            <motion.div
+                                initial={{
+                                    opacity: 0,
+                                    y: 10,
+                                }}
+                                animate={{
+                                    opacity: 1,
+                                    y: 0,
+                                }}
+                                className="mb-8 border-l-2 border-[#66765d] bg-[#66765d]/5 px-5 py-4"
+                            >
+                                <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#66765d]">
+                                    Message sent
+                                </p>
 
-                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#66765d] text-white">
-                                        ✓
-                                    </div>
+                                <p className="mt-2 font-serif text-xl text-[#25221f]">
+                                    Thank you for getting in touch.
+                                </p>
 
-                                    <div>
-                                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#66765d]">
-                                            Message Sent
-                                        </p>
-
-                                        <h3 className="mt-2 font-serif text-xl text-stone-900">
-                                            Thank you for getting in touch.
-                                        </h3>
-
-                                        <p className="mt-2 text-sm leading-6 text-stone-600">
-                                            We have received your message and
-                                            will get back to you as soon as
-                                            possible.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                                <p className="mt-2 text-sm leading-6 text-stone-500">
+                                    We have received your message and will get
+                                    back to you as soon as possible.
+                                </p>
+                            </motion.div>
                         )}
 
-                        <form onSubmit={submit} className="space-y-6">
-
+                        <form onSubmit={submit} className="space-y-7">
                             {/* NAME + EMAIL */}
-                            <div className="grid gap-6 sm:grid-cols-2">
-
+                            <div className="grid gap-7 sm:grid-cols-2">
                                 <Field
                                     label="Name"
                                     error={errors.name}
@@ -173,10 +308,7 @@ export default function ContactSection() {
                                         type="text"
                                         value={data.name}
                                         onChange={(e) =>
-                                            setData(
-                                                'name',
-                                                e.target.value,
-                                            )
+                                            setData('name', e.target.value)
                                         }
                                         className={inputClass}
                                         placeholder="Your name"
@@ -191,10 +323,7 @@ export default function ContactSection() {
                                         type="email"
                                         value={data.email}
                                         onChange={(e) =>
-                                            setData(
-                                                'email',
-                                                e.target.value,
-                                            )
+                                            setData('email', e.target.value)
                                         }
                                         className={inputClass}
                                         placeholder="name@email.com"
@@ -212,10 +341,7 @@ export default function ContactSection() {
                                     type="tel"
                                     value={data.phone}
                                     onChange={(e) =>
-                                        setData(
-                                            'phone',
-                                            e.target.value,
-                                        )
+                                        setData('phone', e.target.value)
                                     }
                                     className={inputClass}
                                     placeholder="+31 6 12345678"
@@ -230,36 +356,16 @@ export default function ContactSection() {
                                 <select
                                     value={data.subject}
                                     onChange={(e) =>
-                                        setData(
-                                            'subject',
-                                            e.target.value,
-                                        )
+                                        setData('subject', e.target.value)
                                     }
                                     className={inputClass}
                                 >
-                                    <option>
-                                        Question about the book
-                                    </option>
-
-                                    <option>
-                                        Question about my order
-                                    </option>
-
-                                    <option>
-                                        Question about an artwork
-                                    </option>
-
-                                    <option>
-                                        Collaboration
-                                    </option>
-
-                                    <option>
-                                        Press & Media
-                                    </option>
-
-                                    <option>
-                                        Other
-                                    </option>
+                                    <option>Question about the book</option>
+                                    <option>Question about my order</option>
+                                    <option>Question about an artwork</option>
+                                    <option>Collaboration</option>
+                                    <option>Press & Media</option>
+                                    <option>Other</option>
                                 </select>
                             </Field>
 
@@ -269,13 +375,10 @@ export default function ContactSection() {
                                 error={errors.message}
                             >
                                 <textarea
-                                    rows={6}
+                                    rows={5}
                                     value={data.message}
                                     onChange={(e) =>
-                                        setData(
-                                            'message',
-                                            e.target.value,
-                                        )
+                                        setData('message', e.target.value)
                                     }
                                     className={`${inputClass} resize-none`}
                                     placeholder="How can we help you?"
@@ -283,9 +386,8 @@ export default function ContactSection() {
                             </Field>
 
                             {/* SUBMIT */}
-                            <div className="flex flex-col gap-4 border-t border-stone-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
-
-                                <p className="max-w-xs text-xs leading-5 text-stone-400">
+                            <div className="flex flex-col gap-5 border-t border-[#8a6a48]/20 pt-7 sm:flex-row sm:items-center sm:justify-between">
+                                <p className="max-w-xs text-[11px] leading-5 text-stone-400">
                                     We&apos;ll only use your information to
                                     respond to your message.
                                 </p>
@@ -293,22 +395,23 @@ export default function ContactSection() {
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="group flex items-center justify-center gap-3 bg-stone-900 px-7 py-4 text-sm font-medium text-white transition hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="group inline-flex items-center justify-center gap-4 border-b border-[#25221f] pb-2 text-[9px] font-semibold uppercase tracking-[0.25em] text-[#25221f] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-40"
                                 >
                                     {processing
                                         ? 'Sending...'
                                         : 'Send Message'}
 
                                     {!processing && (
-                                        <ArrowRight
-                                            size={16}
-                                            className="transition-transform group-hover:translate-x-1"
+                                        <ArrowUpRight
+                                            size={14}
+                                            strokeWidth={1.5}
+                                            className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
                                         />
                                     )}
                                 </button>
                             </div>
                         </form>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>
@@ -316,7 +419,7 @@ export default function ContactSection() {
 }
 
 const inputClass =
-    'w-full border border-stone-300 bg-white px-4 py-3.5 text-sm text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-[#8a6a48] focus:ring-1 focus:ring-[#8a6a48]';
+    'w-full border-0 border-b border-stone-300 bg-transparent px-0 py-3 text-sm text-[#25221f] outline-none transition-colors duration-300 placeholder:text-stone-400 focus:border-[#8a6a48] focus:ring-0';
 
 function Field({
                    label,
@@ -327,17 +430,17 @@ function Field({
     label: string;
     optional?: boolean;
     error?: string;
-    children: React.ReactNode;
+    children: ReactNode;
 }) {
     return (
         <div>
-            <div className="mb-2 flex items-center justify-between">
-                <label className="text-sm font-medium text-stone-800">
+            <div className="mb-1 flex items-center justify-between">
+                <label className="text-[9px] font-semibold uppercase tracking-[0.22em] text-stone-500">
                     {label}
                 </label>
 
                 {optional && (
-                    <span className="text-xs text-stone-400">
+                    <span className="text-[8px] uppercase tracking-[0.2em] text-stone-400">
                         Optional
                     </span>
                 )}

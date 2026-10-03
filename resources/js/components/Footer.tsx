@@ -14,58 +14,6 @@ export default function Footer() {
             <div className="px-6 py-16 sm:py-20 lg:px-10">
                 <div className="mx-auto max-w-7xl">
 
-                    {/* TOP BRAND AREA */}
-                    <div className="grid gap-12 border-b border-stone-300/70 pb-14 lg:grid-cols-[1.4fr_0.6fr] lg:items-end">
-
-                        <div>
-                            {/* BRAND */}
-                            <div className="flex items-center gap-4">
-                                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#8a6a48]/30 bg-white/60">
-                                    <div className="absolute h-5 w-5 rounded-full border border-[#8a6a48]/50" />
-                                    <div className="h-1.5 w-1.5 rounded-full bg-[#8a6a48]" />
-                                </div>
-
-                                <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a6a48]">
-                                        The Taste of Inspiration
-                                    </p>
-
-                                    <p className="mt-1 text-[9px] uppercase tracking-[0.22em] text-stone-400">
-                                        Food × Art × Inspiration
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* HEADING */}
-                            <h2 className="mt-8 max-w-2xl font-serif text-4xl font-light leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-                                Where flavour becomes colour,
-                                <span className="block italic text-[#8a6a48]">
-                                    and food becomes art.
-                                </span>
-                            </h2>
-                        </div>
-
-                        <div className="max-w-md lg:justify-self-end">
-                            <p className="text-sm leading-7 text-stone-500">
-                                A sensory journey where culinary creation,
-                                painting and personal stories come together
-                                through the work of Patrick and Nour.
-                            </p>
-
-                            <Link
-                                href="/paintings"
-                                className="group mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a6a48]"
-                            >
-                                Explore the paintings
-
-                                <ArrowUpRight
-                                    size={15}
-                                    className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                                />
-                            </Link>
-                        </div>
-                    </div>
-
                     {/* LINKS AREA */}
                     <div className="grid gap-12 py-14 sm:grid-cols-2 lg:grid-cols-4">
 
