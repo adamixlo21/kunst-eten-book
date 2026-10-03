@@ -45,7 +45,7 @@ export default function PaintingsSection() {
             id="paintings"
             className="relative overflow-hidden bg-[#eee7dc] text-[#25221f]"
         >
-            <div className="mx-auto max-w-[1500px] px-6 py-24 sm:px-8 lg:px-16 lg:py-28">
+            <div className="mx-auto max-w-[1500px] px-5 py-16 sm:px-8 sm:py-20 lg:px-16 lg:py-28">
 
                 {/* =====================================================
                     CHAPTER HEADER
@@ -56,7 +56,7 @@ export default function PaintingsSection() {
                             ? false
                             : {
                                 opacity: 0,
-                                y: 20,
+                                y: 15,
                             }
                     }
                     whileInView={{
@@ -65,27 +65,25 @@ export default function PaintingsSection() {
                     }}
                     viewport={{
                         once: true,
-                        amount: 0.4,
+                        amount: 0.3,
                     }}
                     transition={{
-                        duration: 0.9,
+                        duration: 0.8,
                         ease,
                     }}
-                    className="flex items-center justify-between border-b border-[#8a6a48]/25 pb-4"
+                    className="flex items-start justify-between gap-5 border-b border-[#8a6a48]/25 pb-4"
                 >
-                    <div className="flex items-center gap-4">
-                        <span className="text-[9px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
+                    <div>
+                        <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#8a6a48] sm:text-[9px] sm:tracking-[0.35em]">
                             03 / The Collection
-                        </span>
+                        </p>
 
-                        <span className="hidden h-px w-10 bg-[#8a6a48]/40 sm:block" />
-
-                        <span className="hidden text-[9px] uppercase tracking-[0.28em] text-stone-400 sm:block">
+                        <p className="mt-1.5 text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px] sm:tracking-[0.28em]">
                             Five Original Paintings
-                        </span>
+                        </p>
                     </div>
 
-                    <span className="text-[8px] uppercase tracking-[0.28em] text-stone-400">
+                    <span className="shrink-0 text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px] sm:tracking-[0.28em]">
                         01 — 05
                     </span>
                 </motion.div>
@@ -99,7 +97,7 @@ export default function PaintingsSection() {
                             ? false
                             : {
                                 opacity: 0,
-                                y: 30,
+                                y: 25,
                             }
                     }
                     whileInView={{
@@ -108,33 +106,32 @@ export default function PaintingsSection() {
                     }}
                     viewport={{
                         once: true,
-                        amount: 0.4,
+                        amount: 0.3,
                     }}
                     transition={{
                         duration: 0.9,
                         ease,
                     }}
-                    className="pb-16 pt-16 lg:pb-20 lg:pt-20"
+                    className="py-12 sm:py-16 lg:py-20"
                 >
-                    <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-
+                    <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-8">
                         <div>
-                            <p className="mb-5 text-[8px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
+                            <p className="mb-3 text-[7px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48] sm:mb-5 sm:text-[8px] sm:tracking-[0.35em]">
                                 The Art
                             </p>
 
-                            <h2 className="font-serif text-5xl font-light leading-[0.9] tracking-[-0.055em] sm:text-6xl lg:text-7xl xl:text-8xl">
+                            <h2 className="font-serif text-[13vw] font-light leading-[0.9] tracking-[-0.055em] sm:text-6xl lg:text-7xl xl:text-8xl">
                                 The
-                                <span className="ml-3 italic text-[#8a6a48] sm:ml-5">
+                                <span className="ml-2 italic text-[#8a6a48] sm:ml-4 lg:ml-5">
                                     Collection.
                                 </span>
                             </h2>
                         </div>
 
-                        <div className="flex items-center gap-5">
-                            <span className="h-px w-10 bg-[#8a6a48]/50" />
+                        <div className="flex items-center gap-3 sm:gap-5">
+                            <span className="h-px w-7 bg-[#8a6a48]/50 sm:w-10" />
 
-                            <p className="text-[8px] uppercase tracking-[0.3em] text-stone-400">
+                            <p className="text-[7px] uppercase tracking-[0.22em] text-stone-400 sm:text-[8px] sm:tracking-[0.3em]">
                                 Food → Feeling → Art
                             </p>
                         </div>
@@ -142,16 +139,15 @@ export default function PaintingsSection() {
                 </motion.div>
 
                 {/* =====================================================
-                    AUTOMATIC MOVING GALLERY
-                    LEFT → RIGHT
+                    MOVING GALLERY
+                    Same gallery on every device
                 ===================================================== */}
                 <div className="relative overflow-hidden">
 
-                    {/* LEFT FADE */}
-                    <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-[#eee7dc] via-[#eee7dc]/70 to-transparent sm:w-24" />
+                    {/* EDGE FADES */}
+                    <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-6 bg-gradient-to-r from-[#eee7dc] via-[#eee7dc]/70 to-transparent sm:w-16 lg:w-24" />
 
-                    {/* RIGHT FADE */}
-                    <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 bg-gradient-to-l from-[#eee7dc] via-[#eee7dc]/70 to-transparent sm:w-24" />
+                    <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-6 bg-gradient-to-l from-[#eee7dc] via-[#eee7dc]/70 to-transparent sm:w-16 lg:w-24" />
 
                     <motion.div
                         initial={{
@@ -178,7 +174,7 @@ export default function PaintingsSection() {
                         className="flex w-max"
                     >
                         {/* FIRST COPY */}
-                        <div className="flex shrink-0 gap-6 pr-6 lg:gap-8 lg:pr-8">
+                        <div className="flex shrink-0 gap-4 pr-4 sm:gap-6 sm:pr-6 lg:gap-8 lg:pr-8">
                             {paintings.map((painting, index) => (
                                 <PaintingCard
                                     key={`first-${painting.slug}`}
@@ -188,10 +184,8 @@ export default function PaintingsSection() {
                             ))}
                         </div>
 
-                        {/* SECOND COPY
-                            Makes the animation loop seamlessly
-                        */}
-                        <div className="flex shrink-0 gap-6 pr-6 lg:gap-8 lg:pr-8">
+                        {/* SECOND COPY */}
+                        <div className="flex shrink-0 gap-4 pr-4 sm:gap-6 sm:pr-6 lg:gap-8 lg:pr-8">
                             {paintings.map((painting, index) => (
                                 <PaintingCard
                                     key={`second-${painting.slug}`}
@@ -221,34 +215,31 @@ export default function PaintingsSection() {
                     }}
                     viewport={{
                         once: true,
-                        amount: 0.4,
+                        amount: 0.3,
                     }}
                     transition={{
                         duration: 0.9,
                         ease,
                     }}
-                    className="mt-16 border-t border-[#8a6a48]/25 pt-8"
+                    className="mt-12 border-t border-[#8a6a48]/25 pt-7 sm:mt-16 sm:pt-8 lg:mt-20"
                 >
-                    <div className="flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
-
-                        {/* LEFT */}
+                    <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
                         <div>
-                            <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-stone-400">
+                            <p className="text-[7px] font-semibold uppercase tracking-[0.26em] text-stone-400 sm:text-[8px] sm:tracking-[0.3em]">
                                 03 / The Collection
                             </p>
 
-                            <h3 className="mt-3 font-serif text-3xl font-light tracking-[-0.03em] sm:text-4xl">
+                            <h3 className="mt-3 max-w-xl font-serif text-[1.9rem] font-light leading-[1.05] tracking-[-0.03em] sm:text-4xl">
                                 Five moments.
-                                <span className="ml-2 italic text-[#8a6a48]">
+                                <span className="block italic text-[#8a6a48] sm:ml-2 sm:inline">
                                     Five expressions.
                                 </span>
                             </h3>
                         </div>
 
-                        {/* LINK */}
                         <Link
                             href="/paintings"
-                            className="group inline-flex w-fit items-center gap-3 border-b border-[#25221f] pb-2 text-[8px] font-semibold uppercase tracking-[0.28em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48]"
+                            className="group inline-flex w-fit items-center gap-3 border-b border-[#25221f] pb-2 text-[8px] font-semibold uppercase tracking-[0.24em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48] sm:tracking-[0.28em]"
                         >
                             Explore All Paintings
 
@@ -277,14 +268,13 @@ function PaintingCard({
     index: number;
 }) {
     return (
-        <article className="group w-[220px] shrink-0 sm:w-[245px] lg:w-[265px] xl:w-[280px]">
+        <article className="group w-[185px] shrink-0 sm:w-[230px] lg:w-[265px] xl:w-[280px]">
             <Link
                 href={`/paintings/${painting.slug}`}
                 className="block"
             >
                 {/* IMAGE */}
                 <div className="relative aspect-[4/5] overflow-hidden bg-[#e5ded3]">
-
                     <img
                         src={painting.image}
                         alt={painting.title}
@@ -292,22 +282,21 @@ function PaintingCard({
                     />
 
                     {/* NUMBER */}
-                    <div className="absolute left-0 top-0 bg-[#eee7dc] px-4 py-3">
-                        <span className="text-[8px] font-semibold tracking-[0.3em] text-[#8a6a48]">
+                    <div className="absolute left-0 top-0 bg-[#eee7dc] px-3 py-2.5 sm:px-4 sm:py-3">
+                        <span className="text-[7px] font-semibold tracking-[0.25em] text-[#8a6a48] sm:text-[8px] sm:tracking-[0.3em]">
                             {String(index + 1).padStart(2, '0')}
                         </span>
                     </div>
 
-                    {/* HOVER OVERLAY */}
+                    {/* HOVER */}
                     <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-
-                        <div className="flex w-full items-center justify-between p-5 text-white">
-                            <span className="text-[8px] font-semibold uppercase tracking-[0.25em]">
+                        <div className="flex w-full items-center justify-between p-4 text-white sm:p-5">
+                            <span className="text-[7px] font-semibold uppercase tracking-[0.22em] sm:text-[8px] sm:tracking-[0.25em]">
                                 View Artwork
                             </span>
 
                             <ArrowUpRight
-                                size={15}
+                                size={14}
                                 strokeWidth={1.4}
                             />
                         </div>
@@ -315,20 +304,18 @@ function PaintingCard({
                 </div>
 
                 {/* CAPTION */}
-                <div className="mt-4 border-t border-[#8a6a48]/20 pt-4">
-
-                    <p className="text-[7px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                <div className="mt-3 border-t border-[#8a6a48]/20 pt-3 sm:mt-4 sm:pt-4">
+                    <p className="text-[7px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48] sm:tracking-[0.3em]">
                         {painting.course}
                     </p>
 
-                    <div className="mt-2 flex items-start justify-between gap-4">
-
-                        <h3 className="font-serif text-xl font-light leading-tight tracking-[-0.025em] sm:text-2xl">
+                    <div className="mt-2 flex items-start justify-between gap-3 sm:gap-4">
+                        <h3 className="font-serif text-lg font-light leading-tight tracking-[-0.025em] sm:text-2xl">
                             {painting.title}
                         </h3>
 
                         <ArrowUpRight
-                            size={14}
+                            size={13}
                             strokeWidth={1.3}
                             className="mt-1 shrink-0 text-[#8a6a48] transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
                         />

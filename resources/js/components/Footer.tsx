@@ -1,183 +1,183 @@
 import { Link } from '@inertiajs/react';
-import {
-    ArrowUpRight,
-    Instagram,
-    Mail,
-    MapPin,
-} from 'lucide-react';
+import { ArrowUpRight, Instagram, Mail } from 'lucide-react';
 
 export default function Footer() {
     return (
-        <footer className="border-t border-stone-200 bg-[#f3eee6] text-stone-900">
+        <footer className="bg-[#25221f] text-[#f7f3ec]">
+            <div className="mx-auto max-w-[1500px] px-5 py-12 sm:px-8 sm:py-16 lg:px-16 lg:py-20">
 
-            {/* MAIN FOOTER */}
-            <div className="px-6 py-16 sm:py-20 lg:px-10">
-                <div className="mx-auto max-w-7xl">
+                {/* =====================================================
+                    TOP
+                ===================================================== */}
+                <div className="border-b border-white/15 pb-10 lg:pb-14">
+                    <div className="grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-end">
 
-                    {/* LINKS AREA */}
-                    <div className="grid gap-12 py-14 sm:grid-cols-2 lg:grid-cols-4">
-
-                        {/* EXPLORE */}
+                        {/* BRAND */}
                         <div>
-                            <FooterTitle>Explore</FooterTitle>
+                            <p className="text-[8px] font-semibold uppercase tracking-[0.35em] text-[#b69773]">
+                                Food × Art × Inspiration
+                            </p>
 
-                            <nav className="mt-6 flex flex-col items-start gap-4">
-                                <FooterAnchor href="/#story">
-                                    Our Story
-                                </FooterAnchor>
-
-                                <FooterAnchor href="/#journey">
-                                    The Journey
-                                </FooterAnchor>
-
-                                <Link
-                                    href="/paintings"
-                                    className="text-sm text-stone-600 transition-colors duration-200 hover:text-[#8a6a48]"
-                                >
-                                    Paintings
-                                </Link>
-
-                                <FooterAnchor href="/#book">
-                                    The Book
-                                </FooterAnchor>
-
-                                <FooterAnchor href="/#contact">
-                                    Contact
-                                </FooterAnchor>
-                            </nav>
-                        </div>
-
-                        {/* THE EXPERIENCE */}
-                        <div>
-                            <FooterTitle>The Experience</FooterTitle>
-
-                            <div className="mt-6 space-y-3">
-                                <p className="font-serif text-xl italic text-stone-700">
-                                    Look.
-                                </p>
-
-                                <p className="font-serif text-xl italic text-stone-700">
-                                    Feel.
-                                </p>
-
-                                <p className="font-serif text-xl italic text-stone-700">
-                                    Taste.
-                                </p>
-
-                                <p className="font-serif text-xl italic text-stone-700">
-                                    Create.
-                                </p>
-
-                                <p className="font-serif text-xl italic text-[#8a6a48]">
-                                    Be inspired.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* CONTACT */}
-                        <div>
-                            <FooterTitle>Contact</FooterTitle>
-
-                            <div className="mt-6 flex flex-col items-start gap-5">
-                                <a
-                                    href="mailto:info@kunsteten.nl"
-                                    className="group flex items-center gap-3 text-sm text-stone-600 transition hover:text-[#8a6a48]"
-                                >
-                                    <span className="flex h-8 w-8 items-center justify-center rounded-full border border-stone-300 bg-white/50 transition group-hover:border-[#8a6a48]/40">
-                                        <Mail
-                                            size={14}
-                                            className="text-[#8a6a48]"
-                                        />
-                                    </span>
-
-                                    info@kunsteten.nl
-                                </a>
-
-                                <a
-                                    href="#"
-                                    aria-label="Instagram"
-                                    className="group flex items-center gap-3 text-sm text-stone-600 transition hover:text-[#8a6a48]"
-                                >
-                                    <span className="flex h-8 w-8 items-center justify-center rounded-full border border-stone-300 bg-white/50 transition group-hover:border-[#8a6a48]/40">
-                                        <Instagram
-                                            size={14}
-                                            className="text-[#8a6a48]"
-                                        />
-                                    </span>
-
-                                    Instagram
-                                </a>
-                            </div>
-                        </div>
-
-                        {/* LOCATION */}
-                        <div>
-                            <FooterTitle>Location</FooterTitle>
-
-                            <div className="mt-6 flex items-start gap-3">
-                                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-stone-300 bg-white/50">
-                                    <MapPin
-                                        size={14}
-                                        className="text-[#8a6a48]"
-                                    />
+                            <h2 className="mt-5 max-w-3xl font-serif text-[11vw] font-light leading-[0.9] tracking-[-0.045em] sm:text-6xl lg:text-7xl xl:text-8xl">
+                                The Taste
+                                <span className="block italic text-[#b69773]">
+                                    of Inspiration.
                                 </span>
+                            </h2>
+                        </div>
 
-                                <div className="text-sm leading-7 text-stone-600">
-                                    <p className="font-medium text-stone-800">
-                                        The Taste of Inspiration
-                                    </p>
+                        {/* TAGLINE */}
+                        <div className="lg:justify-self-end">
+                            <p className="max-w-xs font-serif text-xl font-light leading-[1.3] text-stone-300 lg:text-2xl">
+                                Where flavour becomes colour,
+                                <span className="block italic text-[#b69773]">
+                                    and food becomes art.
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-                                    <p>Street Name 12</p>
-                                    <p>1234 AB City</p>
-                                    <p>The Netherlands</p>
-                                </div>
-                            </div>
+                {/* =====================================================
+                    LINKS
+                ===================================================== */}
+                <div className="grid grid-cols-2 gap-x-8 gap-y-10 py-10 sm:grid-cols-3 lg:py-14">
+
+                    {/* EXPLORE */}
+                    <div>
+                        <FooterTitle>Explore</FooterTitle>
+
+                        <nav className="mt-5 flex flex-col items-start gap-3">
+                            <FooterAnchor href="/#story">
+                                Our Story
+                            </FooterAnchor>
+
+                            <FooterAnchor href="/#journey">
+                                The Journey
+                            </FooterAnchor>
+
+                            <Link
+                                href="/paintings"
+                                className="text-sm text-stone-400 transition-colors duration-300 hover:text-[#b69773]"
+                            >
+                                Paintings
+                            </Link>
+
+                            <FooterAnchor href="/#book">
+                                The Book
+                            </FooterAnchor>
+                        </nav>
+                    </div>
+
+                    {/* CONTACT */}
+                    <div>
+                        <FooterTitle>Contact</FooterTitle>
+
+                        <div className="mt-5 flex flex-col items-start gap-4">
+                            <a
+                                href="mailto:info@kunsteten.nl"
+                                className="group flex items-center gap-2.5 text-sm text-stone-400 transition-colors duration-300 hover:text-[#b69773]"
+                            >
+                                <Mail
+                                    size={14}
+                                    strokeWidth={1.4}
+                                />
+
+                                Email
+                            </a>
+
+                            <a
+                                href="#"
+                                aria-label="Instagram"
+                                className="group flex items-center gap-2.5 text-sm text-stone-400 transition-colors duration-300 hover:text-[#b69773]"
+                            >
+                                <Instagram
+                                    size={14}
+                                    strokeWidth={1.4}
+                                />
+
+                                Instagram
+                            </a>
+
+                            <a
+                                href="/#contact"
+                                className="group mt-2 inline-flex items-center gap-2 border-b border-white/30 pb-1.5 text-[8px] font-semibold uppercase tracking-[0.25em] text-stone-300 transition-colors duration-300 hover:border-[#b69773] hover:text-[#b69773]"
+                            >
+                                Get in touch
+
+                                <ArrowUpRight
+                                    size={12}
+                                    strokeWidth={1.5}
+                                    className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                                />
+                            </a>
                         </div>
                     </div>
 
-                    {/* BOTTOM */}
-                    <div className="flex flex-col gap-6 border-t border-stone-300/70 pt-7 text-xs text-stone-400 md:flex-row md:items-center md:justify-between">
+                    {/* EXPERIENCE */}
+                    <div className="col-span-2 sm:col-span-1">
+                        <FooterTitle>The Experience</FooterTitle>
 
-                        <p>
+                        <p className="mt-5 max-w-[220px] font-serif text-xl font-light italic leading-[1.4] text-stone-400">
+                            Look.
+                            <br />
+                            Feel.
+                            <br />
+                            Taste.
+                            <br />
+                            <span className="text-[#b69773]">
+                                Be inspired.
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                {/* =====================================================
+                    BOTTOM
+                ===================================================== */}
+                <div className="border-t border-white/15 pt-6">
+                    <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+
+                        <p className="text-[9px] leading-5 text-stone-500">
                             © {new Date().getFullYear()} The Taste of Inspiration.
-                            All rights reserved.
                         </p>
 
-                        <div className="flex flex-wrap gap-x-6 gap-y-3">
-
+                        <div className="flex flex-wrap gap-x-5 gap-y-3 text-[8px] uppercase tracking-[0.18em] text-stone-500">
                             <Link
-                                href="/privacy-policy"
-                                className="transition-colors hover:text-[#8a6a48]"
+                                href="/legal/privacy-policy"
+                                className="transition-colors duration-300 hover:text-[#b69773]"
                             >
-                                Privacy Policy
+                                Privacy
                             </Link>
 
                             <Link
-                                href="/terms-and-conditions"
-                                className="transition-colors hover:text-[#8a6a48]"
+                                href="/legal/terms-and-conditions"
+                                className="transition-colors duration-300 hover:text-[#b69773]"
                             >
-                                Terms & Conditions
+                                Terms
                             </Link>
 
                             <Link
-                                href="/shipping-and-returns"
-                                className="transition-colors hover:text-[#8a6a48]"
+                                href="/legal/shipping-and-returns"
+                                className="transition-colors duration-300 hover:text-[#b69773]"
                             >
                                 Shipping & Returns
                             </Link>
-
                         </div>
-                    </div>
 
+                        <p className="hidden text-[8px] uppercase tracking-[0.25em] text-[#b69773] lg:block">
+                            Food · Art · Inspiration
+                        </p>
+                    </div>
                 </div>
             </div>
         </footer>
     );
 }
 
-/* ---------------------------------------------------------
-   SMALL COMPONENTS
---------------------------------------------------------- */
+/* =====================================================
+    SMALL COMPONENTS
+===================================================== */
 
 function FooterTitle({
                          children,
@@ -185,13 +185,9 @@ function FooterTitle({
     children: React.ReactNode;
 }) {
     return (
-        <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-stone-400">
-                {children}
-            </p>
-
-            <div className="mt-3 h-px w-8 bg-[#8a6a48]/50" />
-        </div>
+        <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#b69773]">
+            {children}
+        </p>
     );
 }
 
@@ -205,7 +201,7 @@ function FooterAnchor({
     return (
         <a
             href={href}
-            className="text-sm text-stone-600 transition-colors duration-200 hover:text-[#8a6a48]"
+            className="text-sm text-stone-400 transition-colors duration-300 hover:text-[#b69773]"
         >
             {children}
         </a>

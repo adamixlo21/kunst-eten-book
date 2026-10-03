@@ -25,22 +25,22 @@ export default function Hero() {
     const imageY = useTransform(
         scrollYProgress,
         [0, 1],
-        [0, reduceMotion ? 0 : 70],
+        [0, reduceMotion ? 0 : 35],
     );
 
     const contentY = useTransform(
         scrollYProgress,
         [0, 1],
-        [0, reduceMotion ? 0 : -30],
+        [0, reduceMotion ? 0 : -15],
     );
 
     return (
         <section
             ref={heroRef}
-            className="relative min-h-screen overflow-hidden bg-[#f3eee6] text-[#25221f]"
+            className="relative overflow-hidden bg-[#f3eee6] text-[#25221f]"
         >
             {/* =====================================================
-                BACKGROUND DETAILS
+                BACKGROUND
             ===================================================== */}
             <div className="pointer-events-none absolute inset-0">
                 <motion.div
@@ -49,28 +49,7 @@ export default function Hero() {
                             ? false
                             : {
                                 opacity: 0,
-                                scale: 0.8,
-                            }
-                    }
-                    animate={{
-                        opacity: 1,
-                        scale: 1,
-                    }}
-                    transition={{
-                        duration: 1.8,
-                        delay: 0.4,
-                        ease,
-                    }}
-                    className="absolute -left-52 top-[22%] h-[440px] w-[440px] rounded-full border border-[#8a6a48]/10"
-                />
-
-                <motion.div
-                    initial={
-                        reduceMotion
-                            ? false
-                            : {
-                                opacity: 0,
-                                scale: 0.8,
+                                scale: 0.85,
                             }
                     }
                     animate={{
@@ -79,10 +58,10 @@ export default function Hero() {
                     }}
                     transition={{
                         duration: 1.6,
-                        delay: 0.6,
+                        delay: 0.3,
                         ease,
                     }}
-                    className="absolute -left-24 top-[29%] h-[260px] w-[260px] rounded-full border border-[#8a6a48]/10"
+                    className="absolute -left-40 top-[22%] h-[300px] w-[300px] rounded-full border border-[#8a6a48]/10 sm:-left-48 sm:h-[400px] sm:w-[400px] lg:-left-52 lg:h-[440px] lg:w-[440px]"
                 />
 
                 <motion.div
@@ -90,28 +69,27 @@ export default function Hero() {
                         reduceMotion
                             ? false
                             : {
-                                scaleY: 0,
+                                opacity: 0,
+                                scale: 0.85,
                             }
                     }
                     animate={{
-                        scaleY: 1,
+                        opacity: 1,
+                        scale: 1,
                     }}
                     transition={{
-                        duration: 1.4,
-                        delay: 1,
+                        duration: 1.5,
+                        delay: 0.5,
                         ease,
                     }}
-                    style={{
-                        transformOrigin: 'top',
-                    }}
-                    className="absolute right-[7%] top-[8%] hidden h-28 w-px bg-[#8a6a48]/15 lg:block"
+                    className="absolute -left-20 top-[28%] h-[180px] w-[180px] rounded-full border border-[#8a6a48]/10 sm:-left-24 sm:h-[240px] sm:w-[240px] lg:h-[260px] lg:w-[260px]"
                 />
             </div>
 
-            <div className="relative mx-auto max-w-[1500px] px-6 pb-16 pt-28 sm:px-8 lg:px-16 lg:pb-20 lg:pt-36">
+            <div className="relative mx-auto max-w-[1500px] px-5 pb-12 pt-24 sm:px-8 sm:pb-16 sm:pt-28 lg:px-16 lg:pb-20 lg:pt-36">
 
                 {/* =====================================================
-                    TOP EDITORIAL BAR
+                    TOP BAR
                 ===================================================== */}
                 <motion.div
                     initial={
@@ -119,7 +97,7 @@ export default function Hero() {
                             ? false
                             : {
                                 opacity: 0,
-                                y: -15,
+                                y: -12,
                             }
                     }
                     animate={{
@@ -127,37 +105,37 @@ export default function Hero() {
                         y: 0,
                     }}
                     transition={{
-                        duration: 0.9,
+                        duration: 0.8,
                         delay: 0.1,
                         ease,
                     }}
-                    className="flex items-center justify-between border-b border-[#8a6a48]/20 pb-4"
+                    className="border-b border-[#8a6a48]/20 pb-3 sm:pb-4"
                 >
-                    <div className="flex items-center gap-4">
-                        <span className="text-[9px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
-                            00 / Opening
-                        </span>
+                    <div className="flex items-start justify-between gap-5">
+                        <div>
+                            <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#8a6a48] sm:text-[9px] sm:tracking-[0.35em]">
+                                00 / Opening
+                            </p>
 
-                        <span className="hidden h-px w-10 bg-[#8a6a48]/40 sm:block" />
+                            <p className="mt-1.5 text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px] sm:tracking-[0.25em]">
+                                The Taste of Inspiration
+                            </p>
+                        </div>
 
-                        <span className="hidden text-[8px] uppercase tracking-[0.28em] text-stone-400 sm:block">
-                            The Taste of Inspiration
-                        </span>
-                    </div>
+                        <div className="text-right">
+                            <p className="text-[7px] uppercase tracking-[0.18em] text-stone-400 sm:text-[8px] sm:tracking-[0.25em]">
+                                Art · Food · Experience
+                            </p>
 
-                    <div className="flex items-center gap-5">
-                        <span className="hidden text-[8px] uppercase tracking-[0.28em] text-stone-400 md:block">
-                            Art · Food · Experience
-                        </span>
-
-                        <span className="text-[8px] uppercase tracking-[0.28em] text-stone-400">
-                            NL / 2026
-                        </span>
+                            <p className="mt-1.5 text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px]">
+                                NL / 2026
+                            </p>
+                        </div>
                     </div>
                 </motion.div>
 
                 {/* =====================================================
-                    SMALL INTRO LABEL
+                    INTRO LABEL
                 ===================================================== */}
                 <motion.div
                     initial={
@@ -165,7 +143,7 @@ export default function Hero() {
                             ? false
                             : {
                                 opacity: 0,
-                                y: 15,
+                                y: 12,
                             }
                     }
                     animate={{
@@ -173,13 +151,13 @@ export default function Hero() {
                         y: 0,
                     }}
                     transition={{
-                        duration: 0.9,
+                        duration: 0.8,
                         delay: 0.25,
                         ease,
                     }}
-                    className="mt-8 flex items-center justify-between"
+                    className="mt-6 flex items-center justify-between gap-4 sm:mt-8"
                 >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 sm:gap-4">
                         <motion.span
                             initial={
                                 reduceMotion
@@ -193,33 +171,36 @@ export default function Hero() {
                             }}
                             transition={{
                                 duration: 1,
-                                delay: 0.5,
+                                delay: 0.45,
                                 ease,
                             }}
                             style={{
                                 transformOrigin: 'left',
                             }}
-                            className="h-px w-9 bg-[#8a6a48]"
+                            className="h-px w-6 bg-[#8a6a48] sm:w-9"
                         />
 
-                        <p className="text-[9px] font-semibold uppercase tracking-[0.38em] text-[#8a6a48]">
+                        <p className="text-[8px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48] sm:text-[9px] sm:tracking-[0.38em]">
                             Food × Art × Inspiration
                         </p>
                     </div>
 
-                    <p className="hidden text-[8px] uppercase tracking-[0.28em] text-stone-400 lg:block">
+                    <p className="max-w-[90px] text-right text-[7px] uppercase leading-4 tracking-[0.16em] text-stone-400 sm:max-w-none sm:text-[8px] sm:tracking-[0.22em]">
                         A culinary art experience
                     </p>
                 </motion.div>
 
                 {/* =====================================================
-                    MAIN HERO
-                    CLEAN TWO-COLUMN COMPOSITION
+                    HERO CONTENT
+
+                    Same content on every screen.
+                    Phone = stacked.
+                    Desktop = two columns.
                 ===================================================== */}
-                <div className="mt-12 grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16 xl:gap-24">
+                <div className="mt-9 grid gap-10 sm:mt-12 sm:gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16 xl:gap-24">
 
                     {/* =================================================
-                        LEFT — TITLE + CONTENT
+                        TITLE + TEXT
                     ================================================= */}
                     <motion.div
                         style={{
@@ -229,7 +210,7 @@ export default function Hero() {
                     >
                         {/* TITLE */}
                         <div>
-                            <div className="overflow-hidden pb-2">
+                            <div className="overflow-hidden pb-1 sm:pb-2">
                                 <motion.h1
                                     initial={
                                         reduceMotion
@@ -242,17 +223,17 @@ export default function Hero() {
                                         y: 0,
                                     }}
                                     transition={{
-                                        duration: 1.15,
+                                        duration: 1.1,
                                         delay: 0.3,
                                         ease,
                                     }}
-                                    className="font-serif text-[18vw] font-light uppercase leading-[0.78] tracking-[-0.07em] sm:text-[13vw] lg:text-[6.7rem] xl:text-[8rem]"
+                                    className="font-serif text-[17vw] font-light uppercase leading-[0.82] tracking-[-0.065em] sm:text-[13vw] lg:text-[6.7rem] xl:text-[8rem]"
                                 >
                                     The
                                 </motion.h1>
                             </div>
 
-                            <div className="overflow-hidden pb-2">
+                            <div className="overflow-hidden pb-1 sm:pb-2">
                                 <motion.h1
                                     initial={
                                         reduceMotion
@@ -265,17 +246,17 @@ export default function Hero() {
                                         y: 0,
                                     }}
                                     transition={{
-                                        duration: 1.15,
-                                        delay: 0.45,
+                                        duration: 1.1,
+                                        delay: 0.42,
                                         ease,
                                     }}
-                                    className="font-serif text-[18vw] font-light uppercase leading-[0.78] tracking-[-0.07em] sm:text-[13vw] lg:text-[6.7rem] xl:text-[8rem]"
+                                    className="font-serif text-[17vw] font-light uppercase leading-[0.82] tracking-[-0.065em] sm:text-[13vw] lg:text-[6.7rem] xl:text-[8rem]"
                                 >
                                     Taste
                                 </motion.h1>
                             </div>
 
-                            <div className="overflow-hidden pb-3 pt-1">
+                            <div className="overflow-hidden pb-2 pt-1">
                                 <motion.h2
                                     initial={
                                         reduceMotion
@@ -288,11 +269,11 @@ export default function Hero() {
                                         y: 0,
                                     }}
                                     transition={{
-                                        duration: 1.15,
-                                        delay: 0.6,
+                                        duration: 1.1,
+                                        delay: 0.54,
                                         ease,
                                     }}
-                                    className="font-serif text-[13vw] font-light italic leading-[0.9] tracking-[-0.06em] text-[#8a6a48] sm:text-[10vw] lg:text-[4.8rem] xl:text-[5.8rem]"
+                                    className="font-serif text-[12vw] font-light italic leading-[0.95] tracking-[-0.05em] text-[#8a6a48] sm:text-[10vw] lg:text-[4.8rem] xl:text-[5.8rem]"
                                 >
                                     of Inspiration
                                 </motion.h2>
@@ -312,14 +293,14 @@ export default function Hero() {
                                 scaleX: 1,
                             }}
                             transition={{
-                                duration: 1,
-                                delay: 1,
+                                duration: 0.9,
+                                delay: 0.8,
                                 ease,
                             }}
                             style={{
                                 transformOrigin: 'left',
                             }}
-                            className="mt-8 h-px w-16 bg-[#8a6a48]/50"
+                            className="mt-6 h-px w-12 bg-[#8a6a48]/50 sm:mt-8 sm:w-16"
                         />
 
                         {/* TAGLINE */}
@@ -329,7 +310,7 @@ export default function Hero() {
                                     ? false
                                     : {
                                         opacity: 0,
-                                        y: 20,
+                                        y: 15,
                                     }
                             }
                             animate={{
@@ -337,11 +318,11 @@ export default function Hero() {
                                 y: 0,
                             }}
                             transition={{
-                                duration: 0.9,
-                                delay: 1,
+                                duration: 0.8,
+                                delay: 0.85,
                                 ease,
                             }}
-                            className="mt-7 max-w-md font-serif text-2xl font-light leading-[1.25] text-[#8a6a48] sm:text-3xl"
+                            className="mt-5 max-w-md font-serif text-[1.4rem] font-light leading-[1.2] text-[#8a6a48] sm:mt-7 sm:text-3xl"
                         >
                             Where flavour becomes colour,
                             <span className="block italic">
@@ -349,14 +330,14 @@ export default function Hero() {
                             </span>
                         </motion.p>
 
-                        {/* SHORT TEASER */}
+                        {/* TEASER */}
                         <motion.p
                             initial={
                                 reduceMotion
                                     ? false
                                     : {
                                         opacity: 0,
-                                        y: 20,
+                                        y: 15,
                                     }
                             }
                             animate={{
@@ -364,11 +345,11 @@ export default function Hero() {
                                 y: 0,
                             }}
                             transition={{
-                                duration: 0.9,
-                                delay: 1.15,
+                                duration: 0.8,
+                                delay: 0.95,
                                 ease,
                             }}
-                            className="mt-6 max-w-sm text-sm leading-7 text-stone-500"
+                            className="mt-4 max-w-sm text-[13px] leading-6 text-stone-500 sm:mt-6 sm:text-sm sm:leading-7"
                         >
                             Two creative worlds meet through flavour,
                             colour and feeling.
@@ -381,7 +362,7 @@ export default function Hero() {
                                     ? false
                                     : {
                                         opacity: 0,
-                                        y: 20,
+                                        y: 15,
                                     }
                             }
                             animate={{
@@ -389,15 +370,15 @@ export default function Hero() {
                                 y: 0,
                             }}
                             transition={{
-                                duration: 0.9,
-                                delay: 1.3,
+                                duration: 0.8,
+                                delay: 1.05,
                                 ease,
                             }}
-                            className="mt-9 flex flex-wrap items-center gap-7"
+                            className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4 sm:mt-9 sm:gap-7"
                         >
                             <a
                                 href="/#story"
-                                className="group inline-flex items-center gap-4 border-b border-[#25221f] pb-2 text-[9px] font-semibold uppercase tracking-[0.25em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48]"
+                                className="group inline-flex items-center gap-3 border-b border-[#25221f] pb-2 text-[8px] font-semibold uppercase tracking-[0.22em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48] sm:text-[9px]"
                             >
                                 Begin the Story
 
@@ -410,7 +391,7 @@ export default function Hero() {
 
                             <Link
                                 href="/paintings"
-                                className="group inline-flex items-center gap-3 text-[9px] font-semibold uppercase tracking-[0.25em] text-stone-400 transition-colors duration-300 hover:text-[#8a6a48]"
+                                className="group inline-flex items-center gap-2.5 text-[8px] font-semibold uppercase tracking-[0.22em] text-stone-400 transition-colors duration-300 hover:text-[#8a6a48] sm:text-[9px]"
                             >
                                 The Collection
 
@@ -424,17 +405,17 @@ export default function Hero() {
                     </motion.div>
 
                     {/* =================================================
-                        RIGHT — IMAGE
+                        IMAGE
                     ================================================= */}
                     <div className="relative">
-                        {/* IMAGE NUMBER */}
+                        {/* IMAGE LABEL */}
                         <motion.div
                             initial={
                                 reduceMotion
                                     ? false
                                     : {
                                         opacity: 0,
-                                        x: 15,
+                                        x: 12,
                                     }
                             }
                             animate={{
@@ -443,24 +424,24 @@ export default function Hero() {
                             }}
                             transition={{
                                 duration: 0.8,
-                                delay: 1.2,
+                                delay: 0.9,
                                 ease,
                             }}
-                            className="mb-4 flex items-center justify-between"
+                            className="mb-3 flex items-center justify-between sm:mb-4"
                         >
-                            <div className="flex items-center gap-3">
-                                <span className="text-[8px] font-semibold tracking-[0.28em] text-[#8a6a48]">
+                            <div className="flex items-center gap-2.5 sm:gap-3">
+                                <span className="text-[8px] font-semibold tracking-[0.25em] text-[#8a6a48]">
                                     01
                                 </span>
 
-                                <span className="h-px w-8 bg-[#8a6a48]/40" />
+                                <span className="h-px w-6 bg-[#8a6a48]/40 sm:w-8" />
 
-                                <span className="text-[8px] uppercase tracking-[0.25em] text-stone-400">
+                                <span className="text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px] sm:tracking-[0.25em]">
                                     Patrick & Nour
                                 </span>
                             </div>
 
-                            <span className="text-[8px] uppercase tracking-[0.25em] text-stone-400">
+                            <span className="text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px] sm:tracking-[0.25em]">
                                 Portrait
                             </span>
                         </motion.div>
@@ -470,7 +451,7 @@ export default function Hero() {
                                 y: imageY,
                             }}
                         >
-                            {/* IMAGE REVEAL */}
+                            {/* IMAGE */}
                             <motion.div
                                 initial={
                                     reduceMotion
@@ -485,8 +466,8 @@ export default function Hero() {
                                         'inset(0% 0% 0% 0%)',
                                 }}
                                 transition={{
-                                    duration: 1.4,
-                                    delay: 0.45,
+                                    duration: 1.3,
+                                    delay: 0.4,
                                     ease,
                                 }}
                                 className="relative overflow-hidden"
@@ -496,33 +477,33 @@ export default function Hero() {
                                         reduceMotion
                                             ? false
                                             : {
-                                                scale: 1.1,
+                                                scale: 1.08,
                                             }
                                     }
                                     animate={{
                                         scale: 1,
                                     }}
                                     transition={{
-                                        duration: 2,
-                                        delay: 0.45,
+                                        duration: 1.8,
+                                        delay: 0.4,
                                         ease,
                                     }}
                                     src="/images/patrick-nour.jpg"
                                     alt="Patrick and Nour — The Taste of Inspiration"
-                                    className="h-[480px] w-full object-cover sm:h-[600px] lg:h-[650px] xl:h-[700px]"
+                                    className="aspect-[4/5] w-full object-cover sm:aspect-[5/6] lg:h-[650px] lg:aspect-auto xl:h-[700px]"
                                 />
 
                                 <div className="pointer-events-none absolute inset-0 bg-[#5d4934]/[0.04]" />
                             </motion.div>
 
-                            {/* CAPTION — BELOW IMAGE, NOT OVER IT */}
+                            {/* IMAGE CAPTION */}
                             <motion.div
                                 initial={
                                     reduceMotion
                                         ? false
                                         : {
                                             opacity: 0,
-                                            y: 15,
+                                            y: 10,
                                         }
                                 }
                                 animate={{
@@ -531,22 +512,22 @@ export default function Hero() {
                                 }}
                                 transition={{
                                     duration: 0.8,
-                                    delay: 1.5,
+                                    delay: 1.2,
                                     ease,
                                 }}
-                                className="mt-4 flex items-start justify-between gap-6 border-t border-[#8a6a48]/20 pt-4"
+                                className="mt-3 flex items-start justify-between gap-5 border-t border-[#8a6a48]/20 pt-3 sm:mt-4 sm:pt-4"
                             >
                                 <div>
-                                    <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                                    <p className="text-[7px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48] sm:text-[8px] sm:tracking-[0.3em]">
                                         Food / Art / Emotion
                                     </p>
 
-                                    <p className="mt-1 font-serif text-sm italic text-stone-500">
+                                    <p className="mt-1 font-serif text-[13px] italic text-stone-500 sm:text-sm">
                                         Two passions, one journey.
                                     </p>
                                 </div>
 
-                                <p className="text-right text-[8px] uppercase leading-5 tracking-[0.22em] text-stone-400">
+                                <p className="text-right text-[7px] uppercase leading-4 tracking-[0.18em] text-stone-400 sm:text-[8px] sm:leading-5 sm:tracking-[0.22em]">
                                     NL
                                     <br />
                                     2026
@@ -558,6 +539,7 @@ export default function Hero() {
 
                 {/* =====================================================
                     NUMBERS
+                    Same 3 items on every screen.
                 ===================================================== */}
                 <motion.div
                     initial={
@@ -565,7 +547,7 @@ export default function Hero() {
                             ? false
                             : {
                                 opacity: 0,
-                                y: 25,
+                                y: 20,
                             }
                     }
                     animate={{
@@ -573,38 +555,38 @@ export default function Hero() {
                         y: 0,
                     }}
                     transition={{
-                        duration: 1,
-                        delay: 1.5,
+                        duration: 0.9,
+                        delay: 1.2,
                         ease,
                     }}
-                    className="relative z-20 mt-20 grid gap-8 border-t border-[#8a6a48]/20 pt-7 sm:grid-cols-3 lg:mt-24"
+                    className="relative z-20 mt-14 grid grid-cols-3 gap-3 border-t border-[#8a6a48]/20 pt-6 sm:mt-20 sm:gap-8 sm:pt-7 lg:mt-24"
                 >
                     <div>
-                        <p className="font-serif text-3xl font-light">
+                        <p className="font-serif text-2xl font-light sm:text-3xl">
                             05
                         </p>
 
-                        <p className="mt-2 text-[8px] font-semibold uppercase tracking-[0.28em] text-stone-400">
+                        <p className="mt-2 max-w-[90px] text-[7px] font-semibold uppercase leading-4 tracking-[0.18em] text-stone-400 sm:max-w-none sm:text-[8px] sm:tracking-[0.28em]">
                             Original Paintings
                         </p>
                     </div>
 
-                    <div className="sm:text-center">
-                        <p className="font-serif text-3xl font-light">
+                    <div className="text-center">
+                        <p className="font-serif text-2xl font-light sm:text-3xl">
                             05
                         </p>
 
-                        <p className="mt-2 text-[8px] font-semibold uppercase tracking-[0.28em] text-stone-400">
+                        <p className="mx-auto mt-2 max-w-[90px] text-[7px] font-semibold uppercase leading-4 tracking-[0.18em] text-stone-400 sm:max-w-none sm:text-[8px] sm:tracking-[0.28em]">
                             Culinary Creations
                         </p>
                     </div>
 
-                    <div className="sm:text-right">
-                        <p className="font-serif text-3xl font-light italic text-[#8a6a48]">
+                    <div className="text-right">
+                        <p className="font-serif text-2xl font-light italic text-[#8a6a48] sm:text-3xl">
                             One
                         </p>
 
-                        <p className="mt-2 text-[8px] font-semibold uppercase tracking-[0.28em] text-stone-400">
+                        <p className="ml-auto mt-2 max-w-[90px] text-[7px] font-semibold uppercase leading-4 tracking-[0.18em] text-stone-400 sm:max-w-none sm:text-[8px] sm:tracking-[0.28em]">
                             Shared Journey
                         </p>
                     </div>
@@ -625,21 +607,21 @@ export default function Hero() {
                         opacity: 1,
                     }}
                     transition={{
-                        duration: 1,
-                        delay: 1.8,
+                        duration: 0.9,
+                        delay: 1.4,
                     }}
-                    className="mt-14 flex justify-center"
+                    className="mt-10 flex justify-center sm:mt-14"
                 >
                     <a
                         href="/#story"
                         aria-label="Continue to the story"
-                        className="group flex flex-col items-center gap-3"
+                        className="group flex flex-col items-center gap-2.5 sm:gap-3"
                     >
-                        <span className="text-[8px] font-semibold uppercase tracking-[0.35em] text-stone-400 transition-colors group-hover:text-[#8a6a48]">
+                        <span className="text-[7px] font-semibold uppercase tracking-[0.3em] text-stone-400 transition-colors group-hover:text-[#8a6a48] sm:text-[8px] sm:tracking-[0.35em]">
                             Continue
                         </span>
 
-                        <span className="relative h-12 w-px overflow-hidden bg-stone-300">
+                        <span className="relative h-9 w-px overflow-hidden bg-stone-300 sm:h-12">
                             <motion.span
                                 animate={
                                     reduceMotion

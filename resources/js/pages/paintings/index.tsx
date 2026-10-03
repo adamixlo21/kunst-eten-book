@@ -1,4 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BookCartProvider } from '@/components/BookCartContext';
@@ -19,15 +22,6 @@ interface Props {
     paintings: Painting[];
 }
 
-/*
-|--------------------------------------------------------------------------
-| Hard-coded artwork images
-|--------------------------------------------------------------------------
-|
-| For now the public collection uses images from /public/images/paintings.
-| Later we can switch this back to the image managed from the admin panel.
-|
-*/
 const paintingImages: Record<string, string> = {
     'beyond-the-surface':
         '/images/paintings/beyond-the-surface.jpg',
@@ -45,7 +39,11 @@ const paintingImages: Record<string, string> = {
         '/images/paintings/in-bloom.jpg',
 };
 
+const ease = [0.16, 1, 0.3, 1] as const;
+
 export default function PaintingsIndex({ paintings }: Props) {
+    const reduceMotion = useReducedMotion();
+
     const formatPrice = (price: string) =>
         new Intl.NumberFormat('en-GB', {
             style: 'currency',
@@ -60,256 +58,409 @@ export default function PaintingsIndex({ paintings }: Props) {
 
             <Navbar />
 
-            <main className="min-h-screen overflow-hidden bg-[#f6f1e9] text-[#25231f]">
+            <main className="overflow-hidden bg-[#f3eee6] text-[#25221f]">
 
-                {/* HERO */}
-                <section className="relative overflow-hidden border-b border-[#d9d0c3]">
+                {/* =====================================================
+                    OPENING
+                ===================================================== */}
+                <section className="relative min-h-[75vh] border-b border-[#8a6a48]/20">
+                    <div className="mx-auto flex min-h-[75vh] max-w-[1500px] flex-col px-5 pb-10 pt-28 sm:px-8 sm:pt-32 lg:px-16 lg:pt-36">
 
-                    {/* Decorative background */}
-                    <div className="pointer-events-none absolute -left-32 top-10 h-80 w-80 rounded-full bg-[#b99a75]/10 blur-3xl" />
-
-                    <div className="pointer-events-none absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-[#8a6a48]/10 blur-3xl" />
-
-                    <div className="relative mx-auto max-w-7xl px-6 pb-20 pt-24 md:px-10 md:pb-28 md:pt-32 lg:px-16">
-                        <div className="mx-auto max-w-4xl text-center">
-
-                            <div className="mb-7 flex items-center justify-center gap-4">
-                                <span className="h-px w-10 bg-[#a78967]" />
-
-                                <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
-                                    The Collection
+                        {/* TOP */}
+                        <div className="flex items-start justify-between gap-6 border-b border-[#8a6a48]/20 pb-4">
+                            <div>
+                                <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                                    03 / The Collection
                                 </p>
 
-                                <span className="h-px w-10 bg-[#a78967]" />
+                                <p className="mt-1.5 text-[7px] uppercase tracking-[0.22em] text-stone-400 sm:text-[8px]">
+                                    The Taste of Inspiration
+                                </p>
                             </div>
 
-                            <h1 className="font-serif text-5xl leading-[0.95] tracking-[-0.03em] sm:text-6xl md:text-7xl lg:text-[88px]">
-                                Original
+                            <div className="text-right">
+                                <p className="text-[7px] uppercase tracking-[0.22em] text-stone-400 sm:text-[8px]">
+                                    {String(paintings.length).padStart(2, '0')} Works
+                                </p>
 
-                                <span className="block italic text-[#8a6a48]">
-                                    Paintings
-                                </span>
-                            </h1>
-
-                            <p className="mx-auto mt-8 max-w-2xl text-sm leading-7 text-[#6f6961] md:text-base md:leading-8">
-                                A collection of original artworks born from the
-                                meeting of flavour, colour, memory and
-                                imagination.
-                            </p>
-
-                            <p className="mx-auto mt-3 max-w-xl text-xs leading-6 text-[#948b80]">
-                                Each painting is a unique response to a culinary
-                                experience and is available through private
-                                bidding.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* COLLECTION INTRO */}
-                <section className="px-6 py-12 md:px-10 lg:px-16">
-                    <div className="mx-auto flex max-w-7xl items-end justify-between border-b border-[#d9d0c3] pb-6">
-
-                        <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                The Taste of Inspiration
-                            </p>
-
-                            <h2 className="mt-2 font-serif text-2xl md:text-3xl">
-                                The Collection
-                            </h2>
+                                <p className="mt-1.5 text-[7px] uppercase tracking-[0.22em] text-stone-400 sm:text-[8px]">
+                                    Original Paintings
+                                </p>
+                            </div>
                         </div>
 
-                        <p className="hidden text-xs uppercase tracking-[0.18em] text-[#948b80] md:block">
-                            {paintings.length}{' '}
-                            {paintings.length === 1
-                                ? 'Artwork'
-                                : 'Artworks'}
-                        </p>
-                    </div>
-                </section>
-
-                {/* PAINTINGS */}
-                <section className="px-6 pb-28 md:px-10 md:pb-36 lg:px-16">
-                    <div className="mx-auto grid max-w-7xl gap-x-10 gap-y-20 md:grid-cols-2 lg:gap-x-16 lg:gap-y-28">
-
-                        {paintings.map((painting, index) => {
-                            const artworkImage =
-                                paintingImages[painting.slug];
-
-                            return (
-                                <Link
-                                    key={painting.id}
-                                    href={`/paintings/${painting.slug}`}
-                                    className={`group block ${
-                                        index % 2 === 1
-                                            ? 'md:translate-y-20'
-                                            : ''
-                                    }`}
+                        {/* TITLE */}
+                        <div className="flex flex-1 items-center py-16 sm:py-20">
+                            <div className="w-full">
+                                <motion.p
+                                    initial={
+                                        reduceMotion
+                                            ? false
+                                            : {
+                                                opacity: 0,
+                                                y: 15,
+                                            }
+                                    }
+                                    animate={{
+                                        opacity: 1,
+                                        y: 0,
+                                    }}
+                                    transition={{
+                                        duration: 0.8,
+                                        ease,
+                                    }}
+                                    className="mb-5 text-[8px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]"
                                 >
-                                    {/* IMAGE */}
-                                    <div className="relative">
+                                    An exhibition in five works
+                                </motion.p>
 
-                                        <div className="absolute -inset-3 border border-[#cfc4b5]/60 opacity-0 transition-all duration-500 group-hover:-inset-2 group-hover:opacity-100" />
+                                <div className="overflow-hidden">
+                                    <motion.h1
+                                        initial={
+                                            reduceMotion
+                                                ? false
+                                                : {
+                                                    y: '105%',
+                                                }
+                                        }
+                                        animate={{
+                                            y: 0,
+                                        }}
+                                        transition={{
+                                            duration: 1.1,
+                                            ease,
+                                        }}
+                                        className="font-serif text-[17vw] font-light leading-[0.78] tracking-[-0.065em] sm:text-[13vw] lg:text-[8.5rem] xl:text-[10rem]"
+                                    >
+                                        The
+                                        <span className="block italic text-[#8a6a48]">
+                                            Collection
+                                        </span>
+                                    </motion.h1>
+                                </div>
+                            </div>
+                        </div>
 
-                                        <div className="relative aspect-[4/5] overflow-hidden bg-[#e8e0d5] shadow-[0_18px_60px_rgba(68,55,40,0.08)]">
+                        {/* BOTTOM */}
+                        <div className="flex items-end justify-between gap-8 border-t border-[#8a6a48]/20 pt-5">
+                            <p className="max-w-sm font-serif text-xl font-light leading-[1.2] sm:text-2xl">
+                                Five moments.
+                                <span className="block italic text-[#8a6a48]">
+                                    Five expressions.
+                                </span>
+                            </p>
 
-                                            {artworkImage ? (
-                                                <img
-                                                    src={artworkImage}
-                                                    alt={painting.title}
-                                                    className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.035]"
-                                                />
-                                            ) : (
-                                                <div className="flex h-full items-center justify-center bg-[#e9e1d6]">
-                                                    <div className="text-center">
+                            <a
+                                href="#collection"
+                                aria-label="View the collection"
+                                className="flex h-11 w-11 shrink-0 items-center justify-center border border-[#8a6a48]/30 text-[#8a6a48] transition-colors duration-300 hover:bg-[#8a6a48] hover:text-white"
+                            >
+                                <ArrowDown
+                                    size={15}
+                                    strokeWidth={1.4}
+                                />
+                            </a>
+                        </div>
+                    </div>
+                </section>
 
-                                                        <div className="mx-auto mb-4 h-px w-12 bg-[#b9aa98]" />
+                {/* =====================================================
+                    COLLECTION
+                ===================================================== */}
+                <section id="collection">
+                    <div className="mx-auto max-w-[1500px] px-5 sm:px-8 lg:px-16">
 
-                                                        <span className="text-[10px] uppercase tracking-[0.25em] text-[#948b80]">
-                                                            Artwork coming soon
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            )}
+                        {paintings.length > 0 ? (
+                            paintings.map((painting, index) => {
+                                const artworkImage =
+                                    paintingImages[painting.slug];
 
-                                            {/* Number */}
-                                            <div className="absolute left-5 top-5 flex h-10 w-10 items-center justify-center border border-white/40 bg-[#25231f]/25 text-xs text-white backdrop-blur-sm">
+                                const reverse = index % 2 === 1;
+
+                                return (
+                                    <motion.article
+                                        key={painting.id}
+                                        initial={
+                                            reduceMotion
+                                                ? false
+                                                : {
+                                                    opacity: 0,
+                                                    y: 35,
+                                                }
+                                        }
+                                        whileInView={{
+                                            opacity: 1,
+                                            y: 0,
+                                        }}
+                                        viewport={{
+                                            once: true,
+                                            amount: 0.12,
+                                        }}
+                                        transition={{
+                                            duration: 0.9,
+                                            ease,
+                                        }}
+                                        className="border-b border-[#8a6a48]/20 py-14 sm:py-20 lg:py-28"
+                                    >
+                                        {/* NUMBER / INDEX */}
+                                        <div className="mb-7 flex items-center justify-between border-b border-[#8a6a48]/20 pb-4 lg:mb-10">
+                                            <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                                                Artwork{' '}
                                                 {String(index + 1).padStart(
                                                     2,
                                                     '0',
                                                 )}
-                                            </div>
-
-                                            {/* Availability */}
-                                            <div className="absolute bottom-5 right-5">
-                                                <div className="flex items-center gap-2 bg-[#f7f3ec]/95 px-3 py-2 backdrop-blur">
-
-                                                    <span
-                                                        className={`h-1.5 w-1.5 rounded-full ${
-                                                            painting.bidding_open
-                                                                ? 'bg-[#66765d]'
-                                                                : 'bg-[#a39b91]'
-                                                        }`}
-                                                    />
-
-                                                    <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#4f4a44]">
-                                                        {painting.bidding_open
-                                                            ? 'Available'
-                                                            : 'Bidding Closed'}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* CONTENT */}
-                                    <div className="pt-7">
-
-                                        <div className="flex items-start justify-between gap-6">
-
-                                            <div className="min-w-0">
-                                                <p className="text-[9px] font-semibold uppercase tracking-[0.28em] text-[#a0805d]">
-                                                    Original Artwork
-                                                </p>
-
-                                                <h2 className="mt-3 font-serif text-3xl leading-tight tracking-[-0.02em] transition-colors duration-300 group-hover:text-[#8a6a48] md:text-4xl">
-                                                    {painting.title}
-                                                </h2>
-                                            </div>
-
-                                            <div className="shrink-0 text-right">
-                                                <p className="text-[9px] uppercase tracking-[0.2em] text-[#9a9186]">
-                                                    Starting At
-                                                </p>
-
-                                                <p className="mt-2 font-serif text-xl text-[#6f5237]">
-                                                    {formatPrice(
-                                                        painting.starting_price,
-                                                    )}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* DESCRIPTION */}
-                                        {painting.description && (
-                                            <p className="mt-5 line-clamp-3 max-w-xl text-sm leading-7 text-[#746e66]">
-                                                {painting.description}
                                             </p>
-                                        )}
 
-                                        {/* VIEW */}
-                                        <div className="mt-7 flex items-center justify-between border-t border-[#d9d0c3] pt-5">
-
-                                            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#49453f]">
-                                                View Artwork
-                                            </span>
-
-                                            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bcae9c] transition-all duration-300 group-hover:border-[#8a6a48] group-hover:bg-[#8a6a48] group-hover:text-white">
-                                                →
-                                            </span>
+                                            <p className="text-[7px] uppercase tracking-[0.25em] text-stone-400">
+                                                {String(index + 1).padStart(
+                                                    2,
+                                                    '0',
+                                                )}
+                                                {' / '}
+                                                {String(
+                                                    paintings.length,
+                                                ).padStart(2, '0')}
+                                            </p>
                                         </div>
-                                    </div>
-                                </Link>
-                            );
-                        })}
+
+                                        {/* ARTWORK LAYOUT */}
+                                        <div
+                                            className={`grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-14 xl:gap-20`}
+                                        >
+                                            {/* =================================
+                                                IMAGE
+                                            ================================= */}
+                                            <div
+                                                className={
+                                                    reverse
+                                                        ? 'lg:order-2 lg:col-span-7'
+                                                        : 'lg:col-span-7'
+                                                }
+                                            >
+                                                <Link
+                                                    href={`/paintings/${painting.slug}`}
+                                                    className="group block"
+                                                >
+                                                    <div className="relative overflow-hidden bg-[#e5ded3]">
+                                                        {artworkImage ? (
+                                                            <img
+                                                                src={
+                                                                    artworkImage
+                                                                }
+                                                                alt={
+                                                                    painting.title
+                                                                }
+                                                                className="aspect-[4/5] w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.025]"
+                                                            />
+                                                        ) : (
+                                                            <div className="flex aspect-[4/5] items-center justify-center">
+                                                                <p className="text-[8px] uppercase tracking-[0.25em] text-stone-400">
+                                                                    Artwork
+                                                                    coming
+                                                                    soon
+                                                                </p>
+                                                            </div>
+                                                        )}
+
+                                                        {/* SMALL NUMBER */}
+                                                        <div className="absolute left-0 top-0 bg-[#f3eee6] px-4 py-3">
+                                                            <span className="font-serif text-lg font-light text-[#8a6a48]">
+                                                                {String(
+                                                                    index + 1,
+                                                                ).padStart(
+                                                                    2,
+                                                                    '0',
+                                                                )}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* VIEW */}
+                                                        <div className="absolute bottom-0 left-0 right-0 flex translate-y-full items-center justify-between bg-[#25221f] px-5 py-4 text-[#f7f3ec] transition-transform duration-500 group-hover:translate-y-0">
+                                                            <span className="text-[8px] font-semibold uppercase tracking-[0.25em]">
+                                                                View Artwork
+                                                            </span>
+
+                                                            <ArrowUpRight
+                                                                size={14}
+                                                                strokeWidth={
+                                                                    1.4
+                                                                }
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </div>
+
+                                            {/* =================================
+                                                INFORMATION
+                                            ================================= */}
+                                            <div
+                                                className={
+                                                    reverse
+                                                        ? 'lg:order-1 lg:col-span-5'
+                                                        : 'lg:col-span-5'
+                                                }
+                                            >
+                                                {/* LARGE NUMBER */}
+                                                <p className="font-serif text-6xl font-light leading-none text-[#8a6a48]/20 sm:text-7xl lg:text-8xl">
+                                                    {String(
+                                                        index + 1,
+                                                    ).padStart(2, '0')}
+                                                </p>
+
+                                                {/* TITLE */}
+                                                <Link
+                                                    href={`/paintings/${painting.slug}`}
+                                                    className="group mt-5 block"
+                                                >
+                                                    <h2 className="max-w-lg font-serif text-[2.7rem] font-light leading-[0.95] tracking-[-0.045em] transition-colors duration-300 group-hover:text-[#8a6a48] sm:text-5xl lg:text-6xl">
+                                                        {painting.title}
+                                                    </h2>
+                                                </Link>
+
+                                                {/* META */}
+                                                <div className="mt-8 border-y border-[#8a6a48]/20">
+                                                    <div className="flex items-center justify-between gap-5 border-b border-[#8a6a48]/20 py-4">
+                                                        <span className="text-[7px] font-semibold uppercase tracking-[0.24em] text-stone-400">
+                                                            Type
+                                                        </span>
+
+                                                        <span className="text-[8px] uppercase tracking-[0.2em]">
+                                                            Original Painting
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between gap-5 border-b border-[#8a6a48]/20 py-4">
+                                                        <span className="text-[7px] font-semibold uppercase tracking-[0.24em] text-stone-400">
+                                                            Starting Price
+                                                        </span>
+
+                                                        <span className="font-serif text-xl font-light text-[#8a6a48]">
+                                                            {formatPrice(
+                                                                painting.starting_price,
+                                                            )}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between gap-5 py-4">
+                                                        <span className="text-[7px] font-semibold uppercase tracking-[0.24em] text-stone-400">
+                                                            Status
+                                                        </span>
+
+                                                        <div className="flex items-center gap-2">
+                                                            <span
+                                                                className={`h-1.5 w-1.5 rounded-full ${
+                                                                    painting.bidding_open
+                                                                        ? 'bg-[#66765d]'
+                                                                        : 'bg-stone-400'
+                                                                }`}
+                                                            />
+
+                                                            <span className="text-[8px] uppercase tracking-[0.18em]">
+                                                                {painting.bidding_open
+                                                                    ? 'Available'
+                                                                    : 'Bidding Closed'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* VIEW LINK */}
+                                                <Link
+                                                    href={`/paintings/${painting.slug}`}
+                                                    className="group mt-7 inline-flex items-center gap-4 border-b border-[#25221f] pb-2 text-[8px] font-semibold uppercase tracking-[0.25em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48]"
+                                                >
+                                                    Discover Artwork
+
+                                                    <ArrowUpRight
+                                                        size={14}
+                                                        strokeWidth={1.4}
+                                                        className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                                                    />
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </motion.article>
+                                );
+                            })
+                        ) : (
+                            <div className="py-24 text-center sm:py-32">
+                                <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                                    Coming Soon
+                                </p>
+
+                                <h2 className="mt-4 font-serif text-4xl font-light sm:text-5xl">
+                                    The collection is being prepared.
+                                </h2>
+                            </div>
+                        )}
                     </div>
-
-                    {/* Space for offset cards */}
-                    {paintings.length > 1 && (
-                        <div className="hidden h-16 md:block" />
-                    )}
-
-                    {/* EMPTY STATE */}
-                    {paintings.length === 0 && (
-                        <div className="mx-auto max-w-xl py-24 text-center">
-
-                            <div className="mx-auto mb-8 h-px w-16 bg-[#a78967]" />
-
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                Coming Soon
-                            </p>
-
-                            <h2 className="mt-4 font-serif text-4xl">
-                                The collection is being prepared.
-                            </h2>
-
-                            <p className="mt-5 text-sm leading-7 text-[#77716a]">
-                                The original paintings from The Taste of
-                                Inspiration will appear here soon.
-                            </p>
-                        </div>
-                    )}
                 </section>
 
-                {/* PRIVATE ACQUISITION */}
+                {/* =====================================================
+                    ACQUISITION
+                ===================================================== */}
                 {paintings.length > 0 && (
-                    <section className="border-t border-[#d9d0c3] bg-[#eee6da] px-6 py-20 text-center md:py-28">
+                    <section className="bg-[#25221f] text-[#f3eee6]">
+                        <div className="mx-auto max-w-[1500px] px-5 py-16 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
 
-                        <div className="mx-auto max-w-2xl">
+                            <div className="flex items-start justify-between gap-6 border-b border-white/15 pb-4">
+                                <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#c5a27d]">
+                                    Private Acquisition
+                                </p>
 
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                Private Acquisition
-                            </p>
+                                <p className="text-right text-[7px] uppercase tracking-[0.25em] text-white/40">
+                                    Original Works
+                                </p>
+                            </div>
 
-                            <h2 className="mt-5 font-serif text-3xl leading-tight md:text-5xl">
-                                An artwork that
+                            <div className="grid gap-10 py-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:gap-20 lg:py-14">
 
-                                <span className="block italic text-[#8a6a48]">
-                                    stays with you.
+                                <h2 className="font-serif text-[12vw] font-light leading-[0.9] tracking-[-0.05em] sm:text-6xl lg:text-7xl xl:text-8xl">
+                                    Make a work
+
+                                    <span className="block italic text-[#c5a27d]">
+                                        part of your story.
+                                    </span>
+                                </h2>
+
+                                <div>
+                                    <p className="max-w-md text-[13px] leading-6 text-white/55 sm:text-sm sm:leading-7">
+                                        Each artwork is available through
+                                        private acquisition. Select a work to
+                                        submit your offer.
+                                    </p>
+
+                                    <p className="mt-4 text-[11px] leading-5 text-white/35">
+                                        Offers and bidder information remain
+                                        private.
+                                    </p>
+
+                                    <a
+                                        href="#collection"
+                                        className="group mt-7 inline-flex items-center gap-4 border-b border-white/60 pb-2 text-[8px] font-semibold uppercase tracking-[0.25em] transition-colors duration-300 hover:border-[#c5a27d] hover:text-[#c5a27d]"
+                                    >
+                                        View the Collection
+
+                                        <ArrowUpRight
+                                            size={14}
+                                            strokeWidth={1.4}
+                                            className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                                        />
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between gap-5 border-t border-white/15 pt-5">
+                                <span className="text-[7px] uppercase tracking-[0.25em] text-white/35">
+                                    The Taste of Inspiration
                                 </span>
-                            </h2>
 
-                            <p className="mx-auto mt-6 max-w-lg text-sm leading-7 text-[#716a61]">
-                                All offers are handled privately. Other
-                                visitors cannot see your offer, the offers of
-                                others, or any bidder information.
-                            </p>
-
-                            <p className="mx-auto mt-4 max-w-lg text-xs leading-6 text-[#91887e]">
-                                Select an artwork to discover its story and
-                                submit a private offer.
-                            </p>
+                                <span className="text-right text-[7px] uppercase tracking-[0.25em] text-[#c5a27d]">
+                                    Food · Art · Inspiration
+                                </span>
+                            </div>
                         </div>
                     </section>
                 )}
