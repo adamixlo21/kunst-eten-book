@@ -1,82 +1,287 @@
 import { Link } from '@inertiajs/react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function ClosingSection() {
+    const reduceMotion = useReducedMotion();
+
     return (
-        <section className="relative overflow-hidden bg-[#eee6da] px-6 py-24 text-[#25231f] md:py-32 lg:px-10 lg:py-40">
-            {/* Decorative background */}
-            <div className="pointer-events-none absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-white/30 blur-3xl" />
+        <section
+            id="invitation"
+            className="relative overflow-hidden bg-[#eee6da] text-[#25221f]"
+        >
+            {/* =====================================================
+                SUBTLE BACKGROUND ART
+            ===================================================== */}
+            <div className="pointer-events-none absolute inset-0">
+                <div className="absolute -right-48 top-20 h-[400px] w-[400px] rounded-full border border-[#8a6a48]/10" />
 
-            <div className="pointer-events-none absolute -right-40 bottom-0 h-[450px] w-[450px] rounded-full bg-[#8a6a48]/10 blur-3xl" />
+                <div className="absolute -right-20 top-40 h-[220px] w-[220px] rounded-full border border-[#8a6a48]/10" />
 
-            <div className="relative mx-auto max-w-5xl text-center">
-                {/* Label */}
-                <div className="flex items-center justify-center gap-4">
-                    <span className="h-px w-10 bg-[#8a6a48]" />
+                <div className="absolute bottom-0 left-[15%] h-32 w-32 rounded-full bg-[#8a6a48]/5 blur-3xl" />
+            </div>
 
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
-                        The Taste of Inspiration
-                    </p>
+            <div className="relative mx-auto max-w-[1500px] px-6 py-16 sm:px-8 lg:px-16 lg:py-20">
 
-                    <span className="h-px w-10 bg-[#8a6a48]" />
-                </div>
+                {/* =====================================================
+                    CHAPTER HEADER
+                ===================================================== */}
+                <motion.div
+                    initial={
+                        reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                y: 20,
+                            }
+                    }
+                    whileInView={{
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    viewport={{
+                        once: true,
+                        amount: 0.4,
+                    }}
+                    transition={{
+                        duration: 0.9,
+                        ease,
+                    }}
+                    className="flex items-center justify-between border-b border-[#8a6a48]/25 pb-4"
+                >
+                    <div className="flex items-center gap-4">
+                        <span className="text-[9px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
+                            05 / The Invitation
+                        </span>
 
-                {/* Heading */}
-                <h2 className="mx-auto mt-8 max-w-4xl font-serif text-5xl leading-[0.98] tracking-[-0.03em] sm:text-6xl md:text-7xl">
-                    The story continues
-                    <span className="block italic text-[#8a6a48]">
-                        with you.
+                        <span className="hidden h-px w-10 bg-[#8a6a48]/40 sm:block" />
+
+                        <span className="hidden text-[9px] uppercase tracking-[0.28em] text-stone-400 sm:block">
+                            The Taste of Inspiration
+                        </span>
+                    </div>
+
+                    <span className="text-[8px] uppercase tracking-[0.28em] text-stone-400">
+                        The Closing
                     </span>
-                </h2>
+                </motion.div>
 
-                {/* Story */}
-                <div className="mx-auto mt-10 max-w-2xl">
-                    <p className="text-base leading-8 text-[#625e57] md:text-lg md:leading-9">
-                        Food can create a memory. Art can create a feeling.
-                        Here, the two meet in one shared journey — from
-                        Patrick&apos;s plate to Nour&apos;s canvas, and
-                        finally to you.
-                    </p>
+                {/* =====================================================
+                    INTRO
+                ===================================================== */}
+                <motion.div
+                    initial={
+                        reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                y: 20,
+                            }
+                    }
+                    whileInView={{
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    viewport={{
+                        once: true,
+                    }}
+                    transition={{
+                        duration: 0.9,
+                        ease,
+                    }}
+                    className="pt-10 lg:pt-12"
+                >
+                    <div className="flex items-center gap-4">
+                        <span className="h-px w-10 bg-[#8a6a48]" />
 
-                    <p className="mt-5 text-sm leading-7 text-[#77716a]">
-                        Take your time. Look. Feel. Listen. Smell. Taste.
-                        Create. Share. And perhaps, somewhere along the way,
-                        discover something new within yourself.
-                    </p>
+                        <p className="text-[8px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
+                            From our story to yours
+                        </p>
+                    </div>
+                </motion.div>
+
+                {/* =====================================================
+                    MAIN TITLE
+                ===================================================== */}
+                <div className="py-9 lg:py-12">
+                    <motion.div
+                        initial={
+                            reduceMotion
+                                ? false
+                                : {
+                                    opacity: 0,
+                                    y: 35,
+                                }
+                        }
+                        whileInView={{
+                            opacity: 1,
+                            y: 0,
+                        }}
+                        viewport={{
+                            once: true,
+                            amount: 0.2,
+                        }}
+                        transition={{
+                            duration: 1,
+                            ease,
+                        }}
+                    >
+                        <h2 className="font-serif text-[12vw] font-light leading-[0.95] tracking-[-0.04em] sm:text-[10vw] lg:text-[5.5rem] xl:text-[6.5rem]">
+                            The story continues
+                        </h2>
+
+                        <h2 className="mt-1 font-serif text-[12vw] font-light italic leading-[0.95] tracking-[-0.035em] text-[#8a6a48] sm:text-[10vw] lg:ml-[12%] lg:text-[5.5rem] xl:text-[6.5rem]">
+                            with you.
+                        </h2>
+                    </motion.div>
                 </div>
 
-                {/* Divider */}
-                <div className="mx-auto my-12 h-px w-20 bg-[#b9a58d]" />
+                {/* =====================================================
+                    CLOSING CONTENT
+                ===================================================== */}
+                <div className="grid gap-10 border-t border-[#8a6a48]/25 pt-8 lg:grid-cols-[0.65fr_1.35fr] lg:gap-16">
 
-                {/* Quote */}
-                <p className="mx-auto max-w-2xl font-serif text-2xl italic leading-relaxed text-[#4f4942] md:text-3xl">
-                    “Where flavour becomes colour,
-                    <span className="block">
-                        and food becomes art.”
+                    {/* LEFT */}
+                    <motion.div
+                        initial={
+                            reduceMotion
+                                ? false
+                                : {
+                                    opacity: 0,
+                                    y: 20,
+                                }
+                        }
+                        whileInView={{
+                            opacity: 1,
+                            y: 0,
+                        }}
+                        viewport={{
+                            once: true,
+                            amount: 0.4,
+                        }}
+                        transition={{
+                            duration: 0.9,
+                            ease,
+                        }}
+                    >
+                        <p className="text-[8px] font-semibold uppercase tracking-[0.32em] text-[#8a6a48]">
+                            05.1 / Your Experience
+                        </p>
+
+                        <p className="mt-4 text-[8px] uppercase leading-6 tracking-[0.25em] text-stone-400">
+                            Look
+                            <br />
+                            Feel
+                            <br />
+                            Taste
+                            <br />
+                            Create
+                        </p>
+                    </motion.div>
+
+                    {/* RIGHT */}
+                    <motion.div
+                        initial={
+                            reduceMotion
+                                ? false
+                                : {
+                                    opacity: 0,
+                                    y: 25,
+                                }
+                        }
+                        whileInView={{
+                            opacity: 1,
+                            y: 0,
+                        }}
+                        viewport={{
+                            once: true,
+                            amount: 0.3,
+                        }}
+                        transition={{
+                            duration: 1,
+                            delay: 0.1,
+                            ease,
+                        }}
+                    >
+                        {/* QUOTE */}
+                        <p className="max-w-2xl font-serif text-2xl font-light leading-[1.2] tracking-[-0.03em] sm:text-3xl lg:text-4xl">
+                            Where flavour becomes colour,
+
+                            <span className="block italic text-[#8a6a48]">
+                                and food becomes art.
+                            </span>
+                        </p>
+
+                        {/* SHORT CLOSING */}
+                        <p className="mt-5 max-w-md text-sm leading-7 text-stone-500">
+                            Take your time. Look closer. Feel something.
+                            Let the experience become your own.
+                        </p>
+
+                        {/* ACTIONS */}
+                        <div className="mt-8 flex flex-wrap items-center gap-7">
+                            <Link
+                                href="/paintings"
+                                className="group inline-flex items-center gap-4 border-b border-[#25221f] pb-2 text-[9px] font-semibold uppercase tracking-[0.25em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48]"
+                            >
+                                Explore the Paintings
+
+                                <ArrowUpRight
+                                    size={14}
+                                    strokeWidth={1.5}
+                                    className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                                />
+                            </Link>
+
+                            <a
+                                href="#book"
+                                className="group inline-flex items-center gap-4 text-[9px] font-semibold uppercase tracking-[0.25em] text-stone-400 transition-colors duration-300 hover:text-[#8a6a48]"
+                            >
+                                Discover the Book
+
+                                <ArrowUpRight
+                                    size={14}
+                                    strokeWidth={1.5}
+                                    className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                                />
+                            </a>
+                        </div>
+                    </motion.div>
+                </div>
+
+                {/* =====================================================
+                    FINAL LINE
+                ===================================================== */}
+                <motion.div
+                    initial={
+                        reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                            }
+                    }
+                    whileInView={{
+                        opacity: 1,
+                    }}
+                    viewport={{
+                        once: true,
+                    }}
+                    transition={{
+                        duration: 1,
+                        delay: 0.3,
+                    }}
+                    className="mt-12 flex items-center justify-between border-t border-[#8a6a48]/20 pt-5 lg:mt-16"
+                >
+                    <span className="text-[7px] uppercase tracking-[0.3em] text-stone-400">
+                        05 / The Invitation
                     </span>
-                </p>
 
-                {/* Actions */}
-                <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                    <Link
-                        href="/paintings"
-                        className="group flex min-w-[210px] items-center justify-center gap-3 rounded-full bg-[#25231f] px-8 py-4 text-sm font-medium text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#8a6a48]"
-                    >
-                        Explore the Paintings
-
-                        <ArrowRight
-                            size={16}
-                            className="transition-transform duration-300 group-hover:translate-x-1"
-                        />
-                    </Link>
-
-                    <a
-                        href="#book"
-                        className="min-w-[210px] rounded-full border border-[#b9aa98] bg-white/40 px-8 py-4 text-sm font-medium text-[#49453f] transition duration-300 hover:-translate-y-0.5 hover:border-[#8a6a48] hover:bg-white hover:text-[#8a6a48]"
-                    >
-                        Discover the Book
-                    </a>
-                </div>
+                    <span className="text-[7px] uppercase tracking-[0.3em] text-[#8a6a48]">
+                        Food · Art · Inspiration
+                    </span>
+                </motion.div>
             </div>
         </section>
     );
