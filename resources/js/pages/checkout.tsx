@@ -1,19 +1,100 @@
+
 import { Head, Link, useForm } from '@inertiajs/react';
+import type { FormEvent } from 'react';
 import {
     ArrowLeft,
+    ArrowRight,
     LockKeyhole,
     Minus,
     Plus,
-    ShoppingBag,
-    Truck,
+    ShieldCheck,
 } from 'lucide-react';
 
 interface CheckoutProps {
     quantity: number;
 }
 
+interface CheckoutFieldProps {
+    id: string;
+    label: string;
+    value: string;
+    onChange: (value: string) => void;
+    type?: 'text' | 'email' | 'tel';
+    placeholder?: string;
+    autoComplete?: string;
+    error?: string;
+    required?: boolean;
+}
+
+const BOOK_PRICE = 249.99;
+
+const formatPrice = (amount: number) =>
+    new Intl.NumberFormat('en-IE', {
+        style: 'currency',
+        currency: 'EUR',
+    }).format(amount);
+
+function CheckoutField({
+                           id,
+                           label,
+                           value,
+                           onChange,
+                           type = 'text',
+                           placeholder,
+                           autoComplete,
+                           error,
+                           required = false,
+                       }: CheckoutFieldProps) {
+    return (
+        <div>
+            <label
+                htmlFor={id}
+                className="mb-2.5 block text-xs font-medium tracking-[0.08em] text-[#49443e]"
+            >
+                {label}
+                {required && (
+                    <span className="ml-1 text-[#8a6a48]">*</span>
+                )}
+            </label>
+
+            <input
+                id={id}
+                name={id}
+                type={type}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder={placeholder}
+                autoComplete={autoComplete}
+                required={required}
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? `${id}-error` : undefined}
+                className={`w-full rounded-none border bg-transparent px-4 py-3.5 text-sm text-[#25221f] outline-none transition-colors placeholder:text-stone-400 focus:bg-white focus:ring-1 focus:ring-[#8a6a48]/10 ${
+                    error
+                        ? 'border-red-500 focus:border-red-500'
+                        : 'border-[#cfc6b9] focus:border-[#8a6a48]'
+                }`}
+            />
+
+            {error && (
+                <p
+                    id={`${id}-error`}
+                    className="mt-2 text-xs text-red-600"
+                >
+                    {error}
+                </p>
+            )}
+        </div>
+    );
+}
+
 export default function Checkout({ quantity }: CheckoutProps) {
-    const { data, setData, post, processing, errors } = useForm({
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+    } = useForm({
         name: '',
         email: '',
         phone: '',
@@ -23,8 +104,7 @@ export default function Checkout({ quantity }: CheckoutProps) {
         quantity: quantity,
     });
 
-    const price = 249.99;
-    const total = price * data.quantity;
+    const total = BOOK_PRICE * data.quantity;
 
     const decreaseQuantity = () => {
         setData('quantity', Math.max(1, data.quantity - 1));
@@ -34,421 +114,413 @@ export default function Checkout({ quantity }: CheckoutProps) {
         setData('quantity', data.quantity + 1);
     };
 
-    const submit = (e: React.FormEvent) => {
+    const submit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        // Keep the existing Laravel / Mollie order flow.
         post('/orders');
     };
 
-    const inputClass =
-        'w-full border border-stone-300 bg-[#fdfcf9] px-4 py-3.5 text-sm text-stone-900 outline-none transition duration-200 placeholder:text-stone-400 focus:border-[#8a6a48] focus:bg-white';
-
     return (
         <>
-            <Head title="Checkout" />
+            <Head title="Checkout | The Taste of Inspiration" />
 
-            <main className="min-h-screen bg-[#f7f3ec] text-stone-900">
-                {/* Top bar */}
-                <div className="border-b border-stone-300 bg-[#f7f3ec]/95">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
+            <main className="min-h-screen bg-[#f7f3ec] text-[#25221f]">
+                {/* Top navigation */}
+                <header className="border-b border-[#d8cfc3]">
+                    <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-5 sm:px-8 lg:px-12">
                         <Link
                             href="/"
-                            className="flex items-center gap-2 text-sm text-stone-600 transition hover:text-stone-950"
+                            className="group inline-flex items-center gap-2 text-xs text-stone-600 transition-colors hover:text-[#8a6a48]"
                         >
-                            <ArrowLeft size={16} />
-                            Terug naar de website
+                            <ArrowLeft
+                                size={16}
+                                className="transition-transform group-hover:-translate-x-1"
+                            />
+                            <span>Back to website</span>
                         </Link>
 
-                        <p className="text-sm font-semibold tracking-[0.22em] uppercase">
-                            Kunst Eten
-                        </p>
+                        <div className="flex items-center gap-2 text-stone-500">
+                            <LockKeyhole size={14} />
+                            <span className="text-[10px] font-medium tracking-[0.15em] uppercase">
+                                Secure Checkout
+                            </span>
+                        </div>
                     </div>
-                </div>
+                </header>
 
-                <div className="mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-16">
-                    {/* Heading */}
-                    <div className="mb-12 max-w-2xl">
-                        <div className="mb-4 flex items-center gap-3">
-                            <div className="h-px w-8 bg-[#8a6a48]" />
+                <div className="mx-auto max-w-7xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16 lg:px-12 lg:pb-28 lg:pt-20">
+                    {/* Page introduction */}
+                    <div className="mb-12 border-b border-[#d8cfc3] pb-10 lg:mb-16 lg:pb-12">
+                        <div className="mb-6 flex items-center gap-3">
+                            <span className="h-px w-8 bg-[#8a6a48]" />
 
-                            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                Checkout
+                            <p className="text-[10px] font-semibold tracking-[0.25em] text-[#8a6a48] uppercase">
+                                The Taste of Inspiration
                             </p>
                         </div>
 
-                        <h1 className="text-4xl font-light leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-                            Rond je bestelling
+                        <h1 className="max-w-3xl font-serif text-[clamp(3.25rem,7vw,6.5rem)] leading-[0.98] tracking-[-0.045em]">
+                            A story worth
                             <br />
-                            <span className="text-stone-500">
-                                rustig af.
+                            <span className="italic text-[#8a6a48]">
+                                keeping.
                             </span>
                         </h1>
 
-                        <p className="mt-5 max-w-xl text-base leading-7 text-stone-500">
-                            Vul hieronder je gegevens in. Controleer daarna je
-                            bestelling voordat je deze plaatst.
-                        </p>
+                        <div className="mt-7 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                            <p className="max-w-md text-sm leading-7 text-stone-600 sm:text-base">
+                                You're one step away from bringing
+                                The Taste of Inspiration into your home.
+                            </p>
+
+                            <p className="text-[10px] tracking-[0.16em] text-stone-500 uppercase">
+                                Your Details — Payment
+                            </p>
+                        </div>
                     </div>
 
-                    <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
-                        {/* Checkout form */}
+                    {/* Main checkout layout */}
+                    <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)] lg:items-start lg:gap-16">
+                        {/* Customer form */}
                         <form
                             id="checkout-form"
                             onSubmit={submit}
+                            className="min-w-0"
                         >
-                            <div className="border border-stone-300 bg-white">
-                                {/* Section header */}
-                                <div className="border-b border-stone-200 px-6 py-5 sm:px-8">
-                                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
-                                        01 — Contactgegevens
-                                    </p>
-                                </div>
-
-                                <div className="grid gap-6 p-6 sm:grid-cols-2 sm:p-8">
-                                    <div className="sm:col-span-2">
-                                        <label className="mb-2 block text-sm font-medium">
-                                            Volledige naam
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            value={data.name}
-                                            onChange={(e) =>
-                                                setData('name', e.target.value)
-                                            }
-                                            placeholder="Voor- en achternaam"
-                                            className={inputClass}
-                                        />
-
-                                        {errors.name && (
-                                            <p className="mt-2 text-sm text-red-600">
-                                                {errors.name}
-                                            </p>
-                                        )}
-                                    </div>
+                            {/* Contact details */}
+                            <section>
+                                <div className="mb-8 flex items-start gap-5 border-b border-[#d8cfc3] pb-6">
+                                    <span className="font-serif text-3xl text-[#8a6a48]">
+                                        01
+                                    </span>
 
                                     <div>
-                                        <label className="mb-2 block text-sm font-medium">
-                                            E-mailadres
-                                        </label>
+                                        <h2 className="font-serif text-3xl tracking-tight sm:text-4xl">
+                                            Your details
+                                        </h2>
 
-                                        <input
-                                            type="email"
-                                            value={data.email}
-                                            onChange={(e) =>
-                                                setData('email', e.target.value)
-                                            }
-                                            placeholder="naam@email.nl"
-                                            className={inputClass}
-                                        />
-
-                                        {errors.email && (
-                                            <p className="mt-2 text-sm text-red-600">
-                                                {errors.email}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <label className="mb-2 block text-sm font-medium">
-                                            Telefoon
-                                        </label>
-
-                                        <input
-                                            type="tel"
-                                            value={data.phone}
-                                            onChange={(e) =>
-                                                setData('phone', e.target.value)
-                                            }
-                                            placeholder="06 12345678"
-                                            className={inputClass}
-                                        />
-
-                                        {errors.phone && (
-                                            <p className="mt-2 text-sm text-red-600">
-                                                {errors.phone}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Address */}
-                                <div className="border-t border-stone-200">
-                                    <div className="border-b border-stone-200 px-6 py-5 sm:px-8">
-                                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
-                                            02 — Bezorgadres
+                                        <p className="mt-2 text-sm text-stone-500">
+                                            How can we reach you about your order?
                                         </p>
                                     </div>
+                                </div>
 
-                                    <div className="grid gap-6 p-6 sm:grid-cols-2 sm:p-8">
-                                        <div className="sm:col-span-2">
-                                            <label className="mb-2 block text-sm font-medium">
-                                                Adres
-                                            </label>
+                                <div className="grid gap-6 sm:grid-cols-2">
+                                    <div className="sm:col-span-2">
+                                        <CheckoutField
+                                            id="name"
+                                            label="Full name"
+                                            value={data.name}
+                                            onChange={(value) =>
+                                                setData('name', value)
+                                            }
+                                            placeholder="Your full name"
+                                            autoComplete="name"
+                                            error={errors.name}
+                                            required
+                                        />
+                                    </div>
 
-                                            <input
-                                                type="text"
-                                                value={data.address}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'address',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder="Straatnaam en huisnummer"
-                                                className={inputClass}
-                                            />
+                                    <CheckoutField
+                                        id="email"
+                                        label="Email address"
+                                        type="email"
+                                        value={data.email}
+                                        onChange={(value) =>
+                                            setData('email', value)
+                                        }
+                                        placeholder="you@example.com"
+                                        autoComplete="email"
+                                        error={errors.email}
+                                        required
+                                    />
 
-                                            {errors.address && (
-                                                <p className="mt-2 text-sm text-red-600">
-                                                    {errors.address}
-                                                </p>
-                                            )}
-                                        </div>
+                                    <CheckoutField
+                                        id="phone"
+                                        label="Phone number"
+                                        type="tel"
+                                        value={data.phone}
+                                        onChange={(value) =>
+                                            setData('phone', value)
+                                        }
+                                        placeholder="+31 6 12345678"
+                                        autoComplete="tel"
+                                        error={errors.phone}
+                                    />
+                                </div>
+                            </section>
 
-                                        <div>
-                                            <label className="mb-2 block text-sm font-medium">
-                                                Postcode
-                                            </label>
+                            {/* Shipping address */}
+                            <section className="mt-14">
+                                <div className="mb-8 flex items-start gap-5 border-b border-[#d8cfc3] pb-6">
+                                    <span className="font-serif text-3xl text-[#8a6a48]">
+                                        02
+                                    </span>
 
-                                            <input
-                                                type="text"
-                                                value={data.postal_code}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'postal_code',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder="1234 AB"
-                                                className={inputClass}
-                                            />
+                                    <div>
+                                        <h2 className="font-serif text-3xl tracking-tight sm:text-4xl">
+                                            Delivery address
+                                        </h2>
 
-                                            {errors.postal_code && (
-                                                <p className="mt-2 text-sm text-red-600">
-                                                    {errors.postal_code}
-                                                </p>
-                                            )}
-                                        </div>
-
-                                        <div>
-                                            <label className="mb-2 block text-sm font-medium">
-                                                Plaats
-                                            </label>
-
-                                            <input
-                                                type="text"
-                                                value={data.city}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'city',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder="Plaats"
-                                                className={inputClass}
-                                            />
-
-                                            {errors.city && (
-                                                <p className="mt-2 text-sm text-red-600">
-                                                    {errors.city}
-                                                </p>
-                                            )}
-                                        </div>
+                                        <p className="mt-2 text-sm text-stone-500">
+                                            Where should we send your book?
+                                        </p>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Mobile submit */}
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="mt-6 flex w-full items-center justify-center gap-3 bg-stone-900 px-6 py-4 text-sm font-medium text-white transition hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50 lg:hidden"
-                            >
-                                <ShoppingBag size={17} />
+                                <div className="grid gap-6 sm:grid-cols-2">
+                                    <div className="sm:col-span-2">
+                                        <CheckoutField
+                                            id="address"
+                                            label="Street and house number"
+                                            value={data.address}
+                                            onChange={(value) =>
+                                                setData('address', value)
+                                            }
+                                            placeholder="Street name and house number"
+                                            autoComplete="street-address"
+                                            error={errors.address}
+                                            required
+                                        />
+                                    </div>
 
-                                {processing
-                                    ? 'Bestelling verwerken...'
-                                    : 'Bestelling plaatsen'}
-                            </button>
+                                    <CheckoutField
+                                        id="postal_code"
+                                        label="Postal code"
+                                        value={data.postal_code}
+                                        onChange={(value) =>
+                                            setData('postal_code', value)
+                                        }
+                                        placeholder="1234 AB"
+                                        autoComplete="postal-code"
+                                        error={errors.postal_code}
+                                        required
+                                    />
+
+                                    <CheckoutField
+                                        id="city"
+                                        label="City"
+                                        value={data.city}
+                                        onChange={(value) =>
+                                            setData('city', value)
+                                        }
+                                        placeholder="Your city"
+                                        autoComplete="address-level2"
+                                        error={errors.city}
+                                        required
+                                    />
+                                </div>
+                            </section>
+
+                            {/* Payment explanation */}
+                            <section className="mt-14 border-t border-[#d8cfc3] pt-8">
+                                <div className="flex items-start gap-4">
+                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-[#cfc6b9]">
+                                        <LockKeyhole
+                                            size={18}
+                                            className="text-[#8a6a48]"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <h3 className="font-serif text-xl">
+                                            Secure payment
+                                        </h3>
+
+                                        <p className="mt-2 max-w-md text-sm leading-6 text-stone-500">
+                                            After submitting your details,
+                                            you'll continue to Mollie to
+                                            complete your payment securely.
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
                         </form>
 
                         {/* Order summary */}
-                        <aside className="lg:sticky lg:top-8">
-                            <div className="border border-stone-300 bg-[#efe8dd]">
-                                <div className="border-b border-stone-300 px-6 py-5">
-                                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a6a48]">
-                                        Besteloverzicht
-                                    </p>
+                        <aside className="min-w-0 lg:sticky lg:top-8">
+                            <div className="border border-[#d6cbbd] bg-[#eee7dc]">
+                                <div className="flex items-center justify-between border-b border-[#d6cbbd] px-6 py-5 sm:px-8">
+                                    <h2 className="font-serif text-2xl">
+                                        Your order
+                                    </h2>
+
+                                    <span className="text-[10px] tracking-[0.18em] text-[#8a6a48] uppercase">
+                                        01 Item
+                                    </span>
                                 </div>
 
-                                {/* Product */}
-                                <div className="flex gap-5 border-b border-stone-300 p-6">
-                                    <div className="flex h-36 w-28 shrink-0 items-center justify-center bg-white">
-                                        <img
-                                            src="/images/book cover.png"
-                                            alt="Kunst Eten boek"
-                                            className="max-h-[125px] max-w-[90px] object-contain drop-shadow-lg"
-                                        />
-                                    </div>
-
-                                    <div className="flex flex-1 flex-col justify-between py-1">
-                                        <div>
-                                            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a6a48]">
-                                                Hardcover
-                                            </p>
-
-                                            <h2 className="mt-2 text-lg font-medium">
-                                                Kunst Eten
-                                            </h2>
-
-                                            <p className="mt-1 text-sm text-stone-500">
-                                                Vijf schilderijen.
-                                                <br />
-                                                Vijf gerechten.
-                                                <br />
-                                                Eén verhaal.
-                                            </p>
+                                {/* Book presentation */}
+                                <div className="border-b border-[#d6cbbd] p-6 sm:p-8">
+                                    <div className="flex flex-col gap-6 sm:flex-row lg:flex-col xl:flex-row">
+                                        <div className="flex aspect-[4/5] w-full max-w-[180px] shrink-0 items-center justify-center bg-[#e5dbce] p-4">
+                                            <img
+                                                src="/images/book cover.png"
+                                                alt="The Taste of Inspiration book cover"
+                                                className="h-full w-full object-contain drop-shadow-xl"
+                                            />
                                         </div>
 
-                                        <p className="mt-4 font-medium">
-                                            €{' '}
-                                            {price
-                                                .toFixed(2)
-                                                .replace('.', ',')}
-                                        </p>
+                                        <div className="flex flex-1 flex-col justify-center">
+                                            <p className="text-[10px] font-semibold tracking-[0.2em] text-[#8a6a48] uppercase">
+                                                Art Book
+                                            </p>
+
+                                            <h3 className="mt-3 font-serif text-2xl leading-tight tracking-tight">
+                                                The Taste of Inspiration
+                                            </h3>
+
+                                            <p className="mt-3 max-w-xs text-sm leading-6 text-stone-600">
+                                                Where flavour becomes colour,
+                                                and food becomes art.
+                                            </p>
+
+                                            <p className="mt-5 text-sm font-semibold">
+                                                {formatPrice(BOOK_PRICE)}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* Quantity */}
-                                <div className="border-b border-stone-300 p-6">
-                                    <div className="mb-3 flex items-center justify-between">
-                                        <p className="text-sm font-medium">
-                                            Aantal
-                                        </p>
+                                <div className="border-b border-[#d6cbbd] px-6 py-6 sm:px-8">
+                                    <div className="flex items-center justify-between gap-4">
+                                        <div>
+                                            <p className="text-sm font-medium">
+                                                Quantity
+                                            </p>
 
-                                        <p className="text-xs text-stone-500">
-                                            {data.quantity}{' '}
-                                            {data.quantity === 1
-                                                ? 'boek'
-                                                : 'boeken'}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex items-center justify-between border border-stone-300 bg-white">
-                                        <button
-                                            type="button"
-                                            onClick={decreaseQuantity}
-                                            disabled={data.quantity <= 1}
-                                            className="flex h-12 w-12 items-center justify-center transition hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-30"
-                                        >
-                                            <Minus size={16} />
-                                        </button>
-
-                                        <span className="font-medium">
-                                            {data.quantity}
-                                        </span>
-
-                                        <button
-                                            type="button"
-                                            onClick={increaseQuantity}
-                                            className="flex h-12 w-12 items-center justify-center bg-stone-900 text-white transition hover:bg-[#8a6a48]"
-                                        >
-                                            <Plus size={16} />
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Price */}
-                                <div className="p-6">
-                                    <div className="flex items-center justify-between text-sm text-stone-500">
-                                        <span>Boek(en)</span>
-
-                                        <span>
-                                            €{' '}
-                                            {total
-                                                .toFixed(2)
-                                                .replace('.', ',')}
-                                        </span>
-                                    </div>
-
-                                    <div className="mt-4 flex items-center justify-between text-sm text-stone-500">
-                                        <span>Verzending</span>
-
-                                        <span>Nader te bepalen</span>
-                                    </div>
-
-                                    <div className="mt-6 border-t border-stone-300 pt-6">
-                                        <div className="flex items-end justify-between">
-                                            <div>
-                                                <p className="text-sm text-stone-500">
-                                                    Totaal
-                                                </p>
-
-                                                <p className="mt-1 text-xs text-stone-400">
-                                                    Inclusief btw
-                                                </p>
-                                            </div>
-
-                                            <p className="text-3xl font-light tracking-tight">
-                                                €{' '}
-                                                {total
-                                                    .toFixed(2)
-                                                    .replace('.', ',')}
+                                            <p className="mt-1 text-xs text-stone-500">
+                                                Number of copies
                                             </p>
                                         </div>
+
+                                        <div className="flex items-center border border-[#c6b9a8] bg-[#f7f3ec]">
+                                            <button
+                                                type="button"
+                                                onClick={decreaseQuantity}
+                                                disabled={data.quantity <= 1}
+                                                aria-label="Decrease quantity"
+                                                className="flex h-11 w-11 items-center justify-center transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-30"
+                                            >
+                                                <Minus size={15} />
+                                            </button>
+
+                                            <span className="min-w-10 text-center text-sm font-medium tabular-nums">
+                                                {data.quantity}
+                                            </span>
+
+                                            <button
+                                                type="button"
+                                                onClick={increaseQuantity}
+                                                aria-label="Increase quantity"
+                                                className="flex h-11 w-11 items-center justify-center transition hover:bg-white"
+                                            >
+                                                <Plus size={15} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {errors.quantity && (
+                                        <p className="mt-3 text-xs text-red-600">
+                                            {errors.quantity}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Totals */}
+                                <div className="px-6 py-7 sm:px-8">
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between gap-4 text-sm">
+                                            <span className="text-stone-600">
+                                                Book subtotal
+                                            </span>
+
+                                            <span className="font-medium tabular-nums">
+                                                {formatPrice(total)}
+                                            </span>
+                                        </div>
+
+                                        <div className="flex justify-between gap-4 text-sm">
+                                            <span className="text-stone-600">
+                                                Shipping
+                                            </span>
+
+                                            <span className="text-right text-stone-500">
+                                                To be confirmed
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-7 flex items-end justify-between gap-4 border-t border-[#c6b9a8] pt-6">
+                                        <div>
+                                            <p className="text-sm font-medium">
+                                                Book total
+                                            </p>
+
+                                            <p className="mt-1 text-xs text-stone-500">
+                                                Excluding any shipping charge
+                                            </p>
+                                        </div>
+
+                                        <p className="font-serif text-3xl tracking-tight tabular-nums sm:text-4xl">
+                                            {formatPrice(total)}
+                                        </p>
                                     </div>
 
                                     <button
                                         type="submit"
                                         form="checkout-form"
                                         disabled={processing}
-                                        className="mt-7 hidden w-full items-center justify-center gap-3 bg-stone-900 px-6 py-4 text-sm font-medium text-white transition hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50 lg:flex"
+                                        className="group mt-8 flex w-full items-center justify-center gap-3 bg-[#25221f] px-5 py-4 text-sm font-medium text-white transition-colors hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50"
                                     >
-                                        <LockKeyhole size={16} />
-
-                                        {processing
-                                            ? 'Bestelling verwerken...'
-                                            : 'Bestelling plaatsen'}
+                                        {processing ? (
+                                            'Processing your order...'
+                                        ) : (
+                                            <>
+                                                Continue to payment
+                                                <ArrowRight
+                                                    size={17}
+                                                    className="transition-transform group-hover:translate-x-1"
+                                                />
+                                            </>
+                                        )}
                                     </button>
+
+                                    <div className="mt-5 flex items-center justify-center gap-2 text-stone-500">
+                                        <ShieldCheck size={15} />
+
+                                        <p className="text-xs">
+                                            Secure payment via Mollie
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Info */}
-                            <div className="mt-5 grid grid-cols-2 gap-3">
-                                <div className="border border-stone-300 bg-white/60 p-4">
-                                    <Truck
-                                        size={17}
-                                        className="text-[#8a6a48]"
-                                    />
+                            <div className="mt-6 border-l-2 border-[#8a6a48] pl-5">
+                                <p className="font-serif text-lg italic text-[#8a6a48]">
+                                    A meeting of food and art.
+                                </p>
 
-                                    <p className="mt-3 text-xs font-medium">
-                                        Zorgvuldig verzonden
-                                    </p>
-
-                                    <p className="mt-1 text-xs leading-5 text-stone-500">
-                                        Veilig verpakt voor verzending.
-                                    </p>
-                                </div>
-
-                                <div className="border border-stone-300 bg-white/60 p-4">
-                                    <LockKeyhole
-                                        size={17}
-                                        className="text-[#8a6a48]"
-                                    />
-
-                                    <p className="mt-3 text-xs font-medium">
-                                        Veilig bestellen
-                                    </p>
-
-                                    <p className="mt-1 text-xs leading-5 text-stone-500">
-                                        Je gegevens worden veilig verwerkt.
-                                    </p>
-                                </div>
+                                <p className="mt-2 text-xs leading-6 text-stone-500">
+                                    Thank you for becoming part of this story.
+                                </p>
                             </div>
                         </aside>
                     </div>
                 </div>
+
+                {/* Minimal footer */}
+                <footer className="border-t border-[#d8cfc3] px-5 py-7 sm:px-8 lg:px-12">
+                    <div className="mx-auto flex max-w-7xl flex-col gap-3 text-xs text-stone-500 sm:flex-row sm:items-center sm:justify-between">
+                        <span>The Taste of Inspiration</span>
+
+                        <span>
+                            Where flavour becomes colour, and food becomes art.
+                        </span>
+                    </div>
+                </footer>
             </main>
         </>
     );

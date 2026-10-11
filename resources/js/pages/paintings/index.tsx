@@ -1,5 +1,6 @@
+
 import { Head, Link } from '@inertiajs/react';
-import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ArrowDown } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 
 import Navbar from '@/components/Navbar';
@@ -13,7 +14,7 @@ interface Painting {
     slug: string;
     description: string | null;
     image: string | null;
-    starting_price: string;
+    starting_price: string | number;
     bidding_open: boolean;
     sort_order: number;
 }
@@ -25,439 +26,418 @@ interface Props {
 const paintingImages: Record<string, string> = {
     'beyond-the-surface':
         '/images/paintings/beyond-the-surface.jpg',
-
     essence:
         '/images/paintings/essence.jpg',
-
     'the-silent-melody':
         '/images/paintings/the-silent-melody.jpg',
-
     'a-moment-to-savour':
         '/images/paintings/a-moment-to-savour.jpg',
-
     'in-bloom':
         '/images/paintings/in-bloom.jpg',
 };
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
+function formatPrice(price: string | number) {
+    const amount = Number(price);
+
+    if (!Number.isFinite(amount)) {
+        return 'Price on request';
+    }
+
+    return new Intl.NumberFormat('en-GB', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(amount);
+}
+
+function getPaintingImage(painting: Painting) {
+    const image = painting.image?.trim();
+
+    if (image) {
+        if (
+            image.startsWith('http://') ||
+            image.startsWith('https://') ||
+            image.startsWith('/')
+        ) {
+            return image;
+        }
+
+        if (image.startsWith('storage/')) {
+            return `/${image}`;
+        }
+
+        return `/storage/${image}`;
+    }
+
+    return paintingImages[painting.slug] ?? null;
+}
+
 export default function PaintingsIndex({ paintings }: Props) {
     const reduceMotion = useReducedMotion();
 
-    const formatPrice = (price: string) =>
-        new Intl.NumberFormat('en-GB', {
-            style: 'currency',
-            currency: 'EUR',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        }).format(Number(price));
+    const sortedPaintings = [...paintings].sort(
+        (a, b) => a.sort_order - b.sort_order
+    );
 
     return (
         <BookCartProvider>
-            <Head title="Paintings | The Taste of Inspiration" />
+            <Head title="The Collection | The Taste of Inspiration" />
 
             <Navbar />
 
-            <main className="overflow-hidden bg-[#f3eee6] text-[#25221f]">
+            <main className="min-h-screen overflow-hidden bg-[#f7f3ec] text-[#25221f]">
 
-                {/* =====================================================
-                    OPENING
-                ===================================================== */}
-                <section className="relative min-h-[75vh] border-b border-[#8a6a48]/20">
-                    <div className="mx-auto flex min-h-[75vh] max-w-[1500px] flex-col px-5 pb-10 pt-28 sm:px-8 sm:pt-32 lg:px-16 lg:pt-36">
+                {/* INTRODUCTION */}
+                <section className="bg-[#eee7dc]">
+                    <div className="mx-auto max-w-[1300px] px-5 pb-12 pt-32 sm:px-8 sm:pb-16 sm:pt-40 lg:px-16 lg:pb-20">
 
-                        {/* TOP */}
-                        <div className="flex items-start justify-between gap-6 border-b border-[#8a6a48]/20 pb-4">
-                            <div>
-                                <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                    03 / The Collection
-                                </p>
+                        {/* TOP LABEL */}
+                        <div className="flex items-center justify-between gap-4 border-b border-[#8a6a48]/25 pb-4">
+                            <span className="text-[9px] font-semibold uppercase tracking-[0.28em] text-[#8a6a48]">
+                                03 / The Collection
+                            </span>
 
-                                <p className="mt-1.5 text-[7px] uppercase tracking-[0.22em] text-stone-400 sm:text-[8px]">
-                                    The Taste of Inspiration
-                                </p>
-                            </div>
-
-                            <div className="text-right">
-                                <p className="text-[7px] uppercase tracking-[0.22em] text-stone-400 sm:text-[8px]">
-                                    {String(paintings.length).padStart(2, '0')} Works
-                                </p>
-
-                                <p className="mt-1.5 text-[7px] uppercase tracking-[0.22em] text-stone-400 sm:text-[8px]">
-                                    Original Paintings
-                                </p>
-                            </div>
+                            <span className="text-[9px] uppercase tracking-[0.2em] text-[#746b61]">
+                                {String(sortedPaintings.length).padStart(2, '0')} Works
+                            </span>
                         </div>
 
                         {/* TITLE */}
-                        <div className="flex flex-1 items-center py-16 sm:py-20">
-                            <div className="w-full">
-                                <motion.p
-                                    initial={
-                                        reduceMotion
-                                            ? false
-                                            : {
-                                                opacity: 0,
-                                                y: 15,
-                                            }
-                                    }
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                    }}
-                                    transition={{
-                                        duration: 0.8,
-                                        ease,
-                                    }}
-                                    className="mb-5 text-[8px] font-semibold uppercase tracking-[0.35em] text-[#8a6a48]"
-                                >
-                                    An exhibition in five works
-                                </motion.p>
+                        <motion.div
+                            initial={
+                                reduceMotion
+                                    ? false
+                                    : { opacity: 0, y: 25 }
+                            }
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.9, ease }}
+                            className="py-12 sm:py-16"
+                        >
+                            <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.28em] text-[#8a6a48]">
+                                An Exhibition in Five Works
+                            </p>
 
-                                <div className="overflow-hidden">
-                                    <motion.h1
-                                        initial={
-                                            reduceMotion
-                                                ? false
-                                                : {
-                                                    y: '105%',
-                                                }
-                                        }
-                                        animate={{
-                                            y: 0,
-                                        }}
-                                        transition={{
-                                            duration: 1.1,
-                                            ease,
-                                        }}
-                                        className="font-serif text-[17vw] font-light leading-[0.78] tracking-[-0.065em] sm:text-[13vw] lg:text-[8.5rem] xl:text-[10rem]"
-                                    >
-                                        The
-                                        <span className="block italic text-[#8a6a48]">
-                                            Collection
-                                        </span>
-                                    </motion.h1>
-                                </div>
-                            </div>
-                        </div>
+                            <h1 className="font-serif text-[clamp(3.5rem,9vw,7.5rem)] font-light leading-[0.95] tracking-[-0.055em]">
+                                The
+                                <span className="italic text-[#8a6a48]">
+                                    {' '}Collection.
+                                </span>
+                            </h1>
 
-                        {/* BOTTOM */}
-                        <div className="flex items-end justify-between gap-8 border-t border-[#8a6a48]/20 pt-5">
-                            <p className="max-w-sm font-serif text-xl font-light leading-[1.2] sm:text-2xl">
+                            <p className="mt-7 max-w-lg font-serif text-xl font-light leading-[1.4] text-[#62584c] sm:text-2xl">
                                 Five moments.
-                                <span className="block italic text-[#8a6a48]">
-                                    Five expressions.
+                                <span className="italic text-[#8a6a48]">
+                                    {' '}Five expressions.
                                 </span>
                             </p>
+                        </motion.div>
+
+                        {/* BOTTOM */}
+                        <div className="flex items-center justify-between gap-4 border-t border-[#8a6a48]/25 pt-4">
+                            <span className="text-[9px] uppercase tracking-[0.2em] text-[#746b61]">
+                                Original Artworks
+                            </span>
 
                             <a
                                 href="#collection"
-                                aria-label="View the collection"
-                                className="flex h-11 w-11 shrink-0 items-center justify-center border border-[#8a6a48]/30 text-[#8a6a48] transition-colors duration-300 hover:bg-[#8a6a48] hover:text-white"
+                                aria-label="Explore the collection"
+                                className="group flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.2em] text-[#8a6a48]"
                             >
+                                Explore
+
                                 <ArrowDown
-                                    size={15}
-                                    strokeWidth={1.4}
+                                    size={14}
+                                    strokeWidth={1.5}
+                                    className="transition-transform duration-300 group-hover:translate-y-1"
                                 />
                             </a>
                         </div>
                     </div>
                 </section>
 
-                {/* =====================================================
-                    COLLECTION
-                ===================================================== */}
-                <section id="collection">
-                    <div className="mx-auto max-w-[1500px] px-5 sm:px-8 lg:px-16">
+                {/* COLLECTION */}
+                <section
+                    id="collection"
+                    className="scroll-mt-24"
+                >
+                    <div className="mx-auto max-w-[1300px] px-5 py-12 sm:px-8 sm:py-16 lg:px-16 lg:py-20">
 
-                        {paintings.length > 0 ? (
-                            paintings.map((painting, index) => {
-                                const artworkImage =
-                                    paintingImages[painting.slug];
+                        {/* SECTION HEADING */}
+                        <div className="mb-8 flex items-end justify-between gap-4 border-b border-[#8a6a48]/25 pb-5 sm:mb-12">
+                            <div>
+                                <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
+                                    Discover
+                                </p>
 
-                                const reverse = index % 2 === 1;
+                                <h2 className="font-serif text-2xl font-light tracking-tight sm:text-3xl">
+                                    Original Works
+                                </h2>
+                            </div>
 
-                                return (
-                                    <motion.article
-                                        key={painting.id}
-                                        initial={
-                                            reduceMotion
-                                                ? false
-                                                : {
-                                                    opacity: 0,
-                                                    y: 35,
-                                                }
-                                        }
-                                        whileInView={{
-                                            opacity: 1,
-                                            y: 0,
-                                        }}
-                                        viewport={{
-                                            once: true,
-                                            amount: 0.12,
-                                        }}
-                                        transition={{
-                                            duration: 0.9,
-                                            ease,
-                                        }}
-                                        className="border-b border-[#8a6a48]/20 py-14 sm:py-20 lg:py-28"
-                                    >
-                                        {/* NUMBER / INDEX */}
-                                        <div className="mb-7 flex items-center justify-between border-b border-[#8a6a48]/20 pb-4 lg:mb-10">
-                                            <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                                Artwork{' '}
-                                                {String(index + 1).padStart(
-                                                    2,
-                                                    '0',
-                                                )}
-                                            </p>
+                            <span className="text-[9px] uppercase tracking-[0.2em] text-[#746b61]">
+                                {String(sortedPaintings.length).padStart(2, '0')} Artworks
+                            </span>
+                        </div>
 
-                                            <p className="text-[7px] uppercase tracking-[0.25em] text-stone-400">
-                                                {String(index + 1).padStart(
-                                                    2,
-                                                    '0',
-                                                )}
-                                                {' / '}
-                                                {String(
-                                                    paintings.length,
-                                                ).padStart(2, '0')}
-                                            </p>
-                                        </div>
+                        {sortedPaintings.length > 0 ? (
 
-                                        {/* ARTWORK LAYOUT */}
-                                        <div
-                                            className={`grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-14 xl:gap-20`}
+                            /* TWO-COLUMN GALLERY */
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-8 sm:gap-y-14 lg:gap-x-14 lg:gap-y-20">
+
+                                {sortedPaintings.map((painting, index) => {
+                                    const artworkImage = getPaintingImage(painting);
+                                    const artworkUrl = `/paintings/${painting.slug}`;
+
+                                    return (
+                                        <motion.article
+                                            key={painting.id}
+                                            initial={
+                                                reduceMotion
+                                                    ? false
+                                                    : {
+                                                        opacity: 0,
+                                                        y: 30,
+                                                    }
+                                            }
+                                            whileInView={{
+                                                opacity: 1,
+                                                y: 0,
+                                            }}
+                                            viewport={{
+                                                once: true,
+                                                amount: 0.1,
+                                            }}
+                                            transition={{
+                                                duration: 0.8,
+                                                delay: reduceMotion
+                                                    ? 0
+                                                    : (index % 2) * 0.12,
+                                                ease,
+                                            }}
+                                            className="group min-w-0"
                                         >
-                                            {/* =================================
-                                                IMAGE
-                                            ================================= */}
-                                            <div
-                                                className={
-                                                    reverse
-                                                        ? 'lg:order-2 lg:col-span-7'
-                                                        : 'lg:col-span-7'
-                                                }
+
+                                            {/* IMAGE */}
+                                            <Link
+                                                href={artworkUrl}
+                                                aria-label={`View ${painting.title}`}
+                                                className="block outline-offset-4"
                                             >
-                                                <Link
-                                                    href={`/paintings/${painting.slug}`}
-                                                    className="group block"
-                                                >
-                                                    <div className="relative overflow-hidden bg-[#e5ded3]">
-                                                        {artworkImage ? (
-                                                            <img
-                                                                src={
-                                                                    artworkImage
-                                                                }
-                                                                alt={
-                                                                    painting.title
-                                                                }
-                                                                className="aspect-[4/5] w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.025]"
-                                                            />
-                                                        ) : (
-                                                            <div className="flex aspect-[4/5] items-center justify-center">
-                                                                <p className="text-[8px] uppercase tracking-[0.25em] text-stone-400">
-                                                                    Artwork
-                                                                    coming
-                                                                    soon
-                                                                </p>
-                                                            </div>
-                                                        )}
+                                                <div className="relative aspect-[4/5] overflow-hidden bg-[#e8dfd2]">
 
-                                                        {/* SMALL NUMBER */}
-                                                        <div className="absolute left-0 top-0 bg-[#f3eee6] px-4 py-3">
-                                                            <span className="font-serif text-lg font-light text-[#8a6a48]">
-                                                                {String(
-                                                                    index + 1,
-                                                                ).padStart(
-                                                                    2,
-                                                                    '0',
-                                                                )}
-                                                            </span>
-                                                        </div>
-
-                                                        {/* VIEW */}
-                                                        <div className="absolute bottom-0 left-0 right-0 flex translate-y-full items-center justify-between bg-[#25221f] px-5 py-4 text-[#f7f3ec] transition-transform duration-500 group-hover:translate-y-0">
-                                                            <span className="text-[8px] font-semibold uppercase tracking-[0.25em]">
-                                                                View Artwork
+                                                    {artworkImage ? (
+                                                        <img
+                                                            src={artworkImage}
+                                                            alt={painting.title}
+                                                            loading="lazy"
+                                                            className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.035] group-focus-within:scale-[1.035]"
+                                                        />
+                                                    ) : (
+                                                        <div className="flex h-full w-full flex-col items-center justify-center gap-3">
+                                                            <span className="font-serif text-4xl font-light text-[#8a6a48]/30 sm:text-6xl">
+                                                                {String(index + 1).padStart(2, '0')}
                                                             </span>
 
-                                                            <ArrowUpRight
-                                                                size={14}
-                                                                strokeWidth={
-                                                                    1.4
-                                                                }
-                                                            />
+                                                            <span className="text-center text-[8px] uppercase tracking-[0.2em] text-[#8a6a48]">
+                                                                Artwork Coming Soon
+                                                            </span>
                                                         </div>
+                                                    )}
+
+                                                    {/* ARTWORK NUMBER */}
+                                                    <div className="absolute left-0 top-0 bg-[#f7f3ec] px-3 py-2 sm:px-4 sm:py-3">
+                                                        <span className="font-serif text-sm text-[#8a6a48] sm:text-lg">
+                                                            {String(index + 1).padStart(2, '0')}
+                                                        </span>
                                                     </div>
-                                                </Link>
-                                            </div>
 
-                                            {/* =================================
-                                                INFORMATION
-                                            ================================= */}
-                                            <div
-                                                className={
-                                                    reverse
-                                                        ? 'lg:order-1 lg:col-span-5'
-                                                        : 'lg:col-span-5'
-                                                }
-                                            >
-                                                {/* LARGE NUMBER */}
-                                                <p className="font-serif text-6xl font-light leading-none text-[#8a6a48]/20 sm:text-7xl lg:text-8xl">
-                                                    {String(
-                                                        index + 1,
-                                                    ).padStart(2, '0')}
-                                                </p>
+                                                    {/* DESKTOP HOVER ARROW */}
+                                                    <div className="absolute bottom-0 right-0 hidden h-12 w-12 translate-y-full items-center justify-center bg-[#25221f] text-[#f7f3ec] transition-transform duration-500 group-hover:translate-y-0 group-focus-within:translate-y-0 sm:flex">
+                                                        <ArrowUpRight
+                                                            size={19}
+                                                            strokeWidth={1.4}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </Link>
+
+                                            {/* INFORMATION */}
+                                            <div className="pt-4 sm:pt-6">
+
+                                                {/* NUMBER / TYPE */}
+                                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                                    <span className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#8a6a48] sm:text-[9px]">
+                                                        Artwork {String(index + 1).padStart(2, '0')}
+                                                    </span>
+
+                                                    <span className="hidden text-[9px] uppercase tracking-[0.15em] text-[#746b61] sm:block">
+                                                        Original Painting
+                                                    </span>
+                                                </div>
 
                                                 {/* TITLE */}
                                                 <Link
-                                                    href={`/paintings/${painting.slug}`}
-                                                    className="group mt-5 block"
+                                                    href={artworkUrl}
+                                                    className="mt-3 block"
                                                 >
-                                                    <h2 className="max-w-lg font-serif text-[2.7rem] font-light leading-[0.95] tracking-[-0.045em] transition-colors duration-300 group-hover:text-[#8a6a48] sm:text-5xl lg:text-6xl">
+                                                    <h3 className="font-serif text-[clamp(1.35rem,3vw,2.7rem)] font-light leading-[1.12] tracking-[-0.035em] transition-colors duration-300 group-hover:text-[#8a6a48]">
                                                         {painting.title}
-                                                    </h2>
+                                                    </h3>
                                                 </Link>
 
-                                                {/* META */}
-                                                <div className="mt-8 border-y border-[#8a6a48]/20">
-                                                    <div className="flex items-center justify-between gap-5 border-b border-[#8a6a48]/20 py-4">
-                                                        <span className="text-[7px] font-semibold uppercase tracking-[0.24em] text-stone-400">
-                                                            Type
-                                                        </span>
+                                                {/* PRICE AND STATUS */}
+                                                <div className="mt-5 border-t border-[#8a6a48]/20 pt-4 sm:mt-7 sm:pt-5">
 
-                                                        <span className="text-[8px] uppercase tracking-[0.2em]">
-                                                            Original Painting
-                                                        </span>
-                                                    </div>
+                                                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 
-                                                    <div className="flex items-center justify-between gap-5 border-b border-[#8a6a48]/20 py-4">
-                                                        <span className="text-[7px] font-semibold uppercase tracking-[0.24em] text-stone-400">
-                                                            Starting Price
-                                                        </span>
+                                                        {/* PRICE */}
+                                                        <div>
+                                                            <p className="mb-1 text-[8px] uppercase tracking-[0.15em] text-[#746b61]">
+                                                                Starting Price
+                                                            </p>
 
-                                                        <span className="font-serif text-xl font-light text-[#8a6a48]">
-                                                            {formatPrice(
-                                                                painting.starting_price,
-                                                            )}
-                                                        </span>
-                                                    </div>
+                                                            <p className="font-serif text-lg font-light text-[#8a6a48] sm:text-2xl">
+                                                                {formatPrice(painting.starting_price)}
+                                                            </p>
+                                                        </div>
 
-                                                    <div className="flex items-center justify-between gap-5 py-4">
-                                                        <span className="text-[7px] font-semibold uppercase tracking-[0.24em] text-stone-400">
-                                                            Status
-                                                        </span>
-
+                                                        {/* STATUS */}
                                                         <div className="flex items-center gap-2">
                                                             <span
-                                                                className={`h-1.5 w-1.5 rounded-full ${
+                                                                className={`h-1.5 w-1.5 shrink-0 rounded-full ${
                                                                     painting.bidding_open
                                                                         ? 'bg-[#66765d]'
                                                                         : 'bg-stone-400'
                                                                 }`}
                                                             />
 
-                                                            <span className="text-[8px] uppercase tracking-[0.18em]">
+                                                            <span className="text-[9px] uppercase tracking-[0.12em] text-[#62584c]">
                                                                 {painting.bidding_open
-                                                                    ? 'Available'
+                                                                    ? 'Open for Offers'
                                                                     : 'Bidding Closed'}
                                                             </span>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                {/* VIEW LINK */}
+                                                {/* ACTION */}
                                                 <Link
-                                                    href={`/paintings/${painting.slug}`}
-                                                    className="group mt-7 inline-flex items-center gap-4 border-b border-[#25221f] pb-2 text-[8px] font-semibold uppercase tracking-[0.25em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48]"
+                                                    href={artworkUrl}
+                                                    className="group/link mt-5 inline-flex items-center gap-2 border-b border-[#8a6a48] pb-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#8a6a48] transition-colors duration-300 hover:border-[#25221f] hover:text-[#25221f] sm:mt-7 sm:gap-3 sm:tracking-[0.2em]"
                                                 >
-                                                    Discover Artwork
+                                                    <span>
+                                                        {painting.bidding_open
+                                                            ? 'Make an Offer'
+                                                            : 'View Artwork'}
+                                                    </span>
 
                                                     <ArrowUpRight
                                                         size={14}
-                                                        strokeWidth={1.4}
-                                                        className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                                                        strokeWidth={1.5}
+                                                        className="shrink-0 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
                                                     />
                                                 </Link>
                                             </div>
-                                        </div>
-                                    </motion.article>
-                                );
-                            })
+                                        </motion.article>
+                                    );
+                                })}
+                            </div>
+
                         ) : (
-                            <div className="py-24 text-center sm:py-32">
-                                <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+
+                            /* EMPTY COLLECTION */
+                            <div className="py-20 text-center">
+                                <p className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
                                     Coming Soon
                                 </p>
 
-                                <h2 className="mt-4 font-serif text-4xl font-light sm:text-5xl">
+                                <h2 className="mt-5 font-serif text-3xl font-light sm:text-5xl">
                                     The collection is being prepared.
                                 </h2>
+
+                                <p className="mx-auto mt-4 max-w-sm text-sm leading-7 text-[#62584c]">
+                                    Our original artworks will be available
+                                    to explore here soon.
+                                </p>
                             </div>
                         )}
                     </div>
                 </section>
 
-                {/* =====================================================
-                    ACQUISITION
-                ===================================================== */}
-                {paintings.length > 0 && (
-                    <section className="bg-[#25221f] text-[#f3eee6]">
-                        <div className="mx-auto max-w-[1500px] px-5 py-16 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
+                {/* PRIVATE ACQUISITION */}
+                {sortedPaintings.length > 0 && (
+                    <section className="bg-[#eee7dc]">
+                        <div className="mx-auto max-w-[1300px] px-5 py-12 sm:px-8 sm:py-16 lg:px-16">
 
-                            <div className="flex items-start justify-between gap-6 border-b border-white/15 pb-4">
-                                <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#c5a27d]">
+                            <div className="flex items-center justify-between gap-4 border-b border-[#8a6a48]/25 pb-4">
+                                <span className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
                                     Private Acquisition
-                                </p>
+                                </span>
 
-                                <p className="text-right text-[7px] uppercase tracking-[0.25em] text-white/40">
-                                    Original Works
-                                </p>
+                                <span className="text-[9px] uppercase tracking-[0.15em] text-[#746b61]">
+                                    Original Art
+                                </span>
                             </div>
 
-                            <div className="grid gap-10 py-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:gap-20 lg:py-14">
-
-                                <h2 className="font-serif text-[12vw] font-light leading-[0.9] tracking-[-0.05em] sm:text-6xl lg:text-7xl xl:text-8xl">
-                                    Make a work
-
-                                    <span className="block italic text-[#c5a27d]">
-                                        part of your story.
-                                    </span>
-                                </h2>
-
+                            <motion.div
+                                initial={
+                                    reduceMotion
+                                        ? false
+                                        : { opacity: 0, y: 20 }
+                                }
+                                whileInView={{
+                                    opacity: 1,
+                                    y: 0,
+                                }}
+                                viewport={{ once: true, amount: 0.25 }}
+                                transition={{ duration: 0.8, ease }}
+                                className="grid gap-7 py-10 lg:grid-cols-[1fr_0.8fr] lg:items-center lg:gap-16"
+                            >
                                 <div>
-                                    <p className="max-w-md text-[13px] leading-6 text-white/55 sm:text-sm sm:leading-7">
-                                        Each artwork is available through
-                                        private acquisition. Select a work to
-                                        submit your offer.
+                                    <h2 className="font-serif text-[clamp(2.3rem,5vw,4.5rem)] font-light leading-[1.05] tracking-[-0.04em]">
+                                        Art that becomes
+                                        <span className="block italic text-[#8a6a48]">
+                                            part of your story.
+                                        </span>
+                                    </h2>
+                                </div>
+
+                                <div className="lg:border-l lg:border-[#8a6a48]/25 lg:pl-12">
+                                    <p className="max-w-md text-sm leading-7 text-[#62584c]">
+                                        Selected original artworks are available
+                                        through private offers. Choose a painting
+                                        to discover more and submit your offer.
                                     </p>
 
-                                    <p className="mt-4 text-[11px] leading-5 text-white/35">
-                                        Offers and bidder information remain
-                                        private.
+                                    <p className="mt-3 text-xs leading-6 text-[#746b61]">
+                                        All offers and bidder information
+                                        remain private.
                                     </p>
 
                                     <a
                                         href="#collection"
-                                        className="group mt-7 inline-flex items-center gap-4 border-b border-white/60 pb-2 text-[8px] font-semibold uppercase tracking-[0.25em] transition-colors duration-300 hover:border-[#c5a27d] hover:text-[#c5a27d]"
+                                        className="group mt-6 inline-flex items-center gap-3 border-b border-[#8a6a48] pb-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#8a6a48] transition-colors hover:border-[#25221f] hover:text-[#25221f]"
                                     >
-                                        View the Collection
+                                        Explore the Collection
 
                                         <ArrowUpRight
-                                            size={14}
-                                            strokeWidth={1.4}
-                                            className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                                            size={15}
+                                            strokeWidth={1.5}
+                                            className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                                         />
                                     </a>
                                 </div>
-                            </div>
+                            </motion.div>
 
-                            <div className="flex items-center justify-between gap-5 border-t border-white/15 pt-5">
-                                <span className="text-[7px] uppercase tracking-[0.25em] text-white/35">
+                            <div className="flex items-center justify-between gap-4 border-t border-[#8a6a48]/25 pt-4">
+                                <span className="text-[9px] uppercase tracking-[0.2em] text-[#746b61]">
                                     The Taste of Inspiration
                                 </span>
 
-                                <span className="text-right text-[7px] uppercase tracking-[0.25em] text-[#c5a27d]">
+                                <span className="text-right text-[9px] uppercase tracking-[0.2em] text-[#8a6a48]">
                                     Food · Art · Inspiration
                                 </span>
                             </div>
