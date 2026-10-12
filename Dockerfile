@@ -1,95 +1,13 @@
 
-# Stage 1: Build frontend assets
-FROM node:26-bookworm-slim AS frontend
-
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-RUN npm ci
-
-COPY . .
-RUN npm run build
-
-
-# Stage 2: Install PHP dependencies
-FROM composer:2 AS vendor
-
-WORKDIR /app
-
-COPY composer.json composer.lock ./
-RUN composer install \
-    --no-dev \
-    --prefer-dist \
-    --no-interaction \
-    --no-scripts \
-    --optimize-autoloader
-
-
-# Stage 3: Laravel production server
-FROM php:8.4-apache-bookworm
-
-WORKDIR /var/www/html
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libicu-dev \
-    libzip-dev \
-    libonig-dev \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libxml2-dev \
-    libcurl4-openssl-dev \
-    unzip \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
-        bcmath \
-        exif \
-        gd \
-        intl \
-        mbstring \
-        opcache \
-        pcntl \
-        pdo_mysql \
-        pdo_sqlite \
-        zip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN a2enmod rewrite headers
-
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-
-RUN sed -ri \
-    -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
-    /etc/apache2/sites-available/*.conf \
-    /etc/apache2/apache2.conf \
-    /etc/apache2/conf-available/*.conf
-
-COPY . .
-COPY --from=vendor /app/vendor ./vendor
-COPY --from=frontend /app/public/build ./public/build
-
-RUN mkdir -p \
-    storage/app/public \
-    storage/framework/cache/data \
-    storage/framework/sessions \
-    storage/framework/views \
-    storage/logs \
-    bootstrap/cache \
-    && ln -sfn /var/www/html/storage/app/public public/storage \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R ug+rwX storage bootstrap/cache
-
-EXPOSE 80
-
-CMD ["apache2-foreground"]
-
-# PHP 8.4 with Apache
+# ==================================================
+# Base: PHP 8.4 + Apache
+# ==================================================
 FROM php:8.4-apache-bookworm AS php-base
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
+    libsqlite3-dev \
     libicu-dev \
     libzip-dev \
     libonig-dev \
@@ -97,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
+    && docker-php-ext-install -j2 \
         bcmath \
         exif \
         gd \
@@ -115,7 +33,9 @@ RUN a2enmod rewrite headers
 WORKDIR /var/www/html
 
 
-# Build frontend with Laravel and Wayfinder available
+# ==================================================
+# Builder: Laravel + Composer + Node.js
+# ==================================================
 FROM php-base AS builder
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
@@ -145,12 +65,22 @@ RUN composer dump-autoload \
     --no-scripts \
     --optimize
 
+RUN mkdir -p \
+    storage/app/public \
+    storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache
+
 RUN php artisan package:discover --ansi
 
 RUN npm run build
 
 
-# Production Laravel application
+# ==================================================
+# Production: Laravel application
+# ==================================================
 FROM php-base AS production
 
 ENV APP_ENV=production \
@@ -179,6 +109,7 @@ RUN mkdir -p \
     && chmod -R ug+rwX storage bootstrap/cache
 
 COPY docker/start.sh /usr/local/bin/start-app
+
 RUN chmod +x /usr/local/bin/start-app
 
 EXPOSE 80
