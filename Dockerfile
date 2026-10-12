@@ -28,7 +28,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
     && rm -rf /var/lib/apt/lists/*
 
-RUN a2enmod rewrite headers
+RUN a2dismod mpm_event mpm_worker \
+    && a2enmod mpm_prefork rewrite headers \
 
 WORKDIR /var/www/html
 
@@ -108,7 +109,8 @@ RUN mkdir -p \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R ug+rwX storage bootstrap/cache
 
-COPY docker/start.sh /usr/local/bin/start-app
+RUN a2dismod mpm_event mpm_worker \
+    && a2enmod mpm_prefork
 
 RUN chmod +x /usr/local/bin/start-app
 
