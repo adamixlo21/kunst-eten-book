@@ -1,22 +1,32 @@
+
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
-import AppLogo from '@/components/app-logo';
-import AppLogoIcon from '@/components/app-logo-icon';
+import {
+    ArrowUpRight,
+    Gavel,
+    Image as ImageIcon,
+    LayoutDashboard,
+    Mail,
+    Menu,
+    ShoppingBag,
+} from 'lucide-react';
+
 import { Breadcrumbs } from '@/components/breadcrumbs';
-import { TeamSwitcher } from '@/components/team-switcher';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
 import {
     NavigationMenu,
     NavigationMenuItem,
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
+
 import {
     Sheet,
     SheetContent,
@@ -24,229 +34,231 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
+
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useInitials } from '@/hooks/use-initials';
-import { cn, toUrl } from '@/lib/utils';
-import { dashboard } from '@/routes';
+import { cn } from '@/lib/utils';
+
 import type { BreadcrumbItem, NavItem } from '@/types';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
 };
 
-const rightNavItems: NavItem[] = [
+const mainNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
+        title: 'Dashboard',
+        href: '/admin',
+        icon: LayoutDashboard,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Orders',
+        href: '/admin/orders',
+        icon: ShoppingBag,
+    },
+    {
+        title: 'Paintings',
+        href: '/admin/paintings',
+        icon: ImageIcon,
+    },
+    {
+        title: 'Artwork Bids',
+        href: '/admin/bids',
+        icon: Gavel,
+    },
+    {
+        title: 'Contact Messages',
+        href: '/admin/contacts',
+        icon: Mail,
     },
 ];
 
-const activeItemStyles =
-    'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
-
 export function AppHeader({ breadcrumbs = [] }: Props) {
-    const page = usePage();
-    const { auth, currentTeam } = page.props;
+    const { auth } = usePage().props;
     const getInitials = useInitials();
     const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
-    const dashboardUrl = currentTeam ? dashboard(currentTeam.slug) : '/';
-
-    const mainNavItems: NavItem[] = [
-        {
-            title: 'Dashboard',
-            href: dashboardUrl,
-            icon: LayoutGrid,
-        },
-    ];
 
     return (
         <>
-            <div className="border-sidebar-border/80 border-b">
-                <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
-                    {/* Mobile Menu */}
+            <header className="border-b border-[#8a6a48]/20 bg-[#f7f3ec] text-[#25221f]">
+                <div className="mx-auto flex h-20 max-w-7xl items-center gap-4 px-4 sm:px-6">
+
+                    {/* MOBILE NAVIGATION */}
                     <div className="lg:hidden">
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="mr-2 h-[34px] w-[34px]"
+                                    aria-label="Open navigation"
+                                    className="text-[#25221f] hover:bg-[#eee7dc]"
                                 >
-                                    <Menu className="h-5 w-5" />
+                                    <Menu className="size-5" />
                                 </Button>
                             </SheetTrigger>
+
                             <SheetContent
                                 side="left"
-                                className="bg-sidebar flex h-full w-64 flex-col items-stretch justify-between"
+                                className="flex h-full w-72 flex-col border-[#8a6a48]/20 bg-[#f7f3ec]"
                             >
-                                <SheetTitle className="sr-only">
-                                    Navigation menu
-                                </SheetTitle>
-                                <SheetHeader className="flex justify-start text-left">
-                                    <AppLogoIcon className="h-6 w-6 fill-current text-black dark:text-white" />
-                                </SheetHeader>
-                                <div className="flex h-full flex-1 flex-col space-y-4 p-4">
-                                    <div className="flex h-full flex-col justify-between text-sm">
-                                        <div className="flex flex-col space-y-4">
-                                            {mainNavItems.map((item) => (
-                                                <Link
-                                                    key={item.title}
-                                                    href={item.href}
-                                                    className="flex items-center space-x-2 font-medium"
-                                                >
-                                                    {item.icon && (
-                                                        <item.icon className="h-5 w-5" />
-                                                    )}
-                                                    <span>{item.title}</span>
-                                                </Link>
-                                            ))}
-                                        </div>
+                                <SheetHeader className="border-b border-[#8a6a48]/20 pb-6 text-left">
+                                    <SheetTitle className="font-serif text-xl text-[#25221f]">
+                                        The Taste of Inspiration
+                                    </SheetTitle>
 
-                                        <div className="flex flex-col space-y-4">
-                                            {rightNavItems.map((item) => (
-                                                <a
-                                                    key={item.title}
-                                                    href={toUrl(item.href)}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="flex items-center space-x-2 font-medium"
-                                                >
-                                                    {item.icon && (
-                                                        <item.icon className="h-5 w-5" />
-                                                    )}
-                                                    <span>{item.title}</span>
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
+                                    <p className="text-xs uppercase tracking-[0.18em] text-[#8a6a48]">
+                                        Administration
+                                    </p>
+                                </SheetHeader>
+
+                                <nav
+                                    className="flex flex-1 flex-col gap-2 py-6"
+                                    aria-label="Mobile admin navigation"
+                                >
+                                    {mainNavItems.map((item) => {
+                                        const Icon = item.icon;
+
+                                        return (
+                                            <Link
+                                                key={item.title}
+                                                href={item.href}
+                                                className={cn(
+                                                    'flex items-center gap-3 px-4 py-3 text-sm font-medium transition',
+                                                    isCurrentUrl(item.href)
+                                                        ? 'bg-[#eee7dc] text-[#8a6a48]'
+                                                        : 'text-[#62584c] hover:bg-[#eee7dc]',
+                                                )}
+                                            >
+                                                {Icon && (
+                                                    <Icon className="size-4" />
+                                                )}
+
+                                                {item.title}
+                                            </Link>
+                                        );
+                                    })}
+                                </nav>
+
+                                <Link
+                                    href="/"
+                                    className="mb-4 flex items-center gap-2 border-t border-[#8a6a48]/20 px-4 pt-6 text-sm text-[#8a6a48]"
+                                >
+                                    <ArrowUpRight className="size-4" />
+                                    View Website
+                                </Link>
                             </SheetContent>
                         </Sheet>
                     </div>
 
+                    {/* BRAND */}
                     <Link
-                        href={dashboardUrl}
+                        href="/admin"
                         prefetch
-                        className="flex items-center space-x-2"
+                        className="min-w-0 shrink-0"
                     >
-                        <AppLogo />
+                        <span className="block truncate font-serif text-lg font-medium text-[#25221f] sm:text-xl">
+                            The Taste of
+                            <span className="italic text-[#8a6a48]">
+                                {' '}Inspiration
+                            </span>
+                        </span>
+
+                        <span className="mt-1 block text-[9px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
+                            Administration
+                        </span>
                     </Link>
 
-                    {/* Desktop Navigation */}
-                    <div className="ml-6 hidden h-full items-center space-x-6 lg:flex">
-                        <NavigationMenu className="flex h-full items-stretch">
-                            <NavigationMenuList className="flex h-full items-stretch space-x-2">
-                                {mainNavItems.map((item, index) => (
-                                    <NavigationMenuItem
-                                        key={index}
-                                        className="relative flex h-full items-center"
-                                    >
-                                        <Link
-                                            href={item.href}
-                                            className={cn(
-                                                navigationMenuTriggerStyle(),
-                                                whenCurrentUrl(
-                                                    item.href,
-                                                    activeItemStyles,
-                                                ),
-                                                'h-9 cursor-pointer px-3',
-                                            )}
+                    {/* DESKTOP NAVIGATION */}
+                    <nav
+                        className="ml-5 hidden min-w-0 flex-1 items-center lg:flex"
+                        aria-label="Admin navigation"
+                    >
+                        <NavigationMenu>
+                            <NavigationMenuList className="gap-1">
+                                {mainNavItems.map((item) => {
+                                    const Icon = item.icon;
+
+                                    return (
+                                        <NavigationMenuItem
+                                            key={item.title}
+                                            className="relative"
                                         >
-                                            {item.icon && (
-                                                <item.icon className="mr-2 h-4 w-4" />
+                                            <Link
+                                                href={item.href}
+                                                className={cn(
+                                                    navigationMenuTriggerStyle(),
+                                                    whenCurrentUrl(
+                                                        item.href,
+                                                        'bg-[#eee7dc] text-[#8a6a48]',
+                                                    ),
+                                                    'gap-2 bg-transparent px-3 text-xs text-[#62584c] transition hover:bg-[#eee7dc] hover:text-[#25221f]',
+                                                )}
+                                            >
+                                                {Icon && (
+                                                    <Icon className="size-4" />
+                                                )}
+
+                                                {item.title}
+                                            </Link>
+
+                                            {isCurrentUrl(item.href) && (
+                                                <div className="absolute bottom-0 left-0 h-0.5 w-full bg-[#8a6a48]" />
                                             )}
-                                            {item.title}
-                                        </Link>
-                                        {isCurrentUrl(item.href) && (
-                                            <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"></div>
-                                        )}
-                                    </NavigationMenuItem>
-                                ))}
+                                        </NavigationMenuItem>
+                                    );
+                                })}
                             </NavigationMenuList>
                         </NavigationMenu>
-                    </div>
+                    </nav>
 
-                    <div className="ml-auto flex items-center space-x-2">
-                        <div className="relative flex items-center space-x-1">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="group h-9 w-9 cursor-pointer"
-                            >
-                                <Search className="size-5! opacity-80 group-hover:opacity-100" />
-                            </Button>
-                            <div className="ml-1 hidden gap-1 lg:flex">
-                                {rightNavItems.map((item) => (
-                                    <TooltipProvider
-                                        key={item.title}
-                                        delayDuration={0}
+                    {/* ACCOUNT MENU */}
+                    <div className="ml-auto flex shrink-0 items-center gap-3">
+                        <Link
+                            href="/"
+                            className="hidden items-center gap-2 text-xs font-medium text-[#8a6a48] transition hover:text-[#25221f] xl:flex"
+                        >
+                            View Website
+                            <ArrowUpRight className="size-4" />
+                        </Link>
+
+                        {auth.user && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        aria-label="Open account menu"
+                                        className="size-10 rounded-full p-1 hover:bg-[#eee7dc]"
                                     >
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <a
-                                                    href={toUrl(item.href)}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="group text-accent-foreground ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-9 w-9 items-center justify-center rounded-md bg-transparent p-0 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-                                                >
-                                                    <span className="sr-only">
-                                                        {item.title}
-                                                    </span>
-                                                    {item.icon && (
-                                                        <item.icon className="size-5 opacity-80 group-hover:opacity-100" />
-                                                    )}
-                                                </a>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>{item.title}</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                ))}
-                            </div>
-                        </div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    className="size-10 rounded-full p-1"
-                                >
-                                    <Avatar className="size-8 overflow-hidden rounded-full">
-                                        <AvatarImage
-                                            src={auth.user.avatar}
-                                            alt={auth.user.name}
-                                        />
-                                        <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                                            {getInitials(auth.user.name)}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56" align="end">
-                                <UserMenuContent user={auth.user} />
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                        <Avatar className="size-9 overflow-hidden rounded-full">
+                                            <AvatarImage
+                                                src={auth.user.avatar}
+                                                alt={auth.user.name}
+                                            />
 
-                        <TeamSwitcher inHeader />
+                                            <AvatarFallback className="bg-[#eee7dc] text-xs font-semibold text-[#8a6a48]">
+                                                {getInitials(auth.user.name)}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                    </Button>
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent
+                                    align="end"
+                                    className="w-64 border-[#8a6a48]/20 bg-[#fdfcf9]"
+                                >
+                                    <UserMenuContent user={auth.user} />
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
                     </div>
                 </div>
-            </div>
+            </header>
+
+            {/* BREADCRUMBS */}
             {breadcrumbs.length > 1 && (
-                <div className="border-sidebar-border/70 flex w-full border-b">
-                    <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
+                <div className="border-b border-[#8a6a48]/15 bg-[#eee7dc]/40">
+                    <div className="mx-auto flex h-12 max-w-7xl items-center px-4 text-sm text-[#746b61] sm:px-6">
                         <Breadcrumbs breadcrumbs={breadcrumbs} />
                     </div>
                 </div>
