@@ -2,8 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\TeamRole;
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -39,24 +37,6 @@ class UserFactory extends Factory
     }
 
     /**
-     * Configure the model factory.
-     */
-    public function configure(): static
-    {
-        return $this->afterCreating(function ($user) {
-            $team = Team::factory()->personal()->create([
-                'name' => $user->name."'s Team",
-            ]);
-
-            $team->members()->attach($user, [
-                'role' => TeamRole::Owner->value,
-            ]);
-
-            $user->switchTeam($team);
-        });
-    }
-
-    /**
      * Indicate that the model's email address should be unverified.
      */
     public function unverified(): static
@@ -73,7 +53,9 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'two_factor_secret' => encrypt('secret'),
-            'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1'])),
+            'two_factor_recovery_codes' => encrypt(
+                json_encode(['recovery-code-1'])
+            ),
             'two_factor_confirmed_at' => now(),
         ]);
     }
