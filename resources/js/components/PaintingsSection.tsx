@@ -34,6 +34,7 @@ const paintings = [
         slug: 'in-bloom',
         course: 'The Dessert',
         image: '/images/paintings/in-bloom.jpg',
+
     },
 ];
 
