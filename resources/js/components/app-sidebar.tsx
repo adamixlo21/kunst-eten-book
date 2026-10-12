@@ -1,4 +1,6 @@
-import { Link, usePage  } from '@inertiajs/react';
+
+import { Link, usePage } from '@inertiajs/react';
+
 import {
     LayoutDashboard,
     ShoppingBag,
@@ -7,6 +9,7 @@ import {
     ExternalLink,
     Mail,
     Image,
+    Gavel,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -24,12 +27,11 @@ import {
 
 import type { NavItem } from '@/types';
 
-
 export function AppSidebar() {
-
     const { unreadContactCount } = usePage<{
         unreadContactCount: number;
     }>().props;
+
     const mainNavItems: NavItem[] = [
         {
             title: 'Dashboard',
@@ -37,29 +39,33 @@ export function AppSidebar() {
             icon: LayoutDashboard,
         },
         {
-            title: 'Bestellingen',
+            title: 'Orders',
             href: '/admin/orders',
             icon: ShoppingBag,
         },
         {
-            title: 'Schilderijen',
+            title: 'Paintings',
             href: '/admin/paintings',
             icon: Image,
         },
         {
-            title: 'Contactberichten',
-            href: '/admin/contacts',
-            icon: Mail,
-            badge: unreadContactCount,
-
+            title: 'Artwork Bids',
+            href: '/admin/bids',
+            icon: Gavel,
         },
         {
-            title: 'Profiel',
+            title: 'Contact Messages',
+            href: '/admin/contacts',
+            icon: Mail,
+            badge: unreadContactCount ?? 0,
+        },
+        {
+            title: 'Profile',
             href: '/settings/profile',
             icon: User,
         },
         {
-            title: 'Wachtwoord',
+            title: 'Password',
             href: '/settings/security',
             icon: LockKeyhole,
         },
@@ -70,24 +76,18 @@ export function AppSidebar() {
             collapsible="icon"
             className="
                 border-r border-stone-300
-                bg-[#efe8dd]
-                text-stone-900
-
+                bg-[#efe8dd] text-stone-900
                 dark:border-stone-700
-                dark:bg-stone-900
-                dark:text-stone-100
+                dark:bg-stone-900 dark:text-stone-100
             "
         >
             <SidebarHeader
                 className="
                     border-b border-stone-300
-                    bg-[#efe8dd]
-                    px-3 py-4
+                    bg-[#efe8dd] px-3 py-4
                     text-stone-900
-
                     dark:border-stone-700
-                    dark:bg-stone-900
-                    dark:text-stone-100
+                    dark:bg-stone-900 dark:text-stone-100
                 "
             >
                 <SidebarMenu>
@@ -96,23 +96,33 @@ export function AppSidebar() {
                             size="lg"
                             asChild
                             className="
-                                text-stone-900
-                                hover:bg-stone-200
+                                text-stone-900 hover:bg-stone-200
                                 hover:text-stone-900
-
                                 dark:text-stone-100
                                 dark:hover:bg-stone-800
                                 dark:hover:text-white
                             "
                         >
                             <Link href="/admin">
-                                <div className="flex flex-col">
-                                    <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#8a6a48] dark:text-[#c9a87e]">
-                                        Kunst Eten
+                                <div className="flex min-w-0 flex-col">
+                                    <span
+                                        className="
+                                            truncate font-serif text-sm
+                                            font-semibold tracking-tight
+                                            text-[#8a6a48]
+                                            dark:text-[#c9a87e]
+                                        "
+                                    >
+                                        The Taste of Inspiration
                                     </span>
 
-                                    <span className="text-xs text-stone-500 dark:text-stone-400">
-                                        Administratie
+                                    <span
+                                        className="
+                                            text-xs text-stone-500
+                                            dark:text-stone-400
+                                        "
+                                    >
+                                        Administration
                                     </span>
                                 </div>
                             </Link>
@@ -123,12 +133,9 @@ export function AppSidebar() {
 
             <SidebarContent
                 className="
-                    bg-[#efe8dd]
-                    px-2 py-4
+                    bg-[#efe8dd] px-2 py-4
                     text-stone-900
-
-                    dark:bg-stone-900
-                    dark:text-stone-100
+                    dark:bg-stone-900 dark:text-stone-100
                 "
             >
                 <NavMain items={mainNavItems} />
@@ -137,13 +144,10 @@ export function AppSidebar() {
             <SidebarFooter
                 className="
                     border-t border-stone-300
-                    bg-[#efe8dd]
-                    p-3
+                    bg-[#efe8dd] p-3
                     text-stone-900
-
                     dark:border-stone-700
-                    dark:bg-stone-900
-                    dark:text-stone-100
+                    dark:bg-stone-900 dark:text-stone-100
                 "
             >
                 <SidebarMenu>
@@ -151,10 +155,8 @@ export function AppSidebar() {
                         <SidebarMenuButton
                             asChild
                             className="
-                                text-stone-900
-                                hover:bg-stone-200
+                                text-stone-900 hover:bg-stone-200
                                 hover:text-stone-900
-
                                 dark:text-stone-100
                                 dark:hover:bg-stone-800
                                 dark:hover:text-white
@@ -162,7 +164,7 @@ export function AppSidebar() {
                         >
                             <Link href="/">
                                 <ExternalLink size={17} />
-                                <span>Website bekijken</span>
+                                <span>View Website</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

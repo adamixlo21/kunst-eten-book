@@ -7,14 +7,15 @@ use Illuminate\Support\Facades\Route;
 
 
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Teams\TeamInvitationController;
-use App\Http\Middleware\EnsureTeamMembership;
+//use App\Http\Controllers\DashboardController;
+//use App\Http\Controllers\Teams\TeamInvitationController;
+//use App\Http\Middleware\EnsureTeamMembership;
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\PaintingController as AdminPaintingController;
+use App\Http\Controllers\Admin\BidController as AdminBidController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
@@ -84,7 +85,7 @@ Route::get('/shipping-and-returns', function () {
 
 
 
-Route::middleware(['auth'])
+Route::middleware(['auth', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -101,16 +102,19 @@ Route::middleware(['auth'])
         Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
             ->name('orders.update-status');
 
+        // Fulfillment management
+        Route::patch('/orders/{order}/fulfillment', [AdminOrderController::class, 'updateFulfillment'])
+            ->name('orders.update-fulfillment');
 
         //contacts
         Route::get('/contacts', [AdminContactController::class, 'index'])
-            ->name('admin.contacts.index');
+            ->name('contacts.index');
 
         Route::get('/contacts/{contact}', [AdminContactController::class, 'show'])
-            ->name('admin.contacts.show');
+            ->name('contacts.show');
 
         Route::delete('/contacts/{contact}', [AdminContactController::class, 'destroy'])
-            ->name('admin.contacts.destroy');
+            ->name('contacts.destroy');
 
         //paintings
         Route::get('/paintings', [AdminPaintingController::class, 'index'])
@@ -125,6 +129,9 @@ Route::middleware(['auth'])
         Route::delete('/paintings/{painting}', [AdminPaintingController::class, 'destroy'])
             ->name('paintings.destroy');
 
+        // Private artwork bids
+        Route::get('/bids', [AdminBidController::class, 'index'])
+            ->name('bids.index');
     });
 
 
@@ -136,23 +143,28 @@ Route::middleware(['auth'])
 
 
 
-Route::prefix('{current_team}')
-    ->middleware(['auth', 'verified', EnsureTeamMembership::class])
-    ->group(function () {
-        Route::get('dashboard', DashboardController::class)
-            ->name('dashboard');
-    });
+//Route::prefix('{current_team}')
+//    ->middleware(['auth', 'verified', EnsureTeamMembership::class])
+//    ->group(function () {
+//        Route::get('dashboard', DashboardController::class)
+//            ->name('dashboard');
+//    });
+//
+//Route::middleware(['auth'])->group(function () {
+//    Route::post(
+//        'invitations/{invitation}/accept',
+//        [TeamInvitationController::class, 'accept']
+//    )->name('invitations.accept');
+//
+//    Route::delete(
+//        'invitations/{invitation}',
+//        [TeamInvitationController::class, 'decline']
+//    )->name('invitations.decline');
+//});
 
-Route::middleware(['auth'])->group(function () {
-    Route::post(
-        'invitations/{invitation}/accept',
-        [TeamInvitationController::class, 'accept']
-    )->name('invitations.accept');
-
-    Route::delete(
-        'invitations/{invitation}',
-        [TeamInvitationController::class, 'decline']
-    )->name('invitations.decline');
-});
+// Dashboard without teams
+Route::get('/dashboard', function () {
+    return redirect()->route('admin.dashboard');
+})->middleware(['auth', 'admin'])->name('dashboard');
 
 require __DIR__.'/settings.php';

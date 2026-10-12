@@ -69,16 +69,35 @@ class PaintingController extends Controller
             ->route('admin.paintings.index')
             ->with('success', 'Schilderij bijgewerkt.');
     }
+
     public function destroy(Painting $painting)
     {
-        if ($painting->image) {
+        // Prevent deleting paintings with private bids.
+        if ($painting->bids()->exists()) {
+            return redirect()
+                ->route('admin.paintings.index')
+                ->withErrors([
+                    'delete' => 'This painting cannot be deleted because it has received private bids. Close bidding instead to preserve the offer history.',
+                ]);
+        }
+
+        // Delete the painting from the database first.
+        // If deletion fails, keep the associated image.
+        $painting->delete();
+
+        // Remove uploaded images only.
+        if (
+            $painting->image &&
+            !str_starts_with($painting->image, '/') &&
+            !str_starts_with($painting->image, 'http://') &&
+            !str_starts_with($painting->image, 'https://')
+        ) {
             Storage::disk('public')->delete($painting->image);
         }
 
-        $painting->delete();
-
         return redirect()
             ->route('admin.paintings.index')
-            ->with('success', 'Schilderij verwijderd.');
+            ->with('success', 'Painting deleted successfully.');
     }
+
 }
