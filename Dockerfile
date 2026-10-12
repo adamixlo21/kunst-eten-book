@@ -1,6 +1,6 @@
 
 # ==================================================
-# Base: PHP 8.4 + Apache
+# Stage 1: PHP 8.4 + Apache
 # ==================================================
 FROM php:8.4-apache-bookworm AS php-base
 
@@ -28,24 +28,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
     && rm -rf /var/lib/apt/lists/*
 
-RUN a2dismod mpm_event mpm_worker \
-    && a2enmod mpm_prefork rewrite headers \
+# Apache: enable exactly one MPM
+RUN a2dismod mpm_event mpm_worker && \
+    a2enmod mpm_prefork rewrite headers
 
 WORKDIR /var/www/html
 
 
 # ==================================================
-# Builder: Laravel + Composer + Node.js
+# Stage 2: Build Laravel + React frontend
 # ==================================================
 FROM php-base AS builder
 
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
+# Install Node.js 26 and npm
 COPY --from=node:26-bookworm-slim /usr/local/bin/node /usr/local/bin/node
 COPY --from=node:26-bookworm-slim /usr/local/lib/node_modules /usr/local/lib/node_modules
 
 RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
 
+# Install production PHP dependencies
 COPY composer.json composer.lock ./
 
 RUN composer install \
@@ -55,17 +59,21 @@ RUN composer install \
     --prefer-dist \
     --no-interaction
 
+# Install frontend dependencies
 COPY package.json package-lock.json ./
 
 RUN npm ci
 
+# Copy Laravel application
 COPY . .
 
+# Generate optimized Composer autoload files
 RUN composer dump-autoload \
     --no-dev \
     --no-scripts \
     --optimize
 
+# Create Laravel directories
 RUN mkdir -p \
     storage/app/public \
     storage/framework/cache/data \
@@ -74,13 +82,15 @@ RUN mkdir -p \
     storage/logs \
     bootstrap/cache
 
+# Discover Laravel packages for Wayfinder
 RUN php artisan package:discover --ansi
 
+# Build React, Inertia, Vite Plus and Wayfinder
 RUN npm run build
 
 
 # ==================================================
-# Production: Laravel application
+# Stage 3: Production Laravel application
 # ==================================================
 FROM php-base AS production
 
@@ -88,17 +98,23 @@ ENV APP_ENV=production \
     APP_DEBUG=false \
     LOG_CHANNEL=stderr
 
+# Serve Laravel from public/
 RUN sed -ri \
     's!/var/www/html!/var/www/html/public!g' \
     /etc/apache2/sites-available/*.conf \
     /etc/apache2/apache2.conf \
     /etc/apache2/conf-available/*.conf
 
+# Copy application files
 COPY . .
 
+# Copy production Composer dependencies
 COPY --from=builder /var/www/html/vendor ./vendor
+
+# Copy compiled frontend assets
 COPY --from=builder /var/www/html/public/build ./public/build
 
+# Prepare writable Laravel directories
 RUN mkdir -p \
     storage/app/public \
     storage/framework/cache/data \
@@ -109,8 +125,8 @@ RUN mkdir -p \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R ug+rwX storage bootstrap/cache
 
-RUN a2dismod mpm_event mpm_worker \
-    && a2enmod mpm_prefork
+# Install Railway startup script
+COPY docker/start.sh /usr/local/bin/start-app
 
 RUN chmod +x /usr/local/bin/start-app
 
