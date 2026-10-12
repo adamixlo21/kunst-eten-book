@@ -1,30 +1,34 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useInitials } from '@/hooks/use-initials';
-import type { Team, User } from '@/types';
+import type { User } from '@/types';
+
+interface UserInfoProps {
+    user: User | null;
+    showEmail?: boolean;
+}
 
 export function UserInfo({
                              user,
                              showEmail = false,
-                             team = null,
-                         }: {
-    user: User | null;
-    showEmail?: boolean;
-    team?: Team | null;
-}) {
+                         }: UserInfoProps) {
     const getInitials = useInitials();
 
     if (!user) {
         return null;
     }
 
-    const showAvatar = Boolean(user.avatar && user.avatar !== '');
+    const showAvatar = Boolean(user.avatar);
 
     return (
         <>
             <Avatar className="h-8 w-8 overflow-hidden rounded-lg">
-                {showAvatar ? (
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                ) : null}
+                {showAvatar && (
+                    <AvatarImage
+                        src={user.avatar}
+                        alt={user.name}
+                    />
+                )}
 
                 <AvatarFallback className="rounded-lg text-black dark:text-white">
                     {getInitials(user.name)}
@@ -36,17 +40,11 @@ export function UserInfo({
                     {user.name}
                 </span>
 
-                {team ? (
-                    <span className="text-muted-foreground truncate text-xs">
-                        {team.name}
-                    </span>
-                ) : null}
-
-                {!team && showEmail ? (
+                {showEmail && (
                     <span className="text-muted-foreground truncate text-xs">
                         {user.email}
                     </span>
-                ) : null}
+                )}
             </div>
         </>
     );
