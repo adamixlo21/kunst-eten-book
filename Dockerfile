@@ -34,7 +34,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Enable Apache rewrite
-RUN a2enmod rewrite
+# Use the prefork MPM required by mod_php
+RUN a2dismod mpm_event mpm_worker || true \
+    && a2enmod mpm_prefork rewrite
 
 # Configure Apache to serve Laravel's public directory
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
