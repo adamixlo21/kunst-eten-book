@@ -1,94 +1,51 @@
 
-# ==================================================
-# The Taste of Inspiration - Railway Dockerfile
-# Laravel 13 + PHP 8.4 + Apache + React + Vite Plus
-# ==================================================
+# The Taste of Inspiration
+# Laravel 13 + PHP 8.4 + Nginx + React + Vite Plus
 
-FROM php:8.4-apache-bookworm
+FROM node:22-alpine AS frontend
 
-# Install system dependencies and PHP extensions
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    unzip \
-    curl \
-    ca-certificates \
-    libsqlite3-dev \
-    libicu-dev \
-    libzip-dev \
-    libonig-dev \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j2 \
-        bcmath \
-        exif \
-        gd \
-        intl \
-        mbstring \
-        opcache \
-        pcntl \
-        pdo_mysql \
-        pdo_sqlite \
-        zip \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-# Enable Apache rewrite
-# Use the prefork MPM required by mod_php
-RUN a2dismod mpm_event mpm_worker || true \
-    && a2enmod mpm_prefork rewrite
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Configure Apache to serve Laravel's public directory
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+COPY . .
+RUN npm run build
 
-RUN sed -ri \
-    -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
-    /etc/apache2/sites-available/*.conf
 
-# Allow Laravel's .htaccess rules
-RUN printf '<Directory /var/www/html/public>\n\
-    AllowOverride All\n\
-    Require all granted\n\
-</Directory>\n' \
-    > /etc/apache2/conf-available/laravel.conf \
-    && a2enconf laravel
+# Production PHP + Nginx
+FROM serversideup/php:8.4-fpm-nginx-alpine AS production
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+USER root
 
-# Install Node.js 26 and npm
-COPY --from=node:26-bookworm-slim /usr/local/bin/node /usr/local/bin/node
-COPY --from=node:26-bookworm-slim /usr/local/lib/node_modules /usr/local/lib/node_modules
-
-RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
+# PHP extensions required by Laravel
+RUN install-php-extensions intl gd exif
 
 WORKDIR /var/www/html
 
-# Install PHP dependencies
+# Install Composer dependencies
 COPY composer.json composer.lock ./
 
 RUN composer install \
     --no-dev \
+    --no-interaction \
     --no-scripts \
     --no-autoloader \
-    --prefer-dist \
-    --no-interaction
+    --prefer-dist
 
-# Install frontend dependencies
-COPY package.json package-lock.json ./
-
-RUN npm ci
-
-# Copy application source
+# Copy application
 COPY . .
 
-# Generate Composer autoload files
+# Copy compiled React assets from frontend stage
+COPY --from=frontend /app/public/build ./public/build
+
+# Generate optimized Composer autoload files
 RUN composer dump-autoload \
     --no-dev \
     --no-scripts \
     --optimize
 
-# Prepare Laravel storage directories
+# Prepare Laravel directories
 RUN mkdir -p \
     storage/app/public \
     storage/framework/cache/data \
@@ -100,27 +57,19 @@ RUN mkdir -p \
 # Discover Laravel packages
 RUN php artisan package:discover --ansi
 
-# Build React + Vite Plus + Wayfinder
-RUN npm run build
-
-# Remove development hot-reload marker
+# Remove development Vite marker
 RUN rm -f public/hot
 
-# Create storage symlink
+# Public upload symlink
 RUN php artisan storage:link --force
 
-# Set Laravel permissions
+# Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R ug+rwX storage bootstrap/cache
 
-# Copy the correct startup script
-COPY docker/start.sh /usr/local/bin/docker-start
+USER www-data
 
-# Make the script executable
-RUN chmod +x /usr/local/bin/docker-start
-
-# Railway HTTP port
+# Nginx listens on port 8080
 EXPOSE 8080
 
-# Start Apache using docker/start.sh
-CMD ["/usr/local/bin/docker-start"]
+# Use the image's default Nginx + PHP-FPM startup
