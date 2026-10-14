@@ -9,7 +9,6 @@ import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Spinner } from '@/components/ui/spinner';
-import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 
 type Props = {
@@ -122,7 +121,8 @@ export default function Login({
 
                             <div className="mt-9 border border-stone-300 bg-white p-6 shadow-[0_20px_60px_rgba(70,55,40,0.06)] sm:p-8">
                                 <Form
-                                    {...store.form()}
+                                    action="/login"
+                                    method="post"
                                     resetOnSuccess={['password']}
                                     className="space-y-6"
                                 >
