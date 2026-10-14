@@ -53,27 +53,37 @@ function formatPrice(price: string | number) {
     }).format(amount);
 }
 
-function getPaintingImage(painting: Painting) {
-    const image = painting.image?.trim();
 
-    if (image) {
-        if (
-            image.startsWith('http://') ||
-            image.startsWith('https://') ||
-            image.startsWith('/')
-        ) {
-            return image;
-        }
+function getPaintingImage(painting: Painting): string | null {
+    // Prefer the images already included in the website
+    const staticImage = paintingImages[painting.slug];
 
-        if (image.startsWith('storage/')) {
-            return `/${image}`;
-        }
-
-        return `/storage/${image}`;
+    if (staticImage) {
+        return staticImage;
     }
 
-    return paintingImages[painting.slug] ?? null;
+    // Otherwise use an image uploaded through Laravel
+    const image = painting.image?.trim();
+
+    if (!image) {
+        return null;
+    }
+
+    if (
+        image.startsWith('https://') ||
+        image.startsWith('http://') ||
+        image.startsWith('/')
+    ) {
+        return image;
+    }
+
+    if (image.startsWith('storage/')) {
+        return `/${image}`;
+    }
+
+    return `/storage/${image}`;
 }
+
 
 export default function PaintingsIndex({ paintings }: Props) {
     const reduceMotion = useReducedMotion();
