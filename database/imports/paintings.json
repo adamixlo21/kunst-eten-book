@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "title": "Beyond the Surface",
+        "slug": "beyond-the-surface",
+        "description": "Beyond the Surface invites us to look beyond what is immediately visible. The eye becomes a doorway — a place between observation and emotion, between what we see and what we feel.\r\nLayers of blue, movement and texture draw the viewer closer, encouraging a moment of reflection. Sometimes the smallest detail can change the way we experience the whole.\r\nIt is an invitation to slow down, look again, and discover what might be waiting beneath the surface.",
+        "image": "paintings\/XkDb4mX75ykoBN2NPXxAzQhKbp3Wn964c9MsS1vQ.jpg",
+        "starting_price": "1000.00",
+        "bidding_open": true,
+        "sort_order": 1,
+        "created_at": "2026-09-30T11:00:14.000000Z",
+        "updated_at": "2026-10-12T09:48:22.000000Z"
+    },
+    {
+        "id": 2,
+        "title": "Essence",
+        "slug": "essence",
+        "description": "Essence explores the beauty of presence, vulnerability and the human form. The figure is not defined by a face or a story, leaving space for the viewer to bring their own emotions and interpretation.\r\nWarm tones move across the body while light and shadow create a feeling of softness and intimacy.\r\nNot everything needs to be explained. Some things simply ask to be felt.",
+        "image": "paintings\/pXiBohgGS4sflN7YUWWAjy3ydHqINl4fE7lW8tO3.jpg",
+        "starting_price": "1000.00",
+        "bidding_open": true,
+        "sort_order": 2,
+        "created_at": "2026-09-30T11:00:14.000000Z",
+        "updated_at": "2026-10-02T11:04:36.000000Z"
+    },
+    {
+        "id": 3,
+        "title": "The Silent Melody",
+        "slug": "the-silent-melody",
+        "description": "The Silent Melody captures a moment where music seems to exist without sound. A woman holds her violin as colour and movement flow around her, creating a rhythm that can almost be felt.\r\nThe painting explores the space between silence and memory — those moments when a melody, a feeling or an experience stays with us long after it has passed.\r\nSome music is heard. Other music is remembered.",
+        "image": "paintings\/O354b89JkZDzPgpiZNst7pu3tVWwPHhp51Q9YQ2R.jpg",
+        "starting_price": "1000.00",
+        "bidding_open": true,
+        "sort_order": 3,
+        "created_at": "2026-09-30T11:00:14.000000Z",
+        "updated_at": "2026-10-02T11:04:46.000000Z"
+    },
+    {
+        "id": 4,
+        "title": "A Moment to Savour",
+        "slug": "a-moment-to-savour",
+        "description": "A Moment to Savour is about slowing down and allowing yourself to be fully present. A glass of wine, a quiet table and a moment without urgency become something worth remembering.\r\nLike a beautiful meal, life is not only about what is in front of us, but about the atmosphere, the conversation, the people and the feelings surrounding it.\r\nSome moments should not be rushed. They should be savoured.",
+        "image": "paintings\/mzxIlnoOOuDaLfy6bypIq0VWwd4zvtWuEzyZZUmW.jpg",
+        "starting_price": "1000.00",
+        "bidding_open": true,
+        "sort_order": 4,
+        "created_at": "2026-09-30T11:00:14.000000Z",
+        "updated_at": "2026-10-02T11:04:53.000000Z"
+    },
+    {
+        "id": 5,
+        "title": "In Bloom",
+        "slug": "in-bloom",
+        "description": "In Bloom celebrates beauty, growth and the simple act of becoming. The flower opens boldly against the canvas, surrounded by colour, movement and light.\r\nA flower does not need to explain why it blooms. It simply follows its own rhythm and, for a moment, invites us to stop and notice it.\r\nIt is a reminder that beauty can appear quietly — and that sometimes we only need to slow down enough to see it.",
+        "image": "paintings\/5FiHac1eUTepGm6dKotROsHzYnd0NKUGFuALMWCz.jpg",
+        "starting_price": "1000.00",
+        "bidding_open": true,
+        "sort_order": 5,
+        "created_at": "2026-09-30T11:00:14.000000Z",
+        "updated_at": "2026-10-02T11:05:00.000000Z"
+    }
+]
