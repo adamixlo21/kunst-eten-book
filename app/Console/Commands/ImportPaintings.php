@@ -2,15 +2,15 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Painting;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ImportPaintings extends Command
 {
     protected $signature = 'paintings:import';
 
-    protected $description = 'Import paintings from database/imports/paintings.json';
+    protected $description = 'Import paintings from JSON';
 
     public function handle(): int
     {
@@ -18,7 +18,6 @@ class ImportPaintings extends Command
 
         if (! file_exists($path)) {
             $this->error('Painting JSON file not found.');
-
             return self::FAILURE;
         }
 
@@ -31,13 +30,11 @@ class ImportPaintings extends Command
             );
         } catch (\JsonException $e) {
             $this->error('Invalid JSON: '.$e->getMessage());
-
             return self::FAILURE;
         }
 
         if (! is_array($paintings)) {
             $this->error('Invalid painting data.');
-
             return self::FAILURE;
         }
 
@@ -52,8 +49,12 @@ class ImportPaintings extends Command
                         'starting_price' => $painting['starting_price'],
                         'bidding_open' => $painting['bidding_open'],
                         'sort_order' => $painting['sort_order'],
-                        'created_at' => $painting['created_at'],
-                        'updated_at' => $painting['updated_at'],
+                        'created_at' => Carbon::parse(
+                            $painting['created_at']
+                        )->utc()->format('Y-m-d H:i:s'),
+                        'updated_at' => Carbon::parse(
+                            $painting['updated_at']
+                        )->utc()->format('Y-m-d H:i:s'),
                     ]
                 );
             }
