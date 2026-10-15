@@ -1,20 +1,22 @@
+
 import { Form, Head, Link } from '@inertiajs/react';
 import {
     ArrowLeft,
+    ArrowRight,
     LockKeyhole,
     Mail,
+    ShieldCheck,
 } from 'lucide-react';
 
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Spinner } from '@/components/ui/spinner';
-import { request } from '@/routes/password';
 
-type Props = {
+interface Props {
     status?: string;
     canResetPassword: boolean;
-};
+}
 
 export default function Login({
                                   status,
@@ -22,220 +24,219 @@ export default function Login({
                               }: Props) {
     return (
         <>
-            <Head title="Inloggen" />
+            <Head title="Login | The Taste of Inspiration" />
 
-            <main className="min-h-screen bg-[#f7f3ec] text-stone-900">
-                <div className="grid min-h-screen lg:grid-cols-[1.05fr_0.95fr]">
-                    {/* Left panel */}
-                    <section className="relative hidden overflow-hidden border-r border-stone-300 bg-[#ebe2d5] lg:flex lg:flex-col lg:justify-between">
-                        <div className="relative z-10 px-14 py-14 xl:px-20">
-                            <div className="flex items-center gap-4">
-                                <div className="h-px w-10 bg-[#8a6a48]" />
+            <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f7f3ec] px-5 py-16 text-[#25221f] sm:px-8">
+                {/* Decorative background */}
+                <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full border border-[#8a6a48]/10" />
+                <div className="pointer-events-none absolute -right-24 bottom-0 h-[30rem] w-[30rem] rounded-full border border-[#8a6a48]/10" />
 
-                                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
-                                    Kunst Eten
-                                </p>
-                            </div>
+                <div className="relative z-10 w-full max-w-xl">
+                    {/* Back to website */}
+                    <Link
+                        href="/"
+                        className="group mb-12 inline-flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.2em] text-[#8a6a48] transition-colors hover:text-[#25221f]"
+                    >
+                        <ArrowLeft
+                            size={16}
+                            strokeWidth={1.5}
+                            className="transition-transform group-hover:-translate-x-1"
+                        />
+                        Back to Website
+                    </Link>
 
-                            <div className="mt-20 max-w-xl">
-                                <p className="text-xs font-medium uppercase tracking-[0.3em] text-stone-400">
-                                    Administratie
-                                </p>
+                    {/* Introduction */}
+                    <div className="mb-10">
+                        <div className="mb-8 flex items-center gap-4">
+                            <div className="h-px w-10 bg-[#8a6a48]" />
 
-                                <h1 className="mt-6 text-6xl font-light leading-[0.98] tracking-[-0.04em] xl:text-7xl">
-                                    Beheer
-                                    <br />
-                                    <span className="text-stone-500">
-                                        achter de schermen.
-                                    </span>
-                                </h1>
-
-                                <p className="mt-8 max-w-md text-base leading-8 text-stone-600">
-                                    Beheer bestellingen, accountgegevens en de
-                                    instellingen van Kunst Eten vanuit één
-                                    rustige omgeving.
-                                </p>
-                            </div>
+                            <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                                The Taste of Inspiration
+                            </span>
                         </div>
 
-                        {/* Decorative editorial block */}
-                        <div className="relative z-10 px-14 pb-14 xl:px-20">
-                            <div className="grid grid-cols-[90px_1fr] gap-6 border-t border-stone-300 pt-7">
-                                <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                    01
-                                </p>
+                        <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.25em] text-[#8a6a48]">
+                            Private Administration
+                        </p>
 
-                                <div>
-                                    <p className="text-sm font-medium">
-                                        Kunst Eten beheer
-                                    </p>
+                        <h1 className="font-serif text-5xl font-light leading-[1.08] tracking-[-0.045em] sm:text-6xl">
+                            Welcome
+                            <span className="block italic text-[#8a6a48]">
+                                back.
+                            </span>
+                        </h1>
 
-                                    <p className="mt-1 text-xs leading-5 text-stone-500">
-                                        Alleen toegankelijk voor bevoegde
-                                        gebruikers.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <p className="mt-6 max-w-md text-sm leading-7 text-[#746b61]">
+                            Sign in to access your private dashboard and manage
+                            orders, artworks, and messages.
+                        </p>
+                    </div>
 
-                        {/* Subtle background decoration */}
-                        <div className="pointer-events-none absolute -right-28 top-20 h-80 w-80 rounded-full border border-[#8a6a48]/10" />
-                        <div className="pointer-events-none absolute -right-10 top-40 h-52 w-52 rounded-full border border-[#8a6a48]/10" />
-                    </section>
-
-                    {/* Right panel */}
-                    <section className="flex items-center justify-center px-6 py-10 sm:px-10 lg:px-14 xl:px-20">
-                        <div className="w-full max-w-md">
-                            <Link
-                                href="/"
-                                className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-stone-500 transition hover:text-[#8a6a48]"
+                    {/* Login form */}
+                    <div className="border border-[#d9cec0] bg-[#fffdf9] p-7 shadow-[0_20px_70px_rgba(70,55,40,0.05)] sm:p-10">
+                        {status && (
+                            <div
+                                role="status"
+                                className="mb-7 border border-[#b7c7ab] bg-[#edf3e9] px-4 py-3 text-sm leading-6 text-[#496044]"
                             >
-                                <ArrowLeft size={14} />
-                                Terug naar website
-                            </Link>
-
-                            <div className="mt-10">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-px w-8 bg-[#8a6a48]" />
-
-                                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                        Kunst Eten
-                                    </p>
-                                </div>
-
-                                <h2 className="mt-5 text-4xl font-light tracking-[-0.03em] sm:text-5xl">
-                                    Welkom terug
-                                </h2>
-
-                                <p className="mt-4 max-w-sm text-sm leading-6 text-stone-500">
-                                    Log in om toegang te krijgen tot het
-                                    beheerpaneel.
-                                </p>
+                                {status}
                             </div>
+                        )}
 
-                            {status && (
-                                <div className="mt-7 border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                                    {status}
-                                </div>
-                            )}
+                        <Form
+                            action="/login"
+                            method="post"
+                            resetOnSuccess={['password']}
+                            className="space-y-6"
+                        >
+                            {({ processing, errors }) => (
+                                <>
+                                    {/* Email */}
+                                    <div>
+                                        <label
+                                            htmlFor="email"
+                                            className="mb-3 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#62584c]"
+                                        >
+                                            Email Address
+                                        </label>
 
-                            <div className="mt-9 border border-stone-300 bg-white p-6 shadow-[0_20px_60px_rgba(70,55,40,0.06)] sm:p-8">
-                                <Form
-                                    action="/login"
-                                    method="post"
-                                    resetOnSuccess={['password']}
-                                    className="space-y-6"
-                                >
-                                    {({ processing, errors }) => (
-                                        <>
-                                            <div>
-                                                <label
-                                                    htmlFor="email"
-                                                    className="mb-2 block text-sm font-medium"
-                                                >
-                                                    E-mailadres
-                                                </label>
+                                        <div className="relative">
+                                            <Mail
+                                                size={18}
+                                                strokeWidth={1.5}
+                                                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8a6a48]"
+                                            />
 
-                                                <div className="relative">
-                                                    <Mail
-                                                        size={17}
-                                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"
-                                                    />
+                                            <input
+                                                id="email"
+                                                type="email"
+                                                name="email"
+                                                required
+                                                autoFocus
+                                                autoComplete="email"
+                                                placeholder="your@email.com"
+                                                className="w-full border border-[#d9cec0] bg-[#fdfbf7] py-4 pl-12 pr-4 text-sm text-[#25221f] outline-none transition-colors placeholder:text-[#a59a8d] focus:border-[#8a6a48] focus:bg-white"
+                                            />
+                                        </div>
 
-                                                    <input
-                                                        id="email"
-                                                        type="email"
-                                                        name="email"
-                                                        required
-                                                        autoFocus
-                                                        autoComplete="email"
-                                                        placeholder="naam@email.nl"
-                                                        className="w-full border border-stone-300 bg-[#fdfcf9] py-3.5 pl-11 pr-4 text-sm outline-none transition placeholder:text-stone-400 focus:border-[#8a6a48] focus:bg-white"
-                                                    />
-                                                </div>
+                                        <InputError
+                                            message={errors.email}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                                <InputError
-                                                    message={errors.email}
-                                                    className="mt-2"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <div className="mb-2 flex items-center justify-between">
-                                                    <label
-                                                        htmlFor="password"
-                                                        className="text-sm font-medium"
-                                                    >
-                                                        Wachtwoord
-                                                    </label>
-
-                                                    {canResetPassword && (
-                                                        <Link
-                                                            href={request()}
-                                                            className="text-xs font-medium text-[#8a6a48] transition hover:text-stone-900"
-                                                        >
-                                                            Wachtwoord vergeten?
-                                                        </Link>
-                                                    )}
-                                                </div>
-
-                                                <div className="relative">
-                                                    <LockKeyhole
-                                                        size={17}
-                                                        className="pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2 text-stone-400"
-                                                    />
-
-                                                    <PasswordInput
-                                                        id="password"
-                                                        name="password"
-                                                        required
-                                                        autoComplete="current-password"
-                                                        placeholder="Wachtwoord"
-                                                        className="w-full border-stone-300 bg-[#fdfcf9] pl-11 focus:border-[#8a6a48]"
-                                                    />
-                                                </div>
-
-                                                <InputError
-                                                    message={errors.password}
-                                                    className="mt-2"
-                                                />
-                                            </div>
-
-                                            <div className="flex items-center gap-3">
-                                                <Checkbox
-                                                    id="remember"
-                                                    name="remember"
-                                                />
-
-                                                <label
-                                                    htmlFor="remember"
-                                                    className="cursor-pointer text-sm text-stone-600"
-                                                >
-                                                    Ingelogd blijven
-                                                </label>
-                                            </div>
-
-                                            <button
-                                                type="submit"
-                                                disabled={processing}
-                                                className="flex w-full items-center justify-center gap-2 bg-stone-900 px-6 py-4 text-sm font-medium text-white transition duration-200 hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50"
+                                    {/* Password */}
+                                    <div>
+                                        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                                            <label
+                                                htmlFor="password"
+                                                className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#62584c]"
                                             >
-                                                {processing && <Spinner />}
+                                                Password
+                                            </label>
 
-                                                {processing
-                                                    ? 'Bezig met inloggen...'
-                                                    : 'Inloggen'}
-                                            </button>
-                                        </>
-                                    )}
-                                </Form>
-                            </div>
+                                            {canResetPassword && (
+                                                <Link
+                                                    href="/forgot-password"
+                                                    className="text-xs font-medium text-[#8a6a48] transition-colors hover:text-[#25221f]"
+                                                >
+                                                    Forgot Password?
+                                                </Link>
+                                            )}
+                                        </div>
 
-                            <p className="mt-6 text-center text-xs leading-5 text-stone-400">
-                                Beveiligde toegang tot Kunst Eten administratie.
-                            </p>
-                        </div>
-                    </section>
+                                        <div className="relative">
+                                            <LockKeyhole
+                                                size={18}
+                                                strokeWidth={1.5}
+                                                className="pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2 text-[#8a6a48]"
+                                            />
+
+                                            <PasswordInput
+                                                id="password"
+                                                name="password"
+                                                required
+                                                autoComplete="current-password"
+                                                placeholder="Enter your password"
+                                                className="w-full border-[#d9cec0] bg-[#fdfbf7] pl-12 focus:border-[#8a6a48]"
+                                            />
+                                        </div>
+
+                                        <InputError
+                                            message={errors.password}
+                                            className="mt-2"
+                                        />
+                                    </div>
+
+                                    {/* Remember me */}
+                                    <div className="flex items-center gap-3">
+                                        <Checkbox
+                                            id="remember"
+                                            name="remember"
+                                        />
+
+                                        <label
+                                            htmlFor="remember"
+                                            className="cursor-pointer text-xs text-[#746b61]"
+                                        >
+                                            Remember me
+                                        </label>
+                                    </div>
+
+                                    {/* Submit */}
+                                    <button
+                                        type="submit"
+                                        disabled={processing}
+                                        className="group flex w-full items-center justify-center gap-3 bg-[#25221f] px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-60"
+                                    >
+                                        {processing ? (
+                                            <>
+                                                <Spinner />
+                                                Signing in...
+                                            </>
+                                        ) : (
+                                            <>
+                                                Sign In
+                                                <ArrowRight
+                                                    size={16}
+                                                    strokeWidth={1.5}
+                                                    className="transition-transform group-hover:translate-x-1"
+                                                />
+                                            </>
+                                        )}
+                                    </button>
+                                </>
+                            )}
+                        </Form>
+                    </div>
+
+                    {/* Security note */}
+                    <div className="mt-8 flex items-start gap-3 border-t border-[#8a6a48]/20 pt-6">
+                        <ShieldCheck
+                            size={17}
+                            strokeWidth={1.5}
+                            className="mt-0.5 shrink-0 text-[#8a6a48]"
+                        />
+
+                        <p className="text-xs leading-6 text-[#746b61]">
+                            This is a private administration area, accessible
+                            only to authorized users.
+                        </p>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-[#8a6a48]/20 pt-5">
+                        <Link
+                            href="/"
+                            className="font-serif text-lg font-light tracking-tight text-[#25221f] transition-colors hover:text-[#8a6a48]"
+                        >
+                            The Taste of Inspiration
+                        </Link>
+
+                        <span className="text-[9px] uppercase tracking-[0.2em] text-[#8a6a48]">
+                            Food · Art · Inspiration
+                        </span>
+                    </div>
                 </div>
             </main>
         </>
