@@ -1,175 +1,169 @@
+
 import { Form, Head, Link } from '@inertiajs/react';
-import {
-    ArrowLeft,
-    Mail,
-} from 'lucide-react';
+import { ArrowLeft, ArrowRight, LockKeyhole, Mail } from 'lucide-react';
 
 import InputError from '@/components/input-error';
 import { Spinner } from '@/components/ui/spinner';
-import { login } from '@/routes';
-import { email } from '@/routes/password';
 
-export default function ForgotPassword({
-                                           status,
-                                       }: {
+interface Props {
     status?: string;
-}) {
+}
+
+export default function ForgotPassword({ status }: Props) {
     return (
         <>
-            <Head title="Wachtwoord vergeten" />
+            <Head title="Forgot Password | The Taste of Inspiration" />
 
-            <main className="min-h-screen bg-[#f7f3ec] text-stone-900">
-                <div className="grid min-h-screen lg:grid-cols-[1.05fr_0.95fr]">
-                    {/* Left panel */}
-                    <section className="relative hidden overflow-hidden border-r border-stone-300 bg-[#ebe2d5] lg:flex lg:flex-col lg:justify-between">
-                        <div className="relative z-10 px-14 py-14 xl:px-20">
-                            <div className="flex items-center gap-4">
-                                <div className="h-px w-10 bg-[#8a6a48]" />
+            <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f7f3ec] px-5 py-16 text-[#25221f] sm:px-8">
+                {/* Decorative background */}
+                <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full border border-[#8a6a48]/10" />
+                <div className="pointer-events-none absolute -right-24 bottom-0 h-[30rem] w-[30rem] rounded-full border border-[#8a6a48]/10" />
 
-                                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#8a6a48]">
-                                    Kunst Eten
-                                </p>
-                            </div>
+                <div className="relative z-10 w-full max-w-xl">
+                    {/* Back to login */}
+                    <Link
+                        href="/login"
+                        className="group mb-12 inline-flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.2em] text-[#8a6a48] transition-colors hover:text-[#25221f]"
+                    >
+                        <ArrowLeft
+                            size={16}
+                            strokeWidth={1.5}
+                            className="transition-transform group-hover:-translate-x-1"
+                        />
+                        Back to Login
+                    </Link>
 
-                            <div className="mt-20 max-w-xl">
-                                <p className="text-xs font-medium uppercase tracking-[0.3em] text-stone-400">
-                                    Account herstellen
-                                </p>
-
-                                <h1 className="mt-6 text-6xl font-light leading-[0.98] tracking-[-0.04em] xl:text-7xl">
-                                    Toegang kwijt?
-                                    <br />
-                                    <span className="text-stone-500">
-                                        We helpen je verder.
-                                    </span>
-                                </h1>
-
-                                <p className="mt-8 max-w-md text-base leading-8 text-stone-600">
-                                    Vul het e-mailadres van je beheeraccount in.
-                                    Je ontvangt daarna een link waarmee je een
-                                    nieuw wachtwoord kunt instellen.
-                                </p>
-                            </div>
+                    {/* Introduction */}
+                    <div className="mb-10">
+                        <div className="mb-8 flex items-center gap-4">
+                            <div className="h-px w-10 bg-[#8a6a48]" />
+                            <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                                The Taste of Inspiration
+                            </span>
                         </div>
 
-                        <div className="relative z-10 px-14 pb-14 xl:px-20">
-                            <div className="grid grid-cols-[90px_1fr] gap-6 border-t border-stone-300 pt-7">
-                                <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                    04
-                                </p>
+                        <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.25em] text-[#8a6a48]">
+                            Account Recovery
+                        </p>
 
-                                <div>
-                                    <p className="text-sm font-medium">
-                                        Wachtwoord herstellen
-                                    </p>
+                        <h1 className="font-serif text-5xl font-light leading-[1.08] tracking-[-0.045em] sm:text-6xl">
+                            A fresh
+                            <span className="block italic text-[#8a6a48]">
+                                beginning.
+                            </span>
+                        </h1>
 
-                                    <p className="mt-1 text-xs leading-5 text-stone-500">
-                                        De resetlink wordt alleen naar het
-                                        geregistreerde e-mailadres gestuurd.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <p className="mt-6 max-w-md text-sm leading-7 text-[#746b61]">
+                            Forgot your password? Enter your registered email
+                            address and we will send you a secure link to
+                            restore access to your account.
+                        </p>
+                    </div>
 
-                        <div className="pointer-events-none absolute -right-28 top-20 h-80 w-80 rounded-full border border-[#8a6a48]/10" />
-                        <div className="pointer-events-none absolute -right-10 top-40 h-52 w-52 rounded-full border border-[#8a6a48]/10" />
-                    </section>
-
-                    {/* Right panel */}
-                    <section className="flex items-center justify-center px-6 py-10 sm:px-10 lg:px-14 xl:px-20">
-                        <div className="w-full max-w-md">
-                            <Link
-                                href={login()}
-                                className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-stone-500 transition hover:text-[#8a6a48]"
+                    {/* Form */}
+                    <div className="border border-[#d9cec0] bg-[#fffdf9] p-7 shadow-[0_20px_70px_rgba(70,55,40,0.05)] sm:p-10">
+                        {status && (
+                            <div
+                                role="status"
+                                className="mb-7 border border-[#b7c7ab] bg-[#edf3e9] px-4 py-3 text-sm leading-6 text-[#496044]"
                             >
-                                <ArrowLeft size={14} />
-                                Terug naar inloggen
-                            </Link>
-
-                            <div className="mt-10">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-px w-8 bg-[#8a6a48]" />
-
-                                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                        Kunst Eten
-                                    </p>
-                                </div>
-
-                                <h2 className="mt-5 text-4xl font-light tracking-[-0.03em] sm:text-5xl">
-                                    Wachtwoord vergeten
-                                </h2>
-
-                                <p className="mt-4 max-w-sm text-sm leading-6 text-stone-500">
-                                    Vul je e-mailadres in om een resetlink te
-                                    ontvangen.
-                                </p>
+                                {status}
                             </div>
+                        )}
 
-                            {status && (
-                                <div className="mt-7 border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                                    {status}
-                                </div>
-                            )}
+                        <Form
+                            action="/forgot-password"
+                            method="post"
+                            className="space-y-7"
+                        >
+                            {({ processing, errors }) => (
+                                <>
+                                    <div>
+                                        <label
+                                            htmlFor="email"
+                                            className="mb-3 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#62584c]"
+                                        >
+                                            Email Address
+                                        </label>
 
-                            <div className="mt-9 border border-stone-300 bg-white p-6 shadow-[0_20px_60px_rgba(70,55,40,0.06)] sm:p-8">
-                                <Form
-                                    {...email.form()}
-                                    className="space-y-6"
-                                >
-                                    {({ processing, errors }) => (
-                                        <>
-                                            <div>
-                                                <label
-                                                    htmlFor="email"
-                                                    className="mb-2 block text-sm font-medium"
-                                                >
-                                                    E-mailadres
-                                                </label>
+                                        <div className="relative">
+                                            <Mail
+                                                size={18}
+                                                strokeWidth={1.5}
+                                                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8a6a48]"
+                                            />
 
-                                                <div className="relative">
-                                                    <Mail
-                                                        size={17}
-                                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"
-                                                    />
+                                            <input
+                                                id="email"
+                                                type="email"
+                                                name="email"
+                                                required
+                                                autoFocus
+                                                autoComplete="email"
+                                                placeholder="your@email.com"
+                                                className="w-full border border-[#d9cec0] bg-[#fdfbf7] py-4 pl-12 pr-4 text-sm text-[#25221f] outline-none transition-colors placeholder:text-[#a59a8d] focus:border-[#8a6a48] focus:bg-white"
+                                            />
+                                        </div>
 
-                                                    <input
-                                                        id="email"
-                                                        type="email"
-                                                        name="email"
-                                                        autoComplete="email"
-                                                        autoFocus
-                                                        placeholder="naam@email.nl"
-                                                        className="w-full border border-stone-300 bg-[#fdfcf9] py-3.5 pl-11 pr-4 text-sm outline-none transition placeholder:text-stone-400 focus:border-[#8a6a48] focus:bg-white"
-                                                    />
-                                                </div>
+                                        <InputError
+                                            message={errors.email}
+                                            className="mt-2"
+                                        />
+                                    </div>
 
-                                                <InputError
-                                                    message={errors.email}
-                                                    className="mt-2"
+                                    <button
+                                        type="submit"
+                                        disabled={processing}
+                                        className="group flex w-full items-center justify-center gap-3 bg-[#25221f] px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-60"
+                                    >
+                                        {processing ? (
+                                            <>
+                                                <Spinner />
+                                                Sending...
+                                            </>
+                                        ) : (
+                                            <>
+                                                Send Reset Link
+                                                <ArrowRight
+                                                    size={16}
+                                                    strokeWidth={1.5}
+                                                    className="transition-transform group-hover:translate-x-1"
                                                 />
-                                            </div>
+                                            </>
+                                        )}
+                                    </button>
+                                </>
+                            )}
+                        </Form>
+                    </div>
 
-                                            <button
-                                                type="submit"
-                                                disabled={processing}
-                                                className="flex w-full items-center justify-center gap-2 bg-stone-900 px-6 py-4 text-sm font-medium text-white transition hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50"
-                                            >
-                                                {processing && <Spinner />}
+                    {/* Security note */}
+                    <div className="mt-8 flex items-start gap-3 border-t border-[#8a6a48]/20 pt-6">
+                        <LockKeyhole
+                            size={16}
+                            strokeWidth={1.5}
+                            className="mt-0.5 shrink-0 text-[#8a6a48]"
+                        />
+                        <p className="text-xs leading-6 text-[#746b61]">
+                            For your security, the password reset link will
+                            only be sent to the email address associated
+                            with your account.
+                        </p>
+                    </div>
 
-                                                {processing
-                                                    ? 'Bezig met versturen...'
-                                                    : 'Resetlink versturen'}
-                                            </button>
-                                        </>
-                                    )}
-                                </Form>
-                            </div>
+                    {/* Footer */}
+                    <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-[#8a6a48]/20 pt-5">
+                        <Link
+                            href="/"
+                            className="font-serif text-lg font-light tracking-tight text-[#25221f] transition-colors hover:text-[#8a6a48]"
+                        >
+                            The Taste of Inspiration
+                        </Link>
 
-                            <p className="mt-6 text-center text-xs leading-5 text-stone-400">
-                                Beveiligde toegang tot Kunst Eten administratie.
-                            </p>
-                        </div>
-                    </section>
+                        <span className="text-[9px] uppercase tracking-[0.2em] text-[#8a6a48]">
+                            Food · Art · Inspiration
+                        </span>
+                    </div>
                 </div>
             </main>
         </>
