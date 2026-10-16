@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewOrderNotification;
+use App\Mail\OrderConfirmation;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Mollie\Laravel\Facades\Mollie;
-use App\Mail\OrderConfirmation;
-use Illuminate\Support\Facades\Mail;
+use Throwable;
 
 class OrderController extends Controller
 {
@@ -24,7 +28,6 @@ class OrderController extends Controller
         ]);
 
         $price = 249.99;
-
         $total = $price * $validated['quantity'];
 
         $order = Order::create([
@@ -39,7 +42,7 @@ class OrderController extends Controller
                 'value' => number_format($total, 2, '.', ''),
             ],
 
-            'description' => 'Kunst Eten bestelling #' . $order->id,
+            'description' => 'The Taste of Inspiration - Order #' . $order->id,
 
             'redirectUrl' => route('payment.return', [
                 'order' => $order->id,
@@ -50,7 +53,6 @@ class OrderController extends Controller
             ],
         ];
 
-        // Mollie can only reach the webhook on the public website.
         if (app()->environment('production')) {
             $paymentData['webhookUrl'] = route('mollie.webhook');
         }
@@ -69,7 +71,7 @@ class OrderController extends Controller
         if (!$order->mollie_payment_id) {
             return redirect()
                 ->route('checkout.success')
-                ->with('error', 'Geen betaling gevonden.');
+                ->with('error', 'No payment was found.');
         }
 
         $payment = Mollie::api()->payments->get(
@@ -77,19 +79,7 @@ class OrderController extends Controller
         );
 
         if ($payment->isPaid()) {
-            $order->update([
-                'status' => 'paid',
-            ]);
-
-            if (!$order->confirmation_email_sent_at) {
-                Mail::to($order->email)->send(
-                    new OrderConfirmation($order)
-                );
-
-                $order->update([
-                    'confirmation_email_sent_at' => now(),
-                ]);
-            }
+            $this->processPaidOrder($order);
 
             return redirect()->route('checkout.success', [
                 'order' => $order->id,
@@ -98,7 +88,7 @@ class OrderController extends Controller
 
         return redirect()
             ->route('checkout.success')
-            ->with('error', 'De betaling is nog niet voltooid.');
+            ->with('error', 'The payment has not yet been completed.');
     }
 
     public function webhook(Request $request)
@@ -109,6 +99,7 @@ class OrderController extends Controller
             return response()->noContent();
         }
 
+        // Always verify payment status directly with Mollie.
         $payment = Mollie::api()->payments->get($paymentId);
 
         $order = Order::where(
@@ -121,21 +112,73 @@ class OrderController extends Controller
         }
 
         if ($payment->isPaid()) {
-            $order->update([
-                'status' => 'paid',
-            ]);
-
-            if (!$order->confirmation_email_sent_at) {
-                Mail::to($order->email)->send(
-                    new OrderConfirmation($order)
-                );
-
-                $order->update([
-                    'confirmation_email_sent_at' => now(),
-                ]);
-            }
+            $this->processPaidOrder($order);
         }
 
         return response()->noContent();
+    }
+
+    /**
+     * Process a confirmed payment and send both notifications.
+     */
+    private function processPaidOrder(Order $order): void
+    {
+        DB::transaction(function () use ($order) {
+            // Prevent the webhook and return request from
+            // processing this order at the same time.
+            $lockedOrder = Order::whereKey($order->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($lockedOrder->status !== 'paid') {
+                $lockedOrder->update([
+                    'status' => 'paid',
+                ]);
+            }
+
+            // 1. Send confirmation to the customer.
+            if (!$lockedOrder->confirmation_email_sent_at) {
+                try {
+                    Mail::to($lockedOrder->email)->send(
+                        new OrderConfirmation($lockedOrder)
+                    );
+
+                    $lockedOrder->update([
+                        'confirmation_email_sent_at' => now(),
+                    ]);
+                } catch (Throwable $exception) {
+                    Log::error('Customer order confirmation failed', [
+                        'order_id' => $lockedOrder->id,
+                        'error' => $exception->getMessage(),
+                    ]);
+                }
+            }
+
+            // 2. Send a new order notification to the admin.
+            if (!$lockedOrder->admin_notification_sent_at) {
+                $adminEmail = config('mail.order_notification_email');
+
+                if (!$adminEmail) {
+                    Log::error('Order notification email not configured', [
+                        'order_id' => $lockedOrder->id,
+                    ]);
+                } else {
+                    try {
+                        Mail::to($adminEmail)->send(
+                            new NewOrderNotification($lockedOrder)
+                        );
+
+                        $lockedOrder->update([
+                            'admin_notification_sent_at' => now(),
+                        ]);
+                    } catch (Throwable $exception) {
+                        Log::error('Admin order notification failed', [
+                            'order_id' => $lockedOrder->id,
+                            'error' => $exception->getMessage(),
+                        ]);
+                    }
+                }
+            }
+        });
     }
 }

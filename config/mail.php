@@ -116,5 +116,6 @@ return [
     ],
 
     'contact_email' => env('CONTACT_EMAIL'),
+    'order_notification_email' => env('ORDER_NOTIFICATION_EMAIL'),
 
 ];

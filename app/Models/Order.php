@@ -19,6 +19,7 @@ class Order extends Model
         'fulfillment_status',
         'mollie_payment_id',
         'confirmation_email_sent_at',
+        'admin_notification_sent_at',
         'shipping_email_sent_at',
         'shipping_email_status',
     ];
@@ -27,6 +28,7 @@ class Order extends Model
         'quantity' => 'integer',
         'total_price' => 'decimal:2',
         'confirmation_email_sent_at' => 'datetime',
+        'admin_notification_sent_at' => 'datetime',
         'shipping_email_sent_at' => 'datetime',
     ];
 }
