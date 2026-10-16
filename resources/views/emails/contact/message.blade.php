@@ -1,13 +1,13 @@
+
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
 
-    <title>Nieuw contactbericht - Kunst Eten</title>
+    <title>New Contact Message | The Taste of Inspiration</title>
 
     <style>
         :root {
@@ -38,15 +38,25 @@
                 padding-right: 24px !important;
             }
 
+            .contact-label,
             .contact-value {
-                text-align: left !important;
                 display: block !important;
+                width: auto !important;
+                text-align: left !important;
+            }
+
+            .contact-label {
+                padding-bottom: 2px !important;
+            }
+
+            .contact-value {
                 padding-top: 2px !important;
                 padding-bottom: 12px !important;
             }
 
-            .contact-label {
-                display: block !important;
+            .brand-title {
+                font-size: 24px !important;
+                line-height: 32px !important;
             }
         }
     </style>
@@ -78,11 +88,12 @@
             align="center"
             bgcolor="#f7f3ec"
             style="
-                background-color: #f7f3ec;
                 padding: 40px 15px;
+                background-color: #f7f3ec;
             "
         >
 
+            <!-- EMAIL CONTAINER -->
             <table
                 class="email-container"
                 width="620"
@@ -99,15 +110,14 @@
                 "
             >
 
-                {{-- HEADER --}}
+                <!-- HEADER -->
                 <tr>
                     <td
                         align="center"
                         bgcolor="#efe8dd"
                         style="
-                            padding: 42px 30px;
+                            padding: 42px 25px;
                             background-color: #efe8dd;
-                            color: #292722;
                             text-align: center;
                         "
                     >
@@ -117,27 +127,29 @@
                                 color: #8a6a48;
                                 font-size: 10px;
                                 line-height: 16px;
-                                letter-spacing: 4px;
+                                letter-spacing: 3px;
                                 text-transform: uppercase;
                             "
                         >
-                            Nieuw bericht
+                            New Message
                         </div>
 
                         <div
+                            class="brand-title"
                             style="
                                 color: #292722;
                                 font-family: Georgia, 'Times New Roman', serif;
-                                font-size: 36px;
-                                line-height: 42px;
+                                font-size: 27px;
+                                line-height: 36px;
+                                letter-spacing: 1px;
                             "
                         >
-                            KUNST ETEN
+                            THE TASTE OF INSPIRATION
                         </div>
                     </td>
                 </tr>
 
-                {{-- INTRO --}}
+                <!-- INTRODUCTION -->
                 <tr>
                     <td
                         class="email-padding"
@@ -145,7 +157,6 @@
                         style="
                             padding: 42px 40px 28px;
                             background-color: #ffffff;
-                            color: #292722;
                         "
                     >
                         <div
@@ -158,7 +169,7 @@
                                 text-transform: uppercase;
                             "
                         >
-                            Contactformulier
+                            Contact Form
                         </div>
 
                         <div
@@ -170,7 +181,7 @@
                                 line-height: 36px;
                             "
                         >
-                            Nieuw contactbericht
+                            A New Contact Message
                         </div>
 
                         <p
@@ -181,13 +192,15 @@
                                 line-height: 24px;
                             "
                         >
-                            Er is een nieuw bericht verstuurd via de website
-                            van Kunst Eten.
+                            A new message has been submitted through
+                            The Taste of Inspiration website.
+                            You can find the visitor's details and
+                            message below.
                         </p>
                     </td>
                 </tr>
 
-                {{-- CONTACTGEGEVENS --}}
+                <!-- CONTACT DETAILS -->
                 <tr>
                     <td
                         class="email-padding"
@@ -210,6 +223,7 @@
                                 background-color: #f7f3ec;
                             "
                         >
+
                             <tr>
                                 <td
                                     colspan="2"
@@ -223,10 +237,11 @@
                                         line-height: 26px;
                                     "
                                 >
-                                    Contactgegevens
+                                    Contact Details
                                 </td>
                             </tr>
 
+                            <!-- NAME -->
                             <tr>
                                 <td
                                     class="contact-label"
@@ -238,7 +253,7 @@
                                         font-size: 13px;
                                     "
                                 >
-                                    Naam
+                                    Name
                                 </td>
 
                                 <td
@@ -251,12 +266,14 @@
                                         color: #292722;
                                         font-size: 13px;
                                         font-weight: 600;
+                                        overflow-wrap: anywhere;
                                     "
                                 >
                                     {{ $contact->name }}
                                 </td>
                             </tr>
 
+                            <!-- EMAIL -->
                             <tr>
                                 <td
                                     class="contact-label"
@@ -268,7 +285,7 @@
                                         font-size: 13px;
                                     "
                                 >
-                                    E-mail
+                                    Email
                                 </td>
 
                                 <td
@@ -279,6 +296,7 @@
                                         padding: 7px 25px 7px 10px;
                                         background-color: #f7f3ec;
                                         font-size: 13px;
+                                        overflow-wrap: anywhere;
                                     "
                                 >
                                     <a
@@ -293,6 +311,7 @@
                                 </td>
                             </tr>
 
+                            <!-- PHONE (OPTIONAL) -->
                             @if($contact->phone)
                                 <tr>
                                     <td
@@ -305,7 +324,7 @@
                                             font-size: 13px;
                                         "
                                     >
-                                        Telefoon
+                                        Phone
                                     </td>
 
                                     <td
@@ -324,6 +343,7 @@
                                 </tr>
                             @endif
 
+                            <!-- SUBJECT -->
                             <tr>
                                 <td
                                     class="contact-label"
@@ -335,7 +355,7 @@
                                         font-size: 13px;
                                     "
                                 >
-                                    Onderwerp
+                                    Subject
                                 </td>
 
                                 <td
@@ -353,12 +373,12 @@
                                     {{ $contact->subject }}
                                 </td>
                             </tr>
-                        </table>
 
+                        </table>
                     </td>
                 </tr>
 
-                {{-- BERICHT --}}
+                <!-- MESSAGE -->
                 <tr>
                     <td
                         class="email-padding"
@@ -378,7 +398,7 @@
                                 text-transform: uppercase;
                             "
                         >
-                            Bericht
+                            MESSAGE
                         </div>
 
                         <table
@@ -406,6 +426,7 @@
                                         color: #625e57;
                                         font-size: 15px;
                                         line-height: 26px;
+                                        overflow-wrap: anywhere;
                                     "
                                 >
                                     {!! nl2br(e($contact->message)) !!}
@@ -415,7 +436,7 @@
                     </td>
                 </tr>
 
-                {{-- BUTTON --}}
+                <!-- REPLY BUTTON -->
                 <tr>
                     <td
                         class="email-padding"
@@ -440,12 +461,12 @@
                                 text-decoration: none;
                             "
                         >
-                            Beantwoord bericht →
+                            Reply to Message &rarr;
                         </a>
                     </td>
                 </tr>
 
-                {{-- FOOTER --}}
+                <!-- FOOTER -->
                 <tr>
                     <td
                         align="center"
@@ -462,9 +483,10 @@
                                 color: #292722;
                                 font-family: Georgia, 'Times New Roman', serif;
                                 font-size: 19px;
+                                line-height: 27px;
                             "
                         >
-                            Kunst Eten
+                            The Taste of Inspiration
                         </div>
 
                         <div
@@ -474,14 +496,25 @@
                                 line-height: 18px;
                             "
                         >
-                            Dit bericht is verzonden via het contactformulier
-                            op de Kunst Eten website.
+                            This email was generated from a contact form
+                            submission on The Taste of Inspiration website.
+                        </div>
+
+                        <div
+                            style="
+                                margin-top: 12px;
+                                color: #8a6a48;
+                                font-size: 10px;
+                                line-height: 16px;
+                                letter-spacing: 1px;
+                            "
+                        >
+                            FOOD &bull; ART &bull; INSPIRATION
                         </div>
                     </td>
                 </tr>
 
             </table>
-
         </td>
     </tr>
 </table>

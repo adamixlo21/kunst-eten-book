@@ -1,7 +1,9 @@
+
 import { Form, Head } from '@inertiajs/react';
+import { ArrowRight, CheckCircle2, LockKeyhole, ShieldCheck } from 'lucide-react';
 import { useRef } from 'react';
 
-import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
+import * as SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 
@@ -15,25 +17,55 @@ export default function Security({ passwordRules }: Props) {
 
     return (
         <>
-            <Head title="Wachtwoord" />
+            <Head title="Security | The Taste of Inspiration" />
 
-            <div className="min-h-full bg-[#f7f3ec] p-6 text-stone-900 lg:p-10">
+            <main className="min-h-full bg-[#f7f3ec] px-5 py-10 text-[#25221f] sm:px-8 lg:px-12 lg:py-14">
                 <div className="mx-auto max-w-3xl">
+                    {/* Page header */}
                     <div className="mb-10">
-                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                            Kunst Eten
+                        <div className="mb-6 flex items-center gap-4">
+                            <div className="h-px w-9 bg-[#8a6a48]" />
+
+                            <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
+                                The Taste of Inspiration
+                            </span>
+                        </div>
+
+                        <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.2em] text-[#8a6a48]">
+                            Account Settings
                         </p>
 
-                        <h1 className="mt-3 text-4xl font-light tracking-tight">
-                            Wachtwoord wijzigen
+                        <h1 className="font-serif text-4xl font-light tracking-[-0.04em] sm:text-5xl">
+                            Account{' '}
+                            <span className="italic text-[#8a6a48]">
+                                Security
+                            </span>
                         </h1>
 
-                        <p className="mt-3 max-w-xl text-sm leading-6 text-stone-500">
-                            Wijzig hier het wachtwoord van je adminaccount.
+                        <p className="mt-5 max-w-xl text-sm leading-7 text-[#746b61]">
+                            Update your password to keep your administration
+                            account secure.
                         </p>
                     </div>
 
-                    <div className="border border-stone-300 bg-white p-6 sm:p-8">
+                    {/* Password settings card */}
+                    <div className="border border-[#d9cec0] bg-[#fffdf9] p-6 shadow-[0_20px_60px_rgba(70,55,40,0.04)] sm:p-9">
+                        <div className="mb-8 flex items-center gap-3 border-b border-[#d9cec0] pb-6">
+                            <div className="flex h-11 w-11 items-center justify-center bg-[#eee7dc] text-[#8a6a48]">
+                                <ShieldCheck size={21} strokeWidth={1.5} />
+                            </div>
+
+                            <div>
+                                <h2 className="font-serif text-xl font-light">
+                                    Change Password
+                                </h2>
+
+                                <p className="mt-1 text-xs text-[#746b61]">
+                                    Choose a strong, unique password.
+                                </p>
+                            </div>
+                        </div>
+
                         <Form
                             {...SecurityController.update.form()}
                             options={{
@@ -54,26 +86,36 @@ export default function Security({ passwordRules }: Props) {
                                     currentPasswordInput.current?.focus();
                                 }
                             }}
-                            className="space-y-6"
+                            className="space-y-7"
                         >
                             {({ errors, processing, recentlySuccessful }) => (
                                 <>
+                                    {/* Current password */}
                                     <div>
                                         <label
                                             htmlFor="current_password"
-                                            className="mb-2 block text-sm font-medium"
+                                            className={labelClass}
                                         >
-                                            Huidig wachtwoord
+                                            Current Password
                                         </label>
 
-                                        <PasswordInput
-                                            id="current_password"
-                                            ref={currentPasswordInput}
-                                            name="current_password"
-                                            autoComplete="current-password"
-                                            placeholder="Huidig wachtwoord"
-                                            className="w-full border-stone-300 bg-[#fdfcf9] focus:border-[#8a6a48]"
-                                        />
+                                        <div className="relative">
+                                            <LockKeyhole
+                                                size={18}
+                                                strokeWidth={1.5}
+                                                className={iconClass}
+                                            />
+
+                                            <PasswordInput
+                                                id="current_password"
+                                                ref={currentPasswordInput}
+                                                name="current_password"
+                                                required
+                                                autoComplete="current-password"
+                                                placeholder="Enter current password"
+                                                className={passwordClass}
+                                            />
+                                        </div>
 
                                         <InputError
                                             message={errors.current_password}
@@ -81,23 +123,33 @@ export default function Security({ passwordRules }: Props) {
                                         />
                                     </div>
 
+                                    {/* New password */}
                                     <div>
                                         <label
                                             htmlFor="password"
-                                            className="mb-2 block text-sm font-medium"
+                                            className={labelClass}
                                         >
-                                            Nieuw wachtwoord
+                                            New Password
                                         </label>
 
-                                        <PasswordInput
-                                            id="password"
-                                            ref={passwordInput}
-                                            name="password"
-                                            autoComplete="new-password"
-                                            placeholder="Nieuw wachtwoord"
-                                            passwordrules={passwordRules}
-                                            className="w-full border-stone-300 bg-[#fdfcf9] focus:border-[#8a6a48]"
-                                        />
+                                        <div className="relative">
+                                            <LockKeyhole
+                                                size={18}
+                                                strokeWidth={1.5}
+                                                className={iconClass}
+                                            />
+
+                                            <PasswordInput
+                                                id="password"
+                                                ref={passwordInput}
+                                                name="password"
+                                                required
+                                                autoComplete="new-password"
+                                                placeholder="Enter new password"
+                                                passwordrules={passwordRules}
+                                                className={passwordClass}
+                                            />
+                                        </div>
 
                                         <InputError
                                             message={errors.password}
@@ -105,22 +157,32 @@ export default function Security({ passwordRules }: Props) {
                                         />
                                     </div>
 
+                                    {/* Confirm password */}
                                     <div>
                                         <label
                                             htmlFor="password_confirmation"
-                                            className="mb-2 block text-sm font-medium"
+                                            className={labelClass}
                                         >
-                                            Bevestig nieuw wachtwoord
+                                            Confirm New Password
                                         </label>
 
-                                        <PasswordInput
-                                            id="password_confirmation"
-                                            name="password_confirmation"
-                                            autoComplete="new-password"
-                                            placeholder="Herhaal nieuw wachtwoord"
-                                            passwordrules={passwordRules}
-                                            className="w-full border-stone-300 bg-[#fdfcf9] focus:border-[#8a6a48]"
-                                        />
+                                        <div className="relative">
+                                            <LockKeyhole
+                                                size={18}
+                                                strokeWidth={1.5}
+                                                className={iconClass}
+                                            />
+
+                                            <PasswordInput
+                                                id="password_confirmation"
+                                                name="password_confirmation"
+                                                required
+                                                autoComplete="new-password"
+                                                placeholder="Repeat new password"
+                                                passwordrules={passwordRules}
+                                                className={passwordClass}
+                                            />
+                                        </div>
 
                                         <InputError
                                             message={errors.password_confirmation}
@@ -128,20 +190,37 @@ export default function Security({ passwordRules }: Props) {
                                         />
                                     </div>
 
-                                    <div className="flex items-center gap-4">
+                                    {/* Submit button */}
+                                    <div className="flex flex-wrap items-center gap-5 pt-2">
                                         <button
                                             type="submit"
                                             disabled={processing}
-                                            className="bg-stone-900 px-6 py-3.5 text-sm font-medium text-white transition hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50"
+                                            className="group inline-flex items-center justify-center gap-3 bg-[#25221f] px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-60"
                                         >
-                                            {processing
-                                                ? 'Opslaan...'
-                                                : 'Wachtwoord wijzigen'}
+                                            {processing ? (
+                                                'Saving...'
+                                            ) : (
+                                                <>
+                                                    Update Password
+                                                    <ArrowRight
+                                                        size={16}
+                                                        strokeWidth={1.5}
+                                                        className="transition-transform group-hover:translate-x-1"
+                                                    />
+                                                </>
+                                            )}
                                         </button>
 
                                         {recentlySuccessful && (
-                                            <span className="text-sm text-emerald-700">
-                                                Wachtwoord gewijzigd
+                                            <span
+                                                role="status"
+                                                className="inline-flex items-center gap-2 text-sm text-[#496044]"
+                                            >
+                                                <CheckCircle2
+                                                    size={17}
+                                                    strokeWidth={1.5}
+                                                />
+                                                Password updated successfully
                                             </span>
                                         )}
                                     </div>
@@ -149,8 +228,32 @@ export default function Security({ passwordRules }: Props) {
                             )}
                         </Form>
                     </div>
+
+                    {/* Security note */}
+                    <div className="mt-8 border-l-2 border-[#8a6a48] bg-[#eee7dc] px-5 py-4">
+                        <p className="text-xs leading-6 text-[#746b61]">
+                            For your security, use a password you don't use
+                            for any other account.
+                        </p>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="mt-10 border-t border-[#d9cec0] pt-6">
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-[#8a6a48]">
+                            The Taste of Inspiration · Administration
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </main>
         </>
     );
 }
+
+const labelClass =
+    'mb-3 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#62584c]';
+
+const iconClass =
+    'pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2 text-[#8a6a48]';
+
+const passwordClass =
+    'w-full border-[#d9cec0] bg-[#fdfbf7] pl-12 focus:border-[#8a6a48]';

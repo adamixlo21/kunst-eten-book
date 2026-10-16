@@ -17,7 +17,7 @@ import ClosingSection from "@/components/ClosingSection";
 export default function Home() {
     return (
         <BookCartProvider>
-            <Head title="Kunst Eten" />
+            <Head title="The Taste of Inspiration | Where Food Meets Art" />
 
             <Navbar />
 

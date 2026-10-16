@@ -1,6 +1,12 @@
+
 import { Head, Link } from '@inertiajs/react';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import {
+    ArrowRight,
+    CheckCircle2,
+    Clock3,
+} from 'lucide-react';
 import { useEffect } from 'react';
+
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import {
@@ -19,6 +25,7 @@ interface Order {
 interface CheckoutSuccessProps {
     order: Order;
 }
+
 function ResetCartAfterPayment({ status }: { status: string }) {
     const { resetCart } = useBookCart();
 
@@ -26,7 +33,7 @@ function ResetCartAfterPayment({ status }: { status: string }) {
         if (status === 'paid') {
             resetCart();
         }
-    }, [status]);
+    }, [status, resetCart]);
 
     return null;
 }
@@ -35,109 +42,160 @@ export default function CheckoutSuccess({
                                             order,
                                         }: CheckoutSuccessProps) {
     const total = Number(order.total_price);
+    const isPaid = order.status === 'paid';
 
     return (
-        <>
-            <BookCartProvider>
-                <ResetCartAfterPayment status={order.status} />
-                <Head title="Bestelling gelukt" />
+        <BookCartProvider>
+            <ResetCartAfterPayment status={order.status} />
 
-                <Navbar/>
+            <Head
+                title={
+                    isPaid
+                        ? 'Order Confirmed | The Taste of Inspiration'
+                        : 'Payment Status | The Taste of Inspiration'
+                }
+            />
 
-                <main className="flex min-h-screen items-center justify-center bg-[#f7f3ec] px-6 text-stone-900">
-                    <div className="w-full max-w-2xl border border-stone-300 bg-white p-10 sm:p-14">
-                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#8a6a48]/10 text-[#8a6a48]">
-                            <CheckCircle2 size={34} />
-                        </div>
+            <Navbar />
 
-                        <div className="mt-8 text-center">
-                            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                Betaling geslaagd
-                            </p>
+            <main className="flex min-h-screen items-center justify-center bg-[#f7f3ec] px-5 py-20 text-[#25221f] sm:px-8">
+                <div className="w-full max-w-2xl border border-[#d9cec0] bg-[#fffdf9] px-6 py-10 shadow-[0_20px_70px_rgba(70,55,40,0.05)] sm:px-12 sm:py-14">
 
-                            <h1 className="mt-4 text-4xl font-light tracking-tight sm:text-5xl">
-                                Bedankt voor je bestelling.
-                            </h1>
+                    {/* Status icon */}
+                    <div
+                        className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full border ${
+                            isPaid
+                                ? 'border-[#66765d]/25 bg-[#66765d]/10 text-[#66765d]'
+                                : 'border-[#8a6a48]/25 bg-[#8a6a48]/10 text-[#8a6a48]'
+                        }`}
+                    >
+                        {isPaid ? (
+                            <CheckCircle2 size={42} strokeWidth={1.2} />
+                        ) : (
+                            <Clock3 size={42} strokeWidth={1.2} />
+                        )}
+                    </div>
 
-                            <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-stone-500">
-                                Je bestelling is succesvol ontvangen en betaald.
-                            </p>
-                        </div>
+                    {/* Heading */}
+                    <div className="mt-8 text-center">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
+                            The Taste of Inspiration
+                        </p>
 
-                        <div className="mt-10 border-y border-stone-200 py-6">
-                            <div className="space-y-4 text-sm">
-                                <div className="flex justify-between">
-                                    <span className="text-stone-500">
-                                        Bestelnummer
+                        <h1 className="mt-5 font-serif text-4xl font-light leading-tight tracking-[-0.04em] sm:text-5xl">
+                            {isPaid ? (
+                                <>
+                                    Thank you for
+                                    <span className="block italic text-[#8a6a48]">
+                                        your order.
                                     </span>
-                                    <span className="font-medium">
-                                        #{order.id}
+                                </>
+                            ) : (
+                                <>
+                                    Payment
+                                    <span className="block italic text-[#8a6a48]">
+                                        not yet confirmed.
                                     </span>
-                                </div>
+                                </>
+                            )}
+                        </h1>
 
-                                <div className="flex justify-between">
-                                    <span className="text-stone-500">
-                                        Naam
-                                    </span>
-                                    <span className="font-medium">
-                                        {order.name}
-                                    </span>
-                                </div>
+                        <p className="mx-auto mt-6 max-w-md text-sm leading-7 text-[#746b61]">
+                            {isPaid
+                                ? 'Your payment has been confirmed. Thank you for being part of The Taste of Inspiration.'
+                                : 'We have not yet confirmed your payment. Please check your payment status before placing another order.'}
+                        </p>
+                    </div>
 
-                                <div className="flex justify-between">
-                                    <span className="text-stone-500">
-                                        Aantal
-                                    </span>
-                                    <span className="font-medium">
-                                        {order.quantity}{' '}
-                                        {order.quantity === 1
-                                            ? 'boek'
-                                            : 'boeken'}
-                                    </span>
-                                </div>
+                    {/* Order details */}
+                    <div className="mt-10 border-y border-[#d9cec0] py-7">
+                        <div className="space-y-5 text-sm">
+                            <div className="flex items-start justify-between gap-5">
+                                <span className="text-[#746b61]">
+                                    Order Number
+                                </span>
 
-                                <div className="flex justify-between">
-                                    <span className="text-stone-500">
-                                        Status
-                                    </span>
-                                    <span className="font-medium capitalize">
-                                        {order.status}
-                                    </span>
-                                </div>
+                                <span className="font-medium">
+                                    #{order.id}
+                                </span>
+                            </div>
 
-                                <div className="flex justify-between border-t border-stone-200 pt-4">
-                                    <span className="text-stone-500">
-                                        Totaal
-                                    </span>
+                            <div className="flex items-start justify-between gap-5">
+                                <span className="text-[#746b61]">
+                                    Name
+                                </span>
 
-                                    <span className="text-lg font-medium">
-                                        €{' '}
-                                        {total
-                                            .toFixed(2)
-                                            .replace('.', ',')}
-                                    </span>
-                                </div>
+                                <span className="break-words text-right font-medium">
+                                    {order.name}
+                                </span>
+                            </div>
+
+                            <div className="flex items-start justify-between gap-5">
+                                <span className="text-[#746b61]">
+                                    Quantity
+                                </span>
+
+                                <span className="font-medium">
+                                    {order.quantity}{' '}
+                                    {order.quantity === 1 ? 'book' : 'books'}
+                                </span>
+                            </div>
+
+                            <div className="flex items-start justify-between gap-5">
+                                <span className="text-[#746b61]">
+                                    Payment Status
+                                </span>
+
+                                <span className="font-medium capitalize">
+                                    {order.status.replace(/_/g, ' ')}
+                                </span>
+                            </div>
+
+                            <div className="flex items-start justify-between gap-5 border-t border-[#d9cec0] pt-5">
+                                <span className="text-[#746b61]">
+                                    Total
+                                </span>
+
+                                <span className="text-lg font-medium">
+                                    € {total.toFixed(2).replace('.', ',')}
+                                </span>
                             </div>
                         </div>
-
-                        <div className="mt-8 text-center">
-                            <Link
-                                href="/"
-                                className="group inline-flex items-center gap-3 bg-stone-900 px-7 py-4 text-sm font-medium text-white transition hover:bg-[#8a6a48]"
-                            >
-                                Terug naar Kunst Eten
-
-                                <ArrowRight
-                                    size={16}
-                                    className="transition group-hover:translate-x-1"
-                                />
-                            </Link>
-                        </div>
                     </div>
-                </main>
 
-                <Footer/>
-            </BookCartProvider>
-        </>
+                    {/* Confirmation note */}
+                    {isPaid && (
+                        <p className="mt-7 text-center text-xs leading-6 text-[#746b61]">
+                            Your order confirmation will be sent to the
+                            email address provided during checkout.
+                        </p>
+                    )}
+
+                    {/* Back to home */}
+                    <div className="mt-9 text-center">
+                        <Link
+                            href="/"
+                            className="group inline-flex w-full items-center justify-center gap-3 bg-[#25221f] px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#8a6a48] sm:w-auto"
+                        >
+                            Back to Homepage
+
+                            <ArrowRight
+                                size={16}
+                                strokeWidth={1.5}
+                                className="transition-transform group-hover:translate-x-1"
+                            />
+                        </Link>
+                    </div>
+
+                    <div className="mt-10 border-t border-[#d9cec0] pt-6 text-center">
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-[#8a6a48]">
+                            Food · Art · Inspiration
+                        </p>
+                    </div>
+                </div>
+            </main>
+
+            <Footer />
+        </BookCartProvider>
     );
 }

@@ -1,3 +1,4 @@
+
 import { Link } from '@inertiajs/react';
 import {
     Minus,
@@ -32,9 +33,13 @@ export default function BookCart() {
                 }`}
             />
 
-            {/* Drawer */}
+            {/* Shopping cart drawer */}
             <aside
-                className={`fixed top-0 right-0 z-[90] flex h-full w-full max-w-[440px] flex-col border-l border-stone-200/80 bg-[#f7f3ec] shadow-[-20px_0_60px_rgba(0,0,0,0.12)] transition-transform duration-500 ease-out ${
+                role="dialog"
+                aria-modal={cartOpen}
+                aria-label="Shopping cart"
+                aria-hidden={!cartOpen}
+                className={`fixed right-0 top-0 z-[90] flex h-full w-full max-w-[440px] flex-col border-l border-stone-200/80 bg-[#f7f3ec] shadow-[-20px_0_60px_rgba(0,0,0,0.12)] transition-transform duration-500 ease-out ${
                     cartOpen
                         ? 'translate-x-0'
                         : 'translate-x-full'
@@ -48,12 +53,12 @@ export default function BookCart() {
                         </div>
 
                         <div>
-                            <p className="text-[10px] font-semibold tracking-[0.3em] text-[#8a6a48] uppercase">
-                                Winkelwagen
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                                Your Cart
                             </p>
 
                             <h2 className="mt-1 text-xl font-medium text-stone-900">
-                                Jouw bestelling
+                                Your Order
                             </h2>
                         </div>
                     </div>
@@ -62,7 +67,7 @@ export default function BookCart() {
                         type="button"
                         onClick={closeCart}
                         className="flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white/70 text-stone-700 transition duration-300 hover:rotate-90 hover:border-stone-900 hover:bg-stone-900 hover:text-white"
-                        aria-label="Winkelwagen sluiten"
+                        aria-label="Close shopping cart"
                     >
                         <X size={18} />
                     </button>
@@ -76,27 +81,27 @@ export default function BookCart() {
                             <div className="h-40 w-28 shrink-0 overflow-hidden rounded-[1.25rem] bg-stone-100 shadow-sm">
                                 <img
                                     src="/images/book cover.png"
-                                    alt="Kunst Eten"
+                                    alt="The Taste of Inspiration book cover"
                                     className="h-full w-full object-cover transition duration-500 hover:scale-105"
                                 />
                             </div>
 
                             <div className="flex min-w-0 flex-1 flex-col justify-between py-1">
                                 <div>
-                                    <p className="text-[10px] font-medium tracking-[0.24em] text-[#8a6a48] uppercase">
+                                    <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-[#8a6a48]">
                                         Hardcover
                                     </p>
 
                                     <h3 className="mt-2 text-xl font-medium text-stone-900">
-                                        Kunst Eten
+                                        The Taste of Inspiration
                                     </h3>
 
                                     <p className="mt-2 text-sm leading-6 text-stone-500">
-                                        Vijf schilderijen.
+                                        Five paintings.
                                         <br />
-                                        Vijf gerechten.
+                                        Five dishes.
                                         <br />
-                                        Eén verhaal.
+                                        One story.
                                     </p>
                                 </div>
 
@@ -107,15 +112,15 @@ export default function BookCart() {
                         </div>
                     </div>
 
-                    {/* Quantity */}
+                    {/* Quantity controls */}
                     <div className="mt-9">
                         <div className="mb-4 flex items-center justify-between">
                             <p className="text-sm font-medium text-stone-800">
-                                Aantal boeken
+                                Number of Books
                             </p>
 
                             <p className="text-xs text-stone-400">
-                                Maximaal naar wens
+                                Choose your quantity
                             </p>
                         </div>
 
@@ -124,6 +129,7 @@ export default function BookCart() {
                                 type="button"
                                 onClick={decreaseQuantity}
                                 disabled={quantity === 1}
+                                aria-label="Decrease quantity"
                                 className="flex h-11 w-11 items-center justify-center rounded-xl text-stone-700 transition hover:bg-[#f1ece4] disabled:cursor-not-allowed disabled:opacity-30"
                             >
                                 <Minus size={17} />
@@ -134,14 +140,15 @@ export default function BookCart() {
                                     {quantity}
                                 </p>
 
-                                <p className="text-[10px] tracking-wider text-stone-400 uppercase">
-                                    {quantity === 1 ? 'boek' : 'boeken'}
+                                <p className="text-[10px] uppercase tracking-wider text-stone-400">
+                                    {quantity === 1 ? 'book' : 'books'}
                                 </p>
                             </div>
 
                             <button
                                 type="button"
                                 onClick={increaseQuantity}
+                                aria-label="Increase quantity"
                                 className="flex h-11 w-11 items-center justify-center rounded-xl bg-stone-900 text-white transition hover:bg-[#8a6a48]"
                             >
                                 <Plus size={17} />
@@ -149,30 +156,29 @@ export default function BookCart() {
                         </div>
                     </div>
 
-                    {/* Info */}
+                    {/* Product information */}
                     <div className="mt-8 rounded-[1.25rem] bg-[#eee7dc] p-5">
-                        <p className="text-xs font-medium tracking-[0.18em] text-[#8a6a48] uppercase">
-                            Kunst × Gastronomie
+                        <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#8a6a48]">
+                            Art × Gastronomy
                         </p>
 
                         <p className="mt-2 text-sm leading-6 text-stone-600">
-                            Een bijzonder boek waarin schilderkunst en gastronomie
-                            samenkomen.
+                            A unique book bringing together the worlds of
+                            painting and gastronomy in one inspiring journey.
                         </p>
                     </div>
                 </div>
 
-                {/* Bottom checkout */}
+                {/* Checkout footer */}
                 <div className="border-t border-stone-200 bg-white/95 px-6 py-6 backdrop-blur sm:px-7">
                     <div className="mb-5 flex items-end justify-between">
                         <div>
                             <p className="text-sm text-stone-500">
-                                Totaal
+                                Total
                             </p>
 
                             <p className="mt-1 text-xs text-stone-400">
-                                {quantity}{' '}
-                                {quantity === 1 ? 'boek' : 'boeken'}
+                                {quantity} {quantity === 1 ? 'book' : 'books'}
                             </p>
                         </div>
 
@@ -185,7 +191,7 @@ export default function BookCart() {
                         href={`/checkout?quantity=${quantity}`}
                         className="group flex w-full items-center justify-center gap-3 rounded-full bg-stone-900 px-6 py-4 text-sm font-medium text-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-[#8a6a48] hover:shadow-lg"
                     >
-                        Naar checkout
+                        Proceed to Checkout
 
                         <span className="transition-transform duration-300 group-hover:translate-x-1">
                             →
@@ -197,7 +203,7 @@ export default function BookCart() {
                         onClick={closeCart}
                         className="mt-3 w-full py-3 text-sm text-stone-500 transition hover:text-stone-900"
                     >
-                        Verder kijken
+                        Continue Shopping
                     </button>
                 </div>
             </aside>
