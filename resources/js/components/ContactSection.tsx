@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/react';
 import {
     ArrowUpRight,
-    CheckCircle2,
+    CheckCircle2, Instagram,
     Mail,
     Phone,
     X,
@@ -224,26 +224,41 @@ export default function ContactSection() {
                                     />
 
                                     <a
-                                        href="mailto:info@jouwdomein.nl"
+                                        href="mailto:thetasteofinspiration@gmail.com"
                                         className="break-all text-sm transition-colors hover:text-[#8a6a48]"
                                     >
-                                        info@jouwdomein.nl
+                                        thetasteofinspiration@gmail.com
                                     </a>
                                 </div>
 
+                                {/*/!* Phone *!/*/}
+                                {/*<div className="flex items-center gap-3">*/}
+                                {/*    <Phone*/}
+                                {/*        size={17}*/}
+                                {/*        strokeWidth={1.4}*/}
+                                {/*        className="shrink-0 text-[#8a6a48]"*/}
+                                {/*    />*/}
+
+                                {/*    <a*/}
+                                {/*        href="tel:+31600000000"*/}
+                                {/*        className="text-sm transition-colors hover:text-[#8a6a48]"*/}
+                                {/*    >*/}
+                                {/*        +31 6 00 00 00 00*/}
+                                {/*    </a>*/}
+                                {/*</div>*/}
                                 {/* Phone */}
                                 <div className="flex items-center gap-3">
-                                    <Phone
+                                    <Instagram
                                         size={17}
                                         strokeWidth={1.4}
                                         className="shrink-0 text-[#8a6a48]"
                                     />
 
                                     <a
-                                        href="tel:+31600000000"
+                                        href="https://www.instagram.com/thetasteofinspiration_/"
                                         className="text-sm transition-colors hover:text-[#8a6a48]"
                                     >
-                                        +31 6 00 00 00 00
+                                        thetasteofinspiration_
                                     </a>
                                 </div>
 

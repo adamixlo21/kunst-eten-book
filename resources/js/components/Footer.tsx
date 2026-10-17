@@ -72,10 +72,16 @@ export default function Footer() {
 
                             <div className="flex flex-col items-start gap-3 text-sm text-stone-400">
                                 <a
-                                    href="mailto:info@kunsteten.nl"
+                                    href="mailto:thetasteofinspiration@gmail.com"
                                     className="transition-colors hover:text-white"
                                 >
                                     Email us
+                                </a>
+                                <a
+                                    href="https://www.instagram.com/thetasteofinspiration_/"
+                                    className="transition-colors hover:text-white"
+                                >
+                                    Instagram
                                 </a>
 
                                 <a
