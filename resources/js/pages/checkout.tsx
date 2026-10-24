@@ -26,7 +26,9 @@ interface CheckoutFieldProps {
     required?: boolean;
 }
 
-const BOOK_PRICE = 249.99;
+// const BOOK_PRICE = 249.99;
+const BOOK_PRICE = 0.00;
+
 
 const formatPrice = (amount: number) =>
     new Intl.NumberFormat('en-IE', {

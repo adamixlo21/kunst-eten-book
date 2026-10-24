@@ -332,7 +332,8 @@ export default function BookSection() {
                                 </p>
 
                                 <p className="mt-1 font-serif text-2xl font-light sm:text-3xl">
-                                    €249.99
+                                    {/*€249.99*/}
+                                    0,00
                                 </p>
                             </div>
                         </div>

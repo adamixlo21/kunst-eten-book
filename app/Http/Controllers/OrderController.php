@@ -27,7 +27,9 @@ class OrderController extends Controller
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $price = 249.99;
+//        $price = 249.99;
+        $price = 0;
+
         $total = $price * $validated['quantity'];
 
         $order = Order::create([

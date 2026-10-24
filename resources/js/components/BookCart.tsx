@@ -18,7 +18,9 @@ export default function BookCart() {
         closeCart,
     } = useBookCart();
 
-    const price = 249.99;
+    // const price = 249.99;
+    const price = 0;
+
     const total = price * quantity;
 
     return (
