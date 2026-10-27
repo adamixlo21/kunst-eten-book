@@ -171,7 +171,7 @@ export default function BookSection() {
 
                             {/* BOOK */}
                             <motion.img
-                                src="/images/book cover.png"
+                                src="/images/The Taste of Inspiration Cookbook.png"
                                 alt="The Taste of Inspiration book"
                                 initial={
                                     reduceMotion
