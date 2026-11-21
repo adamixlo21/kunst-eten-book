@@ -16,12 +16,15 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\PaintingController as AdminPaintingController;
 use App\Http\Controllers\Admin\BidController as AdminBidController;
+use App\Http\Controllers\Admin\BookWaitlistController as AdminBookWaitlistController;
+
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PaintingController;
 use App\Http\Controllers\BidController;
+use App\Http\Controllers\BookWaitlistController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -69,6 +72,7 @@ Route::post('/paintings/{painting:slug}/bids', [BidController::class, 'store'])
 
 
 
+
 // legal
 
 Route::get('/privacy-policy', function () {
@@ -83,6 +87,27 @@ Route::get('/shipping-and-returns', function () {
     return Inertia::render('legal/shipping-and-returns');
 })->name('shipping-and-returns');
 
+
+// waitlist
+Route::get('/book-waitlist/unsubscribe/{token}', [
+    BookWaitlistController::class,
+    'unsubscribe',
+])->name('book-waitlist.unsubscribe');
+
+Route::post('/book-waitlist/unsubscribe/{token}', [
+    BookWaitlistController::class,
+    'confirmUnsubscribe',
+])
+    ->middleware('throttle:5,60')
+    ->name('book-waitlist.unsubscribe.confirm');
+
+// Public waitlist signup
+Route::post('/book-waitlist', [
+    BookWaitlistController::class,
+    'store',
+])
+    ->middleware('throttle:5,60')
+    ->name('book-waitlist.store');
 
 
 Route::middleware(['auth', 'admin'])
@@ -132,35 +157,35 @@ Route::middleware(['auth', 'admin'])
         // Private artwork bids
         Route::get('/bids', [AdminBidController::class, 'index'])
             ->name('bids.index');
+
+        // waitlist
+        Route::get('/book-waitlist', [
+            AdminBookWaitlistController::class,
+            'index',
+        ])->name('book-waitlist.index');
+
+        Route::post('/book-waitlist/send-test', [
+            AdminBookWaitlistController::class,
+            'sendTest',
+        ])->middleware('throttle:5,1')
+            ->name('book-waitlist.send-test');
+
+        Route::post('/book-waitlist/send-all', [
+            AdminBookWaitlistController::class,
+            'sendAll',
+        ])->middleware('throttle:1,1')
+            ->name('book-waitlist.send-all');
+
+        Route::post('/book-waitlist/{subscriber}/send', [
+            AdminBookWaitlistController::class,
+            'sendOne',
+        ])->middleware('throttle:10,1')
+            ->name('book-waitlist.send-one');
+
+
     });
 
 
-
-
-
-
-
-
-
-
-//Route::prefix('{current_team}')
-//    ->middleware(['auth', 'verified', EnsureTeamMembership::class])
-//    ->group(function () {
-//        Route::get('dashboard', DashboardController::class)
-//            ->name('dashboard');
-//    });
-//
-//Route::middleware(['auth'])->group(function () {
-//    Route::post(
-//        'invitations/{invitation}/accept',
-//        [TeamInvitationController::class, 'accept']
-//    )->name('invitations.accept');
-//
-//    Route::delete(
-//        'invitations/{invitation}',
-//        [TeamInvitationController::class, 'decline']
-//    )->name('invitations.decline');
-//});
 
 // Dashboard without teams
 Route::get('/dashboard', function () {

@@ -1,5 +1,6 @@
 
 import { Link, usePage } from '@inertiajs/react';
+import { Users } from 'lucide-react';
 
 import {
     LayoutDashboard,
@@ -37,6 +38,11 @@ export function AppSidebar() {
             title: 'Dashboard',
             href: '/admin',
             icon: LayoutDashboard,
+        },
+        {
+            title: 'Book Waitlist',
+            href: '/admin/book-waitlist',
+            icon: Users,
         },
         {
             title: 'Orders',

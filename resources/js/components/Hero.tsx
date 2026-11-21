@@ -1,645 +1,309 @@
+
 import { Link } from '@inertiajs/react';
-import {
-    motion,
-    useReducedMotion,
-    useScroll,
-    useTransform,
-} from 'motion/react';
-import { useRef } from 'react';
-import {
-    ArrowDown,
-    ArrowUpRight,
-} from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+import { ArrowDown, ArrowUpRight, BookOpen } from 'lucide-react';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function Hero() {
     const reduceMotion = useReducedMotion();
-    const heroRef = useRef<HTMLElement>(null);
-
-    const { scrollYProgress } = useScroll({
-        target: heroRef,
-        offset: ['start start', 'end start'],
-    });
-
-    const imageY = useTransform(
-        scrollYProgress,
-        [0, 1],
-        [0, reduceMotion ? 0 : 35],
-    );
-
-    const contentY = useTransform(
-        scrollYProgress,
-        [0, 1],
-        [0, reduceMotion ? 0 : -15],
-    );
 
     return (
         <section
-            ref={heroRef}
+            id="home"
             className="relative overflow-hidden bg-[#f3eee6] text-[#25221f]"
         >
-            {/* =====================================================
-                BACKGROUND
-            ===================================================== */}
-            <div className="pointer-events-none absolute inset-0">
-                <motion.div
-                    initial={
-                        reduceMotion
-                            ? false
-                            : {
-                                opacity: 0,
-                                scale: 0.85,
-                            }
-                    }
-                    animate={{
-                        opacity: 1,
-                        scale: 1,
-                    }}
-                    transition={{
-                        duration: 1.6,
-                        delay: 0.3,
-                        ease,
-                    }}
-                    className="absolute -left-40 top-[22%] h-[300px] w-[300px] rounded-full border border-[#8a6a48]/10 sm:-left-48 sm:h-[400px] sm:w-[400px] lg:-left-52 lg:h-[440px] lg:w-[440px]"
-                />
-
-                <motion.div
-                    initial={
-                        reduceMotion
-                            ? false
-                            : {
-                                opacity: 0,
-                                scale: 0.85,
-                            }
-                    }
-                    animate={{
-                        opacity: 1,
-                        scale: 1,
-                    }}
-                    transition={{
-                        duration: 1.5,
-                        delay: 0.5,
-                        ease,
-                    }}
-                    className="absolute -left-20 top-[28%] h-[180px] w-[180px] rounded-full border border-[#8a6a48]/10 sm:-left-24 sm:h-[240px] sm:w-[240px] lg:h-[260px] lg:w-[260px]"
-                />
+            {/* Subtle background */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                <div className="absolute -left-40 top-1/4 h-[400px] w-[400px] rounded-full border border-[#8a6a48]/10" />
+                <div className="absolute -left-20 top-1/3 h-[260px] w-[260px] rounded-full border border-[#8a6a48]/10" />
+                <div className="absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-[#e9dfd0]/50 blur-3xl" />
             </div>
 
-            <div className="relative mx-auto max-w-[1500px] px-5 pb-12 pt-24 sm:px-8 sm:pb-16 sm:pt-28 lg:px-16 lg:pb-20 lg:pt-36">
+            <div className="relative mx-auto max-w-[1500px] px-5 pb-16 pt-24 sm:px-8 sm:pt-28 lg:px-16 lg:pb-20 lg:pt-32">
 
-                {/* =====================================================
-                    TOP BAR
-                ===================================================== */}
+                {/* Top label */}
                 <motion.div
-                    initial={
-                        reduceMotion
-                            ? false
-                            : {
-                                opacity: 0,
-                                y: -12,
-                            }
-                    }
-                    animate={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    transition={{
-                        duration: 0.8,
-                        delay: 0.1,
-                        ease,
-                    }}
-                    className="border-b border-[#8a6a48]/20 pb-3 sm:pb-4"
+                    initial={reduceMotion ? false : { opacity: 0, y: -12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, ease }}
+                    className="flex items-center justify-between gap-4 border-b border-[#8a6a48]/20 pb-4"
                 >
-                    <div className="flex items-start justify-between gap-5">
-                        <div>
-                            <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#8a6a48] sm:text-[9px] sm:tracking-[0.35em]">
-                                00 / Opening
-                            </p>
+                    <span className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
+                        The Taste of Inspiration
+                    </span>
 
-                            <p className="mt-1.5 text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px] sm:tracking-[0.25em]">
-                                The Taste of Inspiration
-                            </p>
-                        </div>
-
-                        <div className="text-right">
-                            <p className="text-[7px] uppercase tracking-[0.18em] text-stone-400 sm:text-[8px] sm:tracking-[0.25em]">
-                                Art · Food · Experience
-                            </p>
-
-                            <p className="mt-1.5 text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px]">
-                                NL / 2026
-                            </p>
-                        </div>
-                    </div>
+                    <span className="text-[9px] uppercase tracking-[0.2em] text-stone-500">
+                        An Art & Culinary Book
+                    </span>
                 </motion.div>
 
-                {/* =====================================================
-                    INTRO LABEL
-                ===================================================== */}
-                <motion.div
-                    initial={
-                        reduceMotion
-                            ? false
-                            : {
-                                opacity: 0,
-                                y: 12,
-                            }
-                    }
-                    animate={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    transition={{
-                        duration: 0.8,
-                        delay: 0.25,
-                        ease,
-                    }}
-                    className="mt-6 flex items-center justify-between gap-4 sm:mt-8"
-                >
-                    <div className="flex items-center gap-3 sm:gap-4">
-                        <motion.span
-                            initial={
-                                reduceMotion
-                                    ? false
-                                    : {
-                                        scaleX: 0,
-                                    }
-                            }
-                            animate={{
-                                scaleX: 1,
-                            }}
-                            transition={{
-                                duration: 1,
-                                delay: 0.45,
-                                ease,
-                            }}
-                            style={{
-                                transformOrigin: 'left',
-                            }}
-                            className="h-px w-6 bg-[#8a6a48] sm:w-9"
-                        />
+                {/* Main hero */}
+                <div className="grid items-center gap-12 py-12 sm:py-16 lg:min-h-[650px] lg:grid-cols-[1fr_0.95fr] lg:gap-16 lg:py-12">
 
-                        <p className="text-[8px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48] sm:text-[9px] sm:tracking-[0.38em]">
-                            Food × Art × Inspiration
-                        </p>
-                    </div>
+                    {/* Left: Book introduction */}
+                    <div className="relative z-10 order-1">
 
-                    <p className="max-w-[90px] text-right text-[7px] uppercase leading-4 tracking-[0.16em] text-stone-400 sm:max-w-none sm:text-[8px] sm:tracking-[0.22em]">
-                        A culinary art experience
-                    </p>
-                </motion.div>
-
-                {/* =====================================================
-                    HERO CONTENT
-
-                    Same content on every screen.
-                    Phone = stacked.
-                    Desktop = two columns.
-                ===================================================== */}
-                <div className="mt-9 grid gap-10 sm:mt-12 sm:gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16 xl:gap-24">
-
-                    {/* =================================================
-                        TITLE + TEXT
-                    ================================================= */}
-                    <motion.div
-                        style={{
-                            y: contentY,
-                        }}
-                        className="relative z-10"
-                    >
-                        {/* TITLE */}
-                        <div>
-                            <div className="overflow-hidden pb-1 sm:pb-2">
-                                <motion.h1
-                                    initial={
-                                        reduceMotion
-                                            ? false
-                                            : {
-                                                y: '110%',
-                                            }
-                                    }
-                                    animate={{
-                                        y: 0,
-                                    }}
-                                    transition={{
-                                        duration: 1.1,
-                                        delay: 0.3,
-                                        ease,
-                                    }}
-                                    className="font-serif text-[17vw] font-light uppercase leading-[0.82] tracking-[-0.065em] sm:text-[13vw] lg:text-[6.7rem] xl:text-[8rem]"
-                                >
-                                    The
-                                </motion.h1>
-                            </div>
-
-                            <div className="overflow-hidden pb-1 sm:pb-2">
-                                <motion.h1
-                                    initial={
-                                        reduceMotion
-                                            ? false
-                                            : {
-                                                y: '110%',
-                                            }
-                                    }
-                                    animate={{
-                                        y: 0,
-                                    }}
-                                    transition={{
-                                        duration: 1.1,
-                                        delay: 0.42,
-                                        ease,
-                                    }}
-                                    className="font-serif text-[17vw] font-light uppercase leading-[0.82] tracking-[-0.065em] sm:text-[13vw] lg:text-[6.7rem] xl:text-[8rem]"
-                                >
-                                    Taste
-                                </motion.h1>
-                            </div>
-
-                            <div className="overflow-hidden pb-2 pt-1">
-                                <motion.h2
-                                    initial={
-                                        reduceMotion
-                                            ? false
-                                            : {
-                                                y: '110%',
-                                            }
-                                    }
-                                    animate={{
-                                        y: 0,
-                                    }}
-                                    transition={{
-                                        duration: 1.1,
-                                        delay: 0.54,
-                                        ease,
-                                    }}
-                                    className="font-serif text-[12vw] font-light italic leading-[0.95] tracking-[-0.05em] text-[#8a6a48] sm:text-[10vw] lg:text-[4.8rem] xl:text-[5.8rem]"
-                                >
-                                    of Inspiration
-                                </motion.h2>
-                            </div>
-                        </div>
-
-                        {/* DIVIDER */}
+                        {/* Eyebrow */}
                         <motion.div
                             initial={
                                 reduceMotion
                                     ? false
-                                    : {
-                                        scaleX: 0,
-                                    }
+                                    : { opacity: 0, y: 15 }
                             }
-                            animate={{
-                                scaleX: 1,
-                            }}
+                            animate={{ opacity: 1, y: 0 }}
                             transition={{
-                                duration: 0.9,
+                                duration: 0.8,
+                                delay: 0.1,
+                                ease,
+                            }}
+                            className="mb-7 flex items-center gap-3"
+                        >
+                            <BookOpen
+                                size={16}
+                                strokeWidth={1.5}
+                                className="text-[#8a6a48]"
+                            />
+
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#8a6a48]">
+                                Discover the Book
+                            </p>
+                        </motion.div>
+
+                        {/* Main title */}
+                        <motion.h1
+                            initial={
+                                reduceMotion
+                                    ? false
+                                    : { opacity: 0, y: 30 }
+                            }
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 1,
+                                delay: 0.2,
+                                ease,
+                            }}
+                            className="max-w-[700px] font-serif text-[clamp(3.5rem,6.3vw,7.5rem)] font-light leading-[0.98] tracking-[-0.055em]"
+                        >
+                            Five Paintings. Five Dishes.
+                            <span className="block italic text-[#8a6a48]">
+                                One Book.
+                            </span>
+                        </motion.h1>
+
+                        {/* Divider */}
+                        <motion.div
+                            initial={
+                                reduceMotion
+                                    ? false
+                                    : { scaleX: 0 }
+                            }
+                            animate={{ scaleX: 1 }}
+                            transition={{
+                                duration: 0.8,
+                                delay: 0.5,
+                                ease,
+                            }}
+                            style={{ transformOrigin: 'left' }}
+                            className="mt-8 h-px w-16 bg-[#8a6a48]"
+                        />
+
+                        {/*/!* Clear book message *!/*/}
+                        {/*<motion.h2*/}
+                        {/*    initial={*/}
+                        {/*        reduceMotion*/}
+                        {/*            ? false*/}
+                        {/*            : { opacity: 0, y: 15 }*/}
+                        {/*    }*/}
+                        {/*    animate={{ opacity: 1, y: 0 }}*/}
+                        {/*    transition={{*/}
+                        {/*        duration: 0.8,*/}
+                        {/*        delay: 0.5,*/}
+                        {/*        ease,*/}
+                        {/*    }}*/}
+                        {/*    className="mt-7 max-w-lg font-serif text-2xl font-light leading-snug sm:text-3xl"*/}
+                        {/*>*/}
+                        {/*    Five paintings. Five dishes.*/}
+                        {/*    <span className="block italic text-[#8a6a48]">*/}
+                        {/*        One extraordinary book.*/}
+                        {/*    </span>*/}
+                        {/*</motion.h2>*/}
+
+                        {/* Book description */}
+                        <motion.p
+                            initial={
+                                reduceMotion
+                                    ? false
+                                    : { opacity: 0, y: 15 }
+                            }
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 0.8,
+                                delay: 0.65,
+                                ease,
+                            }}
+                            className="mt-6 max-w-[470px] text-sm leading-7 text-[#746b61] sm:text-base sm:leading-8"
+                        >
+                            Discover The Taste of Inspiration, a unique book bringing together
+                            Nour's original paintings and Patrick's culinary creations in one shared story.
+                        </motion.p>
+
+                        {/* Primary action */}
+                        <motion.div
+                            initial={
+                                reduceMotion
+                                    ? false
+                                    : { opacity: 0, y: 15 }
+                            }
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 0.8,
                                 delay: 0.8,
                                 ease,
                             }}
-                            style={{
-                                transformOrigin: 'left',
-                            }}
-                            className="mt-6 h-px w-12 bg-[#8a6a48]/50 sm:mt-8 sm:w-16"
-                        />
-
-                        {/* TAGLINE */}
-                        <motion.p
-                            initial={
-                                reduceMotion
-                                    ? false
-                                    : {
-                                        opacity: 0,
-                                        y: 15,
-                                    }
-                            }
-                            animate={{
-                                opacity: 1,
-                                y: 0,
-                            }}
-                            transition={{
-                                duration: 0.8,
-                                delay: 0.85,
-                                ease,
-                            }}
-                            className="mt-5 max-w-md font-serif text-[1.4rem] font-light leading-[1.2] text-[#8a6a48] sm:mt-7 sm:text-3xl"
-                        >
-                            Where flavour becomes colour,
-                            <span className="block italic">
-                                and food becomes art.
-                            </span>
-                        </motion.p>
-
-                        {/* TEASER */}
-                        <motion.p
-                            initial={
-                                reduceMotion
-                                    ? false
-                                    : {
-                                        opacity: 0,
-                                        y: 15,
-                                    }
-                            }
-                            animate={{
-                                opacity: 1,
-                                y: 0,
-                            }}
-                            transition={{
-                                duration: 0.8,
-                                delay: 0.95,
-                                ease,
-                            }}
-                            className="mt-4 max-w-sm text-[13px] leading-6 text-stone-500 sm:mt-6 sm:text-sm sm:leading-7"
-                        >
-                            Two creative worlds meet through flavour,
-                            colour and feeling.
-                        </motion.p>
-
-                        {/* LINKS */}
-                        <motion.div
-                            initial={
-                                reduceMotion
-                                    ? false
-                                    : {
-                                        opacity: 0,
-                                        y: 15,
-                                    }
-                            }
-                            animate={{
-                                opacity: 1,
-                                y: 0,
-                            }}
-                            transition={{
-                                duration: 0.8,
-                                delay: 1.05,
-                                ease,
-                            }}
-                            className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4 sm:mt-9 sm:gap-7"
+                            className="mt-9 flex flex-wrap items-center gap-6"
                         >
                             <a
-                                href="/#story"
-                                className="group inline-flex items-center gap-3 border-b border-[#25221f] pb-2 text-[8px] font-semibold uppercase tracking-[0.22em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48] sm:text-[9px]"
+                                href="/#book"
+                                className="group inline-flex min-h-13 items-center justify-center gap-4 bg-[#25221f] px-8 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors duration-300 hover:bg-[#8a6a48]"
                             >
-                                Begin the Story
+                                Join the Waitlist
 
-                                <ArrowDown
-                                    size={13}
+                                <ArrowUpRight
+                                    size={17}
                                     strokeWidth={1.5}
-                                    className="transition-transform duration-300 group-hover:translate-y-1"
+                                    className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                                 />
                             </a>
 
-                            <Link
-                                href="/paintings"
-                                className="group inline-flex items-center gap-2.5 text-[8px] font-semibold uppercase tracking-[0.22em] text-stone-400 transition-colors duration-300 hover:text-[#8a6a48] sm:text-[9px]"
+                            <a
+                                href="/#story"
+                                className="group inline-flex items-center gap-2 border-b border-[#8a6a48]/50 pb-2 text-[11px] font-medium tracking-[0.06em] text-[#746b61] transition-colors hover:text-[#8a6a48]"
                             >
-                                The Collection
+                                Our Story
 
-                                <ArrowUpRight
-                                    size={13}
+                                <ArrowDown
+                                    size={15}
                                     strokeWidth={1.5}
-                                    className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                                 />
-                            </Link>
-                        </motion.div>
-                    </motion.div>
-
-                    {/* =================================================
-                        IMAGE
-                    ================================================= */}
-                    <div className="relative">
-                        {/* IMAGE LABEL */}
-                        <motion.div
-                            initial={
-                                reduceMotion
-                                    ? false
-                                    : {
-                                        opacity: 0,
-                                        x: 12,
-                                    }
-                            }
-                            animate={{
-                                opacity: 1,
-                                x: 0,
-                            }}
-                            transition={{
-                                duration: 0.8,
-                                delay: 0.9,
-                                ease,
-                            }}
-                            className="mb-3 flex items-center justify-between sm:mb-4"
-                        >
-                            <div className="flex items-center gap-2.5 sm:gap-3">
-                                <span className="text-[8px] font-semibold tracking-[0.25em] text-[#8a6a48]">
-                                    01
-                                </span>
-
-                                <span className="h-px w-6 bg-[#8a6a48]/40 sm:w-8" />
-
-                                <span className="text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px] sm:tracking-[0.25em]">
-                                    Patrick & Nour
-                                </span>
-                            </div>
-
-                            <span className="text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px] sm:tracking-[0.25em]">
-                                Portrait
-                            </span>
+                            </a>
                         </motion.div>
 
-                        <motion.div
-                            style={{
-                                y: imageY,
-                            }}
-                        >
-                            {/* IMAGE */}
-                            <motion.div
-                                initial={
-                                    reduceMotion
-                                        ? false
-                                        : {
-                                            clipPath:
-                                                'inset(100% 0% 0% 0%)',
-                                        }
-                                }
-                                animate={{
-                                    clipPath:
-                                        'inset(0% 0% 0% 0%)',
-                                }}
-                                transition={{
-                                    duration: 1.3,
-                                    delay: 0.4,
-                                    ease,
-                                }}
-                                className="relative overflow-hidden"
-                            >
-                                <motion.img
-                                    initial={
-                                        reduceMotion
-                                            ? false
-                                            : {
-                                                scale: 1.08,
-                                            }
-                                    }
-                                    animate={{
-                                        scale: 1,
-                                    }}
-                                    transition={{
-                                        duration: 1.8,
-                                        delay: 0.4,
-                                        ease,
-                                    }}
-                                    src="/images/patrick-nour.jpg"
-                                    alt="Patrick and Nour — The Taste of Inspiration"
-                                    className="aspect-[4/5] w-full object-cover sm:aspect-[5/6] lg:h-[650px] lg:aspect-auto xl:h-[700px]"
-                                />
+                        {/*/!* Supporting book details *!/*/}
+                        {/*<motion.div*/}
+                        {/*    initial={*/}
+                        {/*        reduceMotion*/}
+                        {/*            ? false*/}
+                        {/*            : { opacity: 0, y: 12 }*/}
+                        {/*    }*/}
+                        {/*    animate={{ opacity: 1, y: 0 }}*/}
+                        {/*    transition={{*/}
+                        {/*        duration: 0.7,*/}
+                        {/*        delay: 1,*/}
+                        {/*        ease,*/}
+                        {/*    }}*/}
+                        {/*    className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-[#8a6a48]/20 pt-6"*/}
+                        {/*>*/}
+                        {/*    <div>*/}
+                        {/*        <p className="font-serif text-2xl font-light">*/}
+                        {/*            05*/}
+                        {/*        </p>*/}
+                        {/*        <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-[#746b61]">*/}
+                        {/*            Paintings*/}
+                        {/*        </p>*/}
+                        {/*    </div>*/}
 
-                                <div className="pointer-events-none absolute inset-0 bg-[#5d4934]/[0.04]" />
-                            </motion.div>
+                        {/*    <div className="h-9 w-px bg-[#8a6a48]/20" />*/}
 
-                            {/* IMAGE CAPTION */}
-                            <motion.div
-                                initial={
-                                    reduceMotion
-                                        ? false
-                                        : {
-                                            opacity: 0,
-                                            y: 10,
-                                        }
-                                }
-                                animate={{
-                                    opacity: 1,
-                                    y: 0,
-                                }}
-                                transition={{
-                                    duration: 0.8,
-                                    delay: 1.2,
-                                    ease,
-                                }}
-                                className="mt-3 flex items-start justify-between gap-5 border-t border-[#8a6a48]/20 pt-3 sm:mt-4 sm:pt-4"
-                            >
-                                <div>
-                                    <p className="text-[7px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48] sm:text-[8px] sm:tracking-[0.3em]">
-                                        Food / Art / Emotion
-                                    </p>
+                        {/*    <div>*/}
+                        {/*        <p className="font-serif text-2xl font-light">*/}
+                        {/*            05*/}
+                        {/*        </p>*/}
+                        {/*        <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-[#746b61]">*/}
+                        {/*            Dishes*/}
+                        {/*        </p>*/}
+                        {/*    </div>*/}
 
-                                    <p className="mt-1 font-serif text-[13px] italic text-stone-500 sm:text-sm">
-                                        Two passions, one journey.
-                                    </p>
-                                </div>
+                        {/*    <div className="h-9 w-px bg-[#8a6a48]/20" />*/}
 
-                                <p className="text-right text-[7px] uppercase leading-4 tracking-[0.18em] text-stone-400 sm:text-[8px] sm:leading-5 sm:tracking-[0.22em]">
-                                    NL
-                                    <br />
-                                    2026
-                                </p>
-                            </motion.div>
-                        </motion.div>
+                        {/*    <div>*/}
+                        {/*        <p className="font-serif text-2xl font-light italic text-[#8a6a48]">*/}
+                        {/*            One*/}
+                        {/*        </p>*/}
+                        {/*        <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-[#746b61]">*/}
+                        {/*            Story*/}
+                        {/*        </p>*/}
+                        {/*    </div>*/}
+                        {/*</motion.div>*/}
                     </div>
+
+                    {/* Right: Book cover */}
+                    <motion.div
+                        initial={
+                            reduceMotion
+                                ? false
+                                : { opacity: 0, y: 40, scale: 0.96 }
+                        }
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{
+                            duration: 1.2,
+                            delay: 0.35,
+                            ease,
+                        }}
+                        className="relative order-2 mx-auto flex w-full max-w-[570px] flex-col items-center justify-center"
+                    >
+                        {/* Soft glow behind book */}
+                        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[75%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d9c8ae]/40 blur-[70px]" />
+
+                        {/* Book image */}
+                        <div className="relative z-10 flex w-full items-center justify-center">
+                            <img
+                                src="/images/book cover.png"
+                                alt="The Taste of Inspiration hardcover book, combining art and gastronomy"
+                                fetchPriority="high"
+                                className="h-auto max-h-[490px] w-auto max-w-full object-contain drop-shadow-[0_25px_30px_rgba(50,35,20,0.17)] sm:max-h-[580px] lg:max-h-[680px]"
+                            />
+                        </div>
+
+                        {/*/!* Book caption *!/*/}
+                        {/*<div className="relative z-10 mt-7 flex w-full max-w-[420px] items-center justify-between gap-4 border-t border-[#8a6a48]/20 pt-4">*/}
+                        {/*    <div>*/}
+                        {/*        <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#8a6a48]">*/}
+                        {/*            The Book*/}
+                        {/*        </p>*/}
+
+                        {/*        <p className="mt-1 font-serif text-sm italic text-[#746b61]">*/}
+                        {/*            Where art and taste meet.*/}
+                        {/*        </p>*/}
+                        {/*    </div>*/}
+
+                        {/*    <p className="text-right text-[9px] uppercase leading-5 tracking-[0.15em] text-[#746b61]">*/}
+                        {/*        Art*/}
+                        {/*        <br />*/}
+                        {/*        Gastronomy*/}
+                        {/*    </p>*/}
+                        {/*</div>*/}
+                    </motion.div>
                 </div>
 
-                {/* =====================================================
-                    NUMBERS
-                    Same 3 items on every screen.
-                ===================================================== */}
-                <motion.div
-                    initial={
-                        reduceMotion
-                            ? false
-                            : {
-                                opacity: 0,
-                                y: 20,
-                            }
-                    }
-                    animate={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    transition={{
-                        duration: 0.9,
-                        delay: 1.2,
-                        ease,
-                    }}
-                    className="relative z-20 mt-14 grid grid-cols-3 gap-3 border-t border-[#8a6a48]/20 pt-6 sm:mt-20 sm:gap-8 sm:pt-7 lg:mt-24"
-                >
-                    <div>
-                        <p className="font-serif text-2xl font-light sm:text-3xl">
-                            05
-                        </p>
+                {/* Bottom strip */}
+                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#8a6a48]/20 pt-5">
+                    <p className="font-serif text-sm italic text-[#746b61]">
+                        A story told through art and food.
+                    </p>
 
-                        <p className="mt-2 max-w-[90px] text-[7px] font-semibold uppercase leading-4 tracking-[0.18em] text-stone-400 sm:max-w-none sm:text-[8px] sm:tracking-[0.28em]">
-                            Original Paintings
-                        </p>
-                    </div>
-
-                    <div className="text-center">
-                        <p className="font-serif text-2xl font-light sm:text-3xl">
-                            05
-                        </p>
-
-                        <p className="mx-auto mt-2 max-w-[90px] text-[7px] font-semibold uppercase leading-4 tracking-[0.18em] text-stone-400 sm:max-w-none sm:text-[8px] sm:tracking-[0.28em]">
-                            Culinary Creations
-                        </p>
-                    </div>
-
-                    <div className="text-right">
-                        <p className="font-serif text-2xl font-light italic text-[#8a6a48] sm:text-3xl">
-                            One
-                        </p>
-
-                        <p className="ml-auto mt-2 max-w-[90px] text-[7px] font-semibold uppercase leading-4 tracking-[0.18em] text-stone-400 sm:max-w-none sm:text-[8px] sm:tracking-[0.28em]">
-                            Shared Journey
-                        </p>
-                    </div>
-                </motion.div>
-
-                {/* =====================================================
-                    CONTINUE
-                ===================================================== */}
-                <motion.div
-                    initial={
-                        reduceMotion
-                            ? false
-                            : {
-                                opacity: 0,
-                            }
-                    }
-                    animate={{
-                        opacity: 1,
-                    }}
-                    transition={{
-                        duration: 0.9,
-                        delay: 1.4,
-                    }}
-                    className="mt-10 flex justify-center sm:mt-14"
-                >
-                    <a
-                        href="/#story"
-                        aria-label="Continue to the story"
-                        className="group flex flex-col items-center gap-2.5 sm:gap-3"
+                    <Link
+                        href="/paintings"
+                        className="group inline-flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#8a6a48] transition-colors hover:text-[#25221f]"
                     >
-                        <span className="text-[7px] font-semibold uppercase tracking-[0.3em] text-stone-400 transition-colors group-hover:text-[#8a6a48] sm:text-[8px] sm:tracking-[0.35em]">
-                            Continue
-                        </span>
-
-                        <span className="relative h-9 w-px overflow-hidden bg-stone-300 sm:h-12">
-                            <motion.span
-                                animate={
-                                    reduceMotion
-                                        ? undefined
-                                        : {
-                                            y: [-20, 50],
-                                        }
-                                }
-                                transition={{
-                                    duration: 1.8,
-                                    repeat: Infinity,
-                                    ease: 'easeInOut',
-                                }}
-                                className="absolute left-0 top-0 h-5 w-px bg-[#8a6a48]"
-                            />
-                        </span>
-                    </a>
-                </motion.div>
+                        Discover the Artworks
+                        <ArrowUpRight
+                            size={15}
+                            strokeWidth={1.5}
+                            className="transition-transform group-hover:translate-x-1"
+                        />
+                    </Link>
+                </div>
             </div>
         </section>
     );

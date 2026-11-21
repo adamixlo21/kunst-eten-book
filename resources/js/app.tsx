@@ -23,6 +23,8 @@ void createInertiaApp({
             case name === 'legal/privacy-policy':
             case name === 'legal/shipping-and-returns':
             case name === 'legal/terms-and-conditions':
+            case name === 'waitlist-unsubscribe':
+
                 return null;
 
             case name === 'auth/login':
