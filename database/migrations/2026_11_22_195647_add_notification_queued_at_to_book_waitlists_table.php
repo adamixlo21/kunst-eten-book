@@ -1,33 +1,26 @@
 <?php
 
-namespace App\Mail;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use App\Models\BookWaitlist;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
-
-class NewWaitlistSubscriber extends Mailable
+return new class extends Migration
 {
-    use Queueable, SerializesModels;
-
-    public function __construct(
-        public BookWaitlist $subscriber
-    ) {}
-
-    public function envelope(): Envelope
+    public function up(): void
     {
-        return new Envelope(
-            subject: 'New Book Waitlist Signup | The Taste of Inspiration'
-        );
+        if (!Schema::hasColumn('book_waitlists', 'notification_queued_at')) {
+            Schema::table('book_waitlists', function (Blueprint $table) {
+                $table->timestamp('notification_queued_at')->nullable();
+            });
+        }
     }
 
-    public function content(): Content
+    public function down(): void
     {
-        return new Content(
-            view: 'emails.waitlist.admin-notification'
-        );
+        if (Schema::hasColumn('book_waitlists', 'notification_queued_at')) {
+            Schema::table('book_waitlists', function (Blueprint $table) {
+                $table->dropColumn('notification_queued_at');
+            });
+        }
     }
-}
+};
