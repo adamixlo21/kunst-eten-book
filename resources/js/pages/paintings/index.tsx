@@ -25,15 +25,15 @@ interface Props {
 
 const paintingImages: Record<string, string> = {
     'beyond-the-surface':
-        '/images/paintings/beyond-the-surface.jpg',
-    essence:
-        '/images/paintings/essence.jpg',
+        '/images/paintings/beyond-the-surface.webp',
+    'essence':
+        '/images/paintings/essence.webp',
     'the-silent-melody':
-        '/images/paintings/the-silent-melody.jpg',
+        '/images/paintings/the-silent-melody.webp',
     'a-moment-to-savour':
-        '/images/paintings/a-moment-to-savour.jpg',
+        '/images/paintings/a-moment-to-savour.webp',
     'in-bloom':
-        '/images/paintings/in-bloom.jpg',
+        '/images/paintings/in-bloom.webp',
 };
 
 const ease = [0.16, 1, 0.3, 1] as const;

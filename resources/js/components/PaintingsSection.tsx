@@ -9,31 +9,31 @@ const paintings = [
         title: 'Beyond the Surface',
         slug: 'beyond-the-surface',
         course: 'The Starters',
-        image: '/images/paintings/beyond-the-surface.jpg',
+        image: '/images/paintings/beyond-the-surface.webp',
     },
     {
         title: 'Essence',
         slug: 'essence',
         course: 'The Starters',
-        image: '/images/paintings/essence.jpg',
+        image: '/images/paintings/essence.webp',
     },
     {
         title: 'The Silent Melody',
         slug: 'the-silent-melody',
         course: 'The Main Courses',
-        image: '/images/paintings/the-silent-melody.jpg',
+        image: '/images/paintings/the-silent-melody.webp',
     },
     {
         title: 'A Moment to Savour',
         slug: 'a-moment-to-savour',
         course: 'The Main Courses',
-        image: '/images/paintings/a-moment-to-savour.jpg',
+        image: '/images/paintings/a-moment-to-savour.webp',
     },
     {
         title: 'In Bloom',
         slug: 'in-bloom',
         course: 'The Dessert',
-        image: '/images/paintings/in-bloom.jpg',
+        image: '/images/paintings/in-bloom.webp',
 
     },
 ];

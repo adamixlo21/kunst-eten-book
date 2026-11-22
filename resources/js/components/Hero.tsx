@@ -21,7 +21,6 @@ export default function Hero() {
             </div>
 
             <div className="relative mx-auto max-w-[1500px] px-5 pb-16 pt-24 sm:px-8 sm:pt-28 lg:px-16 lg:pb-20 lg:pt-32">
-
                 {/* Top label */}
                 <motion.div
                     initial={reduceMotion ? false : { opacity: 0, y: -12 }}
@@ -34,17 +33,14 @@ export default function Hero() {
                     </span>
 
                     <span className="text-[9px] uppercase tracking-[0.2em] text-stone-500">
-                        An Art & Culinary Book
+                        An Art &amp; Culinary Book
                     </span>
                 </motion.div>
 
                 {/* Main hero */}
                 <div className="grid items-center gap-12 py-12 sm:py-16 lg:min-h-[650px] lg:grid-cols-[1fr_0.95fr] lg:gap-16 lg:py-12">
-
                     {/* Left: Book introduction */}
                     <div className="relative z-10 order-1">
-
-                        {/* Eyebrow */}
                         <motion.div
                             initial={
                                 reduceMotion
@@ -70,7 +66,6 @@ export default function Hero() {
                             </p>
                         </motion.div>
 
-                        {/* Main title */}
                         <motion.h1
                             initial={
                                 reduceMotion
@@ -91,7 +86,6 @@ export default function Hero() {
                             </span>
                         </motion.h1>
 
-                        {/* Divider */}
                         <motion.div
                             initial={
                                 reduceMotion
@@ -108,28 +102,6 @@ export default function Hero() {
                             className="mt-8 h-px w-16 bg-[#8a6a48]"
                         />
 
-                        {/*/!* Clear book message *!/*/}
-                        {/*<motion.h2*/}
-                        {/*    initial={*/}
-                        {/*        reduceMotion*/}
-                        {/*            ? false*/}
-                        {/*            : { opacity: 0, y: 15 }*/}
-                        {/*    }*/}
-                        {/*    animate={{ opacity: 1, y: 0 }}*/}
-                        {/*    transition={{*/}
-                        {/*        duration: 0.8,*/}
-                        {/*        delay: 0.5,*/}
-                        {/*        ease,*/}
-                        {/*    }}*/}
-                        {/*    className="mt-7 max-w-lg font-serif text-2xl font-light leading-snug sm:text-3xl"*/}
-                        {/*>*/}
-                        {/*    Five paintings. Five dishes.*/}
-                        {/*    <span className="block italic text-[#8a6a48]">*/}
-                        {/*        One extraordinary book.*/}
-                        {/*    </span>*/}
-                        {/*</motion.h2>*/}
-
-                        {/* Book description */}
                         <motion.p
                             initial={
                                 reduceMotion
@@ -144,11 +116,13 @@ export default function Hero() {
                             }}
                             className="mt-6 max-w-[470px] text-sm leading-7 text-[#746b61] sm:text-base sm:leading-8"
                         >
-                            Discover The Taste of Inspiration, a unique book bringing together
-                            Nour's original paintings and Patrick's culinary creations in one shared story.
+                            Discover The Taste of Inspiration, a unique book
+                            bringing together Nour&apos;s original paintings
+                            and Patrick&apos;s culinary creations in one shared
+                            story.
                         </motion.p>
 
-                        {/* Primary action */}
+                        {/* Main action */}
                         <motion.div
                             initial={
                                 reduceMotion
@@ -168,7 +142,6 @@ export default function Hero() {
                                 className="group inline-flex min-h-13 items-center justify-center gap-4 bg-[#25221f] px-8 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors duration-300 hover:bg-[#8a6a48]"
                             >
                                 Join the Waitlist
-
                                 <ArrowUpRight
                                     size={17}
                                     strokeWidth={1.5}
@@ -181,60 +154,9 @@ export default function Hero() {
                                 className="group inline-flex items-center gap-2 border-b border-[#8a6a48]/50 pb-2 text-[11px] font-medium tracking-[0.06em] text-[#746b61] transition-colors hover:text-[#8a6a48]"
                             >
                                 Our Story
-
-                                <ArrowDown
-                                    size={15}
-                                    strokeWidth={1.5}
-                                />
+                                <ArrowDown size={15} strokeWidth={1.5} />
                             </a>
                         </motion.div>
-
-                        {/*/!* Supporting book details *!/*/}
-                        {/*<motion.div*/}
-                        {/*    initial={*/}
-                        {/*        reduceMotion*/}
-                        {/*            ? false*/}
-                        {/*            : { opacity: 0, y: 12 }*/}
-                        {/*    }*/}
-                        {/*    animate={{ opacity: 1, y: 0 }}*/}
-                        {/*    transition={{*/}
-                        {/*        duration: 0.7,*/}
-                        {/*        delay: 1,*/}
-                        {/*        ease,*/}
-                        {/*    }}*/}
-                        {/*    className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-[#8a6a48]/20 pt-6"*/}
-                        {/*>*/}
-                        {/*    <div>*/}
-                        {/*        <p className="font-serif text-2xl font-light">*/}
-                        {/*            05*/}
-                        {/*        </p>*/}
-                        {/*        <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-[#746b61]">*/}
-                        {/*            Paintings*/}
-                        {/*        </p>*/}
-                        {/*    </div>*/}
-
-                        {/*    <div className="h-9 w-px bg-[#8a6a48]/20" />*/}
-
-                        {/*    <div>*/}
-                        {/*        <p className="font-serif text-2xl font-light">*/}
-                        {/*            05*/}
-                        {/*        </p>*/}
-                        {/*        <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-[#746b61]">*/}
-                        {/*            Dishes*/}
-                        {/*        </p>*/}
-                        {/*    </div>*/}
-
-                        {/*    <div className="h-9 w-px bg-[#8a6a48]/20" />*/}
-
-                        {/*    <div>*/}
-                        {/*        <p className="font-serif text-2xl font-light italic text-[#8a6a48]">*/}
-                        {/*            One*/}
-                        {/*        </p>*/}
-                        {/*        <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-[#746b61]">*/}
-                        {/*            Story*/}
-                        {/*        </p>*/}
-                        {/*    </div>*/}
-                        {/*</motion.div>*/}
                     </div>
 
                     {/* Right: Book cover */}
@@ -252,37 +174,22 @@ export default function Hero() {
                         }}
                         className="relative order-2 mx-auto flex w-full max-w-[570px] flex-col items-center justify-center"
                     >
-                        {/* Soft glow behind book */}
                         <div className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[75%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d9c8ae]/40 blur-[70px]" />
 
-                        {/* Book image */}
                         <div className="relative z-10 flex w-full items-center justify-center">
                             <img
-                                src="/images/book cover.png"
-                                alt="The Taste of Inspiration hardcover book, combining art and gastronomy"
+                                src="/images/paintings/taste-of-inspiration-cover.webp"
+                                alt="The Taste of Inspiration concept book cover featuring five original artworks"
                                 fetchPriority="high"
+                                loading="eager"
+                                decoding="async"
                                 className="h-auto max-h-[490px] w-auto max-w-full object-contain drop-shadow-[0_25px_30px_rgba(50,35,20,0.17)] sm:max-h-[580px] lg:max-h-[680px]"
                             />
                         </div>
 
-                        {/*/!* Book caption *!/*/}
-                        {/*<div className="relative z-10 mt-7 flex w-full max-w-[420px] items-center justify-between gap-4 border-t border-[#8a6a48]/20 pt-4">*/}
-                        {/*    <div>*/}
-                        {/*        <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#8a6a48]">*/}
-                        {/*            The Book*/}
-                        {/*        </p>*/}
-
-                        {/*        <p className="mt-1 font-serif text-sm italic text-[#746b61]">*/}
-                        {/*            Where art and taste meet.*/}
-                        {/*        </p>*/}
-                        {/*    </div>*/}
-
-                        {/*    <p className="text-right text-[9px] uppercase leading-5 tracking-[0.15em] text-[#746b61]">*/}
-                        {/*        Art*/}
-                        {/*        <br />*/}
-                        {/*        Gastronomy*/}
-                        {/*    </p>*/}
-                        {/*</div>*/}
+                        <p className="relative z-10 mt-4 text-center text-[10px] tracking-[0.08em] text-[#746b61]">
+                            Concept cover — final design may vary.
+                        </p>
                     </motion.div>
                 </div>
 

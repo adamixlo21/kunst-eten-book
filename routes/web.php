@@ -101,13 +101,12 @@ Route::post('/book-waitlist/unsubscribe/{token}', [
     ->middleware('throttle:5,60')
     ->name('book-waitlist.unsubscribe.confirm');
 
+
 // Public waitlist signup
 Route::post('/book-waitlist', [
     BookWaitlistController::class,
     'store',
-])
-    ->middleware('throttle:5,60')
-    ->name('book-waitlist.store');
+])->name('book-waitlist.store');
 
 
 Route::middleware(['auth', 'admin'])
@@ -173,7 +172,7 @@ Route::middleware(['auth', 'admin'])
         Route::post('/book-waitlist/send-all', [
             AdminBookWaitlistController::class,
             'sendAll',
-        ])->middleware('throttle:1,1')
+        ])->middleware('throttle:10,1')
             ->name('book-waitlist.send-all');
 
         Route::post('/book-waitlist/{subscriber}/send', [

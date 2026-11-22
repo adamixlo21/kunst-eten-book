@@ -1,6 +1,7 @@
+
 import { useState, type FormEvent } from 'react';
 import { router } from '@inertiajs/react';
-import { ArrowUpRight, Check, Mail } from 'lucide-react';
+import { ArrowUpRight, Check, Mail, AlertCircle } from 'lucide-react';
 
 export default function BookWaitlistSection() {
     const [email, setEmail] = useState('');
@@ -15,7 +16,9 @@ export default function BookWaitlistSection() {
         setError('');
 
         if (!consent) {
-            setError('Please agree to receive the book launch notification.');
+            setError(
+                'Please agree to receive the book launch notification.'
+            );
             return;
         }
 
@@ -48,17 +51,21 @@ export default function BookWaitlistSection() {
             className="relative overflow-hidden bg-[#f3eee6] px-5 py-20 text-[#25221f] sm:px-8 sm:py-28 lg:px-16"
         >
             <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-20">
-
                 {/* Book image */}
-                <div className="relative flex justify-center">
-                    <div className="absolute inset-12 rounded-full bg-[#ddccb5]/50 blur-3xl" />
+                <div className="relative flex flex-col items-center justify-center">
+                    <div className="pointer-events-none absolute inset-12 rounded-full bg-[#ddccb5]/50 blur-3xl" />
 
                     <img
-                        src="/images/book cover.png"
-                        alt="The Taste of Inspiration book cover"
+                        src="/images/paintings/taste-of-inspiration-cover.webp"
+                        alt="The Taste of Inspiration concept book cover featuring five original artworks"
                         loading="lazy"
+                        decoding="async"
                         className="relative z-10 max-h-[560px] w-full max-w-[460px] object-contain drop-shadow-2xl"
                     />
+
+                    <p className="relative z-10 mt-4 text-center text-[10px] tracking-[0.08em] text-[#746b61]">
+                        Concept cover — final design may vary.
+                    </p>
                 </div>
 
                 {/* Content */}
@@ -93,13 +100,15 @@ export default function BookWaitlistSection() {
                                 size={21}
                                 className="shrink-0 text-[#8a6a48]"
                             />
+
                             <div>
                                 <h3 className="font-serif text-xl">
-                                    You're on the list!
+                                    You&apos;re on the list!
                                 </h3>
+
                                 <p className="mt-2 text-sm text-[#746b61]">
-                                    Thank you for your interest. We'll let
-                                    you know when the book is available.
+                                    Thank you for your interest. We&apos;ll
+                                    let you know when the book is available.
                                 </p>
                             </div>
                         </div>
@@ -126,6 +135,12 @@ export default function BookWaitlistSection() {
                                     onChange={(event) =>
                                         setEmail(event.target.value)
                                     }
+                                    aria-invalid={Boolean(error)}
+                                    aria-describedby={
+                                        error
+                                            ? 'waitlist-error'
+                                            : undefined
+                                    }
                                     className="min-h-13 min-w-0 flex-1 border border-[#8a6a48]/30 bg-white/70 px-4 py-3 text-sm outline-none transition-colors focus:border-[#8a6a48] focus:ring-2 focus:ring-[#8a6a48]/20"
                                 />
 
@@ -134,12 +149,17 @@ export default function BookWaitlistSection() {
                                     disabled={loading || !consent}
                                     className="inline-flex min-h-13 items-center justify-center gap-2 bg-[#25221f] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50"
                                 >
-                                    {loading ? 'Joining...' : 'Join Waitlist'}
-                                    {!loading && <ArrowUpRight size={16} />}
+                                    {loading
+                                        ? 'Joining...'
+                                        : 'Join Waitlist'}
+
+                                    {!loading && (
+                                        <ArrowUpRight size={16} />
+                                    )}
                                 </button>
                             </div>
 
-                            {/* Honeypot: hidden from real visitors */}
+                            {/* Honeypot */}
                             <div
                                 className="absolute -left-[9999px]"
                                 aria-hidden="true"
@@ -147,6 +167,7 @@ export default function BookWaitlistSection() {
                                 <label htmlFor="waitlist-website">
                                     Website
                                 </label>
+
                                 <input
                                     id="waitlist-website"
                                     type="text"
@@ -159,6 +180,7 @@ export default function BookWaitlistSection() {
                                 />
                             </div>
 
+                            {/* Consent */}
                             <label className="mt-4 flex cursor-pointer items-start gap-3 text-xs leading-5 text-[#746b61]">
                                 <input
                                     type="checkbox"
@@ -169,23 +191,40 @@ export default function BookWaitlistSection() {
                                     }
                                     className="mt-1 accent-[#8a6a48]"
                                 />
+
                                 <span>
                                     I agree to receive an email when
                                     The Taste of Inspiration launches.
                                 </span>
                             </label>
 
+                            {/* Inline validation and rate-limit errors */}
                             {error && (
-                                <p
+                                <div
+                                    id="waitlist-error"
                                     role="alert"
-                                    className="mt-3 text-sm text-red-700"
+                                    className="mt-5 flex items-start gap-3 border border-[#d9b58d] bg-[#fff8f0] p-4"
                                 >
-                                    {error}
-                                </p>
+                                    <AlertCircle
+                                        size={19}
+                                        className="mt-0.5 shrink-0 text-[#8a6a48]"
+                                    />
+
+                                    <div>
+                                        <p className="text-sm font-semibold text-[#77502f]">
+                                            Unable to join right now
+                                        </p>
+
+                                        <p className="mt-1 text-sm leading-6 text-[#77502f]">
+                                            {error}
+                                        </p>
+                                    </div>
+                                </div>
                             )}
 
                             <div className="mt-5 flex items-center gap-2 text-xs text-[#746b61]">
                                 <Mail size={14} />
+
                                 <span>
                                     Only book updates. No spam.
                                 </span>
