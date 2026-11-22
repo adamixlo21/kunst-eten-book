@@ -107,6 +107,7 @@ export default function BookWaitlistSection() {
                                 </h3>
 
                                 <p className="mt-2 text-sm text-[#746b61]">
+
                                     Thank you for your interest. We&apos;ll
                                     let you know when the book is available.
                                 </p>
