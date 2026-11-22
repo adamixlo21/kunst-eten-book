@@ -23,7 +23,7 @@ export default function Navbar() {
                     onClick={() => setMenuOpen(false)}
                 >
                     <img
-                        src="/favicon.png"
+                        src="/favicon.webp"
                         alt="The Taste of Inspiration"
                         className="h-11 w-11 shrink-0 object-contain transition duration-300 group-hover:scale-105"
                     />

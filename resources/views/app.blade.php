@@ -30,8 +30,8 @@
             }
         </style>
 
-        <link rel="icon" type="image/png" href="/favicon.png">
-        <link rel="apple-touch-icon" href="/favicon.png">
+        <link rel="icon" type="image/png" href="/favicon.webp">
+        <link rel="apple-touch-icon" href="/favicon.webp">
 
         @fonts
 
