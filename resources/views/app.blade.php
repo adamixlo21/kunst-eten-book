@@ -1,49 +1,78 @@
+
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    @class(['dark' => ($appearance ?? 'system') == 'dark'])
+>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        {{-- Inline script to detect system dark mode preference and apply it immediately --}}
-        <script>
-            (function() {
-                const appearance = '{{ $appearance ?? "system" }}';
+    {{-- System appearance preference --}}
+    <script>
+        (function () {
+            const appearance = @json($appearance ?? 'system');
 
-                if (appearance === 'system') {
-                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (appearance === 'system') {
+                const prefersDark = window.matchMedia(
+                    '(prefers-color-scheme: dark)'
+                ).matches;
 
-                    if (prefersDark) {
-                        document.documentElement.classList.add('dark');
-                    }
+                if (prefersDark) {
+                    document.documentElement.classList.add('dark');
                 }
-            })();
-        </script>
-
-        {{-- Inline style to set the HTML background color based on our theme in app.css --}}
-        <style>
-            html {
-                background-color: oklch(1 0 0);
             }
+        })();
+    </script>
 
-            html.dark {
-                background-color: oklch(0.145 0 0);
-            }
-        </style>
+    {{-- Initial page background --}}
+    <style>
+        html {
+            background-color: #f3eee6;
+        }
 
-        <link rel="icon" type="image/png" href="/favicon.webp">
-        <link rel="apple-touch-icon" href="/favicon.webp">
+        html.dark {
+            background-color: #25221f;
+        }
+    </style>
 
-        @fonts
+    {{-- Favicons --}}
+    <link
+        rel="icon"
+        type="image/webp"
+        href="/favicon.webp"
+    >
 
-        @fonts
+    <link
+        rel="apple-touch-icon"
+        href="/favicon.webp"
+    >
 
-        @viteReactRefresh
-        @vite(['resources/css/app.css', 'resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
-        <x-inertia::head>
-            <title>{{ config('app.name', 'Laravel') }}</title>
-        </x-inertia::head>
-    </head>
-    <body class="font-sans antialiased">
-        <x-inertia::app />
-    </body>
+    {{-- Fonts --}}
+    @fonts
+
+    {{-- Vite --}}
+    @viteReactRefresh
+
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.tsx',
+        "resources/js/pages/{$page['component']}.tsx"
+    ])
+
+    {{-- Inertia SEO metadata and SSR fallback --}}
+    <x-inertia::head>
+        <title>The Taste of Inspiration | Art &amp; Culinary Book</title>
+
+        <meta
+            data-inertia="description"
+            name="description"
+            content="Discover The Taste of Inspiration, an upcoming book bringing together five original paintings and five culinary creations. Join the waitlist."
+        >
+    </x-inertia::head>
+</head>
+
+<body class="font-sans antialiased">
+<x-inertia::app />
+</body>
 </html>

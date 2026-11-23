@@ -1,7 +1,12 @@
 
 import { useState, type FormEvent } from 'react';
 import { router } from '@inertiajs/react';
-import { ArrowUpRight, Check, Mail, AlertCircle } from 'lucide-react';
+import {
+    ArrowUpRight,
+    CheckCircle2,
+    Mail,
+    AlertCircle,
+} from 'lucide-react';
 
 export default function BookWaitlistSection() {
     const [email, setEmail] = useState('');
@@ -24,16 +29,25 @@ export default function BookWaitlistSection() {
 
         router.post(
             '/book-waitlist',
-            { email, consent, website },
+            {
+                email,
+                consent,
+                website,
+            },
             {
                 preserveScroll: true,
+
                 onStart: () => setLoading(true),
+
                 onFinish: () => setLoading(false),
+
                 onSuccess: () => {
                     setSuccess(true);
                     setEmail('');
                     setConsent(false);
+                    setError('');
                 },
+
                 onError: (errors) => {
                     setError(
                         errors.email ??
@@ -48,88 +62,109 @@ export default function BookWaitlistSection() {
     return (
         <section
             id="book"
-            className="relative overflow-hidden bg-[#f3eee6] px-5 py-20 text-[#25221f] sm:px-8 sm:py-28 lg:px-16"
+            aria-labelledby="book-heading"
+            className="relative overflow-hidden bg-[#f3eee6] text-[#25221f]"
         >
-            <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-20">
-                {/* Book image */}
+            <div className="mx-auto grid max-w-[1300px] items-center gap-12 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-20 lg:px-16 lg:py-24">
+
+                {/* Book cover */}
                 <div className="relative flex flex-col items-center justify-center">
-                    <div className="pointer-events-none absolute inset-12 rounded-full bg-[#ddccb5]/50 blur-3xl" />
+
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-12 rounded-full bg-[#ddccb5]/40 blur-3xl"
+                    />
 
                     <img
                         src="/images/paintings/taste-of-inspiration-cover.webp"
-                        alt="The Taste of Inspiration concept book cover featuring five original artworks"
+                        alt="Concept cover for The Taste of Inspiration"
                         loading="lazy"
                         decoding="async"
-                        className="relative z-10 max-h-[560px] w-full max-w-[460px] object-contain drop-shadow-2xl"
+                        className="relative z-10 h-auto max-h-[540px] w-full max-w-[450px] object-contain drop-shadow-2xl"
                     />
 
-                    <p className="relative z-10 mt-4 text-center text-[10px] tracking-[0.08em] text-[#746b61]">
+                    <p className="relative z-10 mt-5 text-center text-sm leading-6 text-[#564b40]">
                         Concept cover — final design may vary.
                     </p>
                 </div>
 
-                {/* Content */}
-                <div>
-                    <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                {/* Book information */}
+                <div className="min-w-0">
+
+                    {/* Section label */}
+                    <p className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
                         The Taste of Inspiration · Coming Soon
                     </p>
 
-                    <h2 className="font-serif text-4xl font-light leading-tight tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+                    {/* Heading */}
+                    <h2
+                        id="book-heading"
+                        className="font-serif text-[clamp(2.75rem,5vw,5rem)] font-light leading-[1.1] tracking-[-0.045em] text-[#25221f]"
+                    >
                         A book worth
-                        <span className="block italic text-[#8a6a48]">
+                        <span className="block italic text-[#70512f]">
                             waiting for.
                         </span>
                     </h2>
 
-                    <p className="mt-6 max-w-md text-sm leading-7 text-[#746b61] sm:text-base">
+                    {/* Description */}
+                    <p className="mt-6 max-w-lg text-base leading-8 text-[#564b40] sm:text-lg">
                         Five original paintings. Five culinary creations.
-                        One unique story bringing art and gastronomy together.
+                        One shared story bringing art and gastronomy together.
                     </p>
 
-                    <p className="mt-4 max-w-md text-sm leading-7 text-[#746b61]">
-                        The book is not available yet. Join the waitlist
-                        and be among the first to know when it launches.
+                    <p className="mt-5 max-w-lg text-base leading-8 text-[#564b40]">
+                        The book is coming soon. Join the waitlist
+                        to be among the first to know when it launches.
                     </p>
 
+                    {/* Success message */}
                     {success ? (
                         <div
                             role="status"
-                            className="mt-9 flex items-start gap-3 border border-[#8a6a48]/30 bg-white/60 p-5"
+                            aria-live="polite"
+                            className="mt-9 flex items-start gap-4 border border-[#c8b8a6] bg-[#faf8f4] p-5 sm:p-6"
                         >
-                            <Check
-                                size={21}
-                                className="shrink-0 text-[#8a6a48]"
+                            <CheckCircle2
+                                size={26}
+                                aria-hidden="true"
+                                className="mt-1 shrink-0 text-[#426340]"
                             />
 
                             <div>
-                                <h3 className="font-serif text-xl">
-                                    You&apos;re on the list!
+                                <h3 className="font-serif text-2xl leading-tight text-[#25221f]">
+                                    You're on the list!
                                 </h3>
 
-                                <p className="mt-2 text-sm text-[#746b61]">
-
-                                    Thank you for your interest. We&apos;ll
-                                    let you know when the book is available.
+                                <p className="mt-3 text-base leading-8 text-[#564b40]">
+                                    Thank you for your interest.
+                                    We'll let you know when the book
+                                    becomes available.
                                 </p>
                             </div>
                         </div>
                     ) : (
+                        /* Waitlist form */
                         <form
                             onSubmit={submit}
-                            className="mt-9 max-w-md"
+                            className="mt-9 max-w-lg"
                         >
+                            {/* Email label */}
                             <label
                                 htmlFor="waitlist-email"
-                                className="mb-3 block text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a6a48]"
+                                className="mb-3 block text-sm font-semibold text-[#25221f]"
                             >
                                 Your email address
                             </label>
 
+                            {/* Email and button */}
                             <div className="flex flex-col gap-3 sm:flex-row">
                                 <input
                                     id="waitlist-email"
+                                    name="email"
                                     type="email"
                                     required
+                                    maxLength={255}
                                     autoComplete="email"
                                     placeholder="you@example.com"
                                     value={email}
@@ -142,25 +177,30 @@ export default function BookWaitlistSection() {
                                             ? 'waitlist-error'
                                             : undefined
                                     }
-                                    className="min-h-13 min-w-0 flex-1 border border-[#8a6a48]/30 bg-white/70 px-4 py-3 text-sm outline-none transition-colors focus:border-[#8a6a48] focus:ring-2 focus:ring-[#8a6a48]/20"
+                                    className="min-h-12 min-w-0 flex-1 border border-[#c8b8a6] bg-white px-4 py-3 text-base text-[#25221f] outline-none transition-colors placeholder:text-[#746b61] focus:border-[#70512f] focus:ring-2 focus:ring-[#70512f]/20"
                                 />
 
                                 <button
                                     type="submit"
                                     disabled={loading || !consent}
-                                    className="inline-flex min-h-13 items-center justify-center gap-2 bg-[#25221f] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="group inline-flex min-h-12 shrink-0 items-center justify-center gap-3 bg-[#25221f] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#70512f] disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
                                 >
                                     {loading
                                         ? 'Joining...'
                                         : 'Join Waitlist'}
 
                                     {!loading && (
-                                        <ArrowUpRight size={16} />
+                                        <ArrowUpRight
+                                            size={18}
+                                            strokeWidth={1.7}
+                                            aria-hidden="true"
+                                            className="transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
+                                        />
                                     )}
                                 </button>
                             </div>
 
-                            {/* Honeypot */}
+                            {/* Honeypot - keep for spam protection */}
                             <div
                                 className="absolute -left-[9999px]"
                                 aria-hidden="true"
@@ -171,6 +211,7 @@ export default function BookWaitlistSection() {
 
                                 <input
                                     id="waitlist-website"
+                                    name="website"
                                     type="text"
                                     tabIndex={-1}
                                     autoComplete="off"
@@ -182,7 +223,7 @@ export default function BookWaitlistSection() {
                             </div>
 
                             {/* Consent */}
-                            <label className="mt-4 flex cursor-pointer items-start gap-3 text-xs leading-5 text-[#746b61]">
+                            <label className="mt-5 flex cursor-pointer items-start gap-3">
                                 <input
                                     type="checkbox"
                                     required
@@ -190,25 +231,26 @@ export default function BookWaitlistSection() {
                                     onChange={(event) =>
                                         setConsent(event.target.checked)
                                     }
-                                    className="mt-1 accent-[#8a6a48]"
+                                    className="mt-1.5 h-4 w-4 shrink-0 accent-[#70512f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#70512f]"
                                 />
 
-                                <span>
+                                <span className="text-sm leading-7 text-[#564b40]">
                                     I agree to receive an email when
                                     The Taste of Inspiration launches.
                                 </span>
                             </label>
 
-                            {/* Inline validation and rate-limit errors */}
+                            {/* Error message */}
                             {error && (
                                 <div
                                     id="waitlist-error"
                                     role="alert"
-                                    className="mt-5 flex items-start gap-3 border border-[#d9b58d] bg-[#fff8f0] p-4"
+                                    className="mt-6 flex items-start gap-3 border border-[#d9b58d] bg-[#fff8f0] p-4"
                                 >
                                     <AlertCircle
-                                        size={19}
-                                        className="mt-0.5 shrink-0 text-[#8a6a48]"
+                                        size={21}
+                                        aria-hidden="true"
+                                        className="mt-0.5 shrink-0 text-[#92532d]"
                                     />
 
                                     <div>
@@ -216,19 +258,25 @@ export default function BookWaitlistSection() {
                                             Unable to join right now
                                         </p>
 
-                                        <p className="mt-1 text-sm leading-6 text-[#77502f]">
+                                        <p className="mt-2 text-sm leading-7 text-[#77502f]">
                                             {error}
                                         </p>
                                     </div>
                                 </div>
                             )}
 
-                            <div className="mt-5 flex items-center gap-2 text-xs text-[#746b61]">
-                                <Mail size={14} />
+                            {/* Privacy note */}
+                            <div className="mt-6 flex items-center gap-3 border-t border-[#70512f]/20 pt-5">
+                                <Mail
+                                    size={18}
+                                    strokeWidth={1.6}
+                                    aria-hidden="true"
+                                    className="shrink-0 text-[#70512f]"
+                                />
 
-                                <span>
+                                <p className="text-sm leading-6 text-[#564b40]">
                                     Only book updates. No spam.
-                                </span>
+                                </p>
                             </div>
                         </form>
                     )}

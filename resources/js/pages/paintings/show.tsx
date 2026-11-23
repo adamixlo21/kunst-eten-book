@@ -1,6 +1,7 @@
-import { FormEvent, useState } from 'react';
+
+import { useState, type FormEvent, type ReactNode } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -24,213 +25,263 @@ interface Props {
 const paintingImages: Record<string, string> = {
     'beyond-the-surface':
         '/images/paintings/beyond-the-surface.webp',
-
-    'essence':
+    essence:
         '/images/paintings/essence.webp',
-
     'the-silent-melody':
         '/images/paintings/the-silent-melody.webp',
-
     'a-moment-to-savour':
         '/images/paintings/a-moment-to-savour.webp',
-
     'in-bloom':
         '/images/paintings/in-bloom.webp',
 };
 
+const inputClass =
+    'min-h-12 w-full border border-[#c8b8a6] bg-[#faf8f4] px-4 py-3 text-base text-[#25221f] outline-none transition-colors placeholder:text-[#746b61] focus:border-[#70512f] focus:ring-2 focus:ring-[#70512f]/20';
+
+function formatPrice(price: string | number): string {
+    const amount = Number(price);
+
+    if (!Number.isFinite(amount)) {
+        return 'Price on request';
+    }
+
+    return new Intl.NumberFormat('en-GB', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(amount);
+}
+
+function getArtworkImage(painting: Painting): string | null {
+    const staticImage = paintingImages[painting.slug];
+
+    if (staticImage) {
+        return staticImage;
+    }
+
+    const image = painting.image?.trim();
+
+    if (!image) {
+        return null;
+    }
+
+    if (
+        image.startsWith('https://') ||
+        image.startsWith('http://') ||
+        image.startsWith('/')
+    ) {
+        return image;
+    }
+
+    if (image.startsWith('storage/')) {
+        return `/${image}`;
+    }
+
+    return `/storage/${image}`;
+}
+
 export default function PaintingShow({ painting }: Props) {
     const [bidSent, setBidSent] = useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+        reset,
+    } = useForm({
         name: '',
         email: '',
         phone: '',
         amount: painting.starting_price,
     });
 
-    const submitBid = (e: FormEvent) => {
-        e.preventDefault();
+    const artworkImage = getArtworkImage(painting);
+
+    // const seoDescription = painting.description
+    //     ? painting.description.replace(/\s+/g, ' ').trim().slice(0, 155)
+    //     : `Discover ${painting.title}, an original painting by Nour featured in The Taste of Inspiration. Explore the artwork and private offer details.`;
+
+    function submitBid(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
 
         post(`/paintings/${painting.slug}/bids`, {
             preserveScroll: true,
-
             onSuccess: () => {
                 reset('name', 'email', 'phone');
                 setBidSent(true);
             },
         });
-    };
-
-    const formatPrice = (price: string) =>
-        new Intl.NumberFormat('en-GB', {
-            style: 'currency',
-            currency: 'EUR',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        }).format(Number(price));
-
-    const artworkImage = paintingImages[painting.slug];
+    }
 
     return (
         <BookCartProvider>
             <Head
                 title={`${painting.title} | The Taste of Inspiration`}
-            />
+            >
+                <meta
+                    head-key="description"
+                    name="description"
+                    content={`Discover ${painting.title}, an original painting featured in The Taste of Inspiration. Explore the artwork and private offer details.`}
+                />
+            </Head>
 
             <Navbar />
 
-            <main className="bg-[#f3eee6] text-[#25221f]">
+            <main className="min-h-screen bg-[#faf8f4] text-[#25221f]">
 
-                {/* =====================================================
-                    TOP NAVIGATION
-                ===================================================== */}
-                <section className="border-b border-[#8a6a48]/20">
-                    <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-5 px-5 pb-5 pt-28 sm:px-8 sm:pt-32 lg:px-16 lg:pt-36">
-
+                {/* Back navigation */}
+                <div className="border-b border-[#70512f]/20">
+                    <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4 px-5 pb-5 pt-28 sm:px-8 sm:pt-32 lg:px-16 lg:pt-36">
                         <Link
                             href="/paintings"
-                            className="group flex items-center gap-3 text-[8px] font-semibold uppercase tracking-[0.24em] transition-colors hover:text-[#8a6a48]"
+                            className="group inline-flex min-h-11 items-center gap-3 text-sm font-semibold text-[#70512f] transition-colors hover:text-[#25221f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
                         >
                             <ArrowLeft
-                                size={14}
-                                strokeWidth={1.4}
-                                className="transition-transform group-hover:-translate-x-1"
+                                size={18}
+                                aria-hidden="true"
+                                className="transition-transform motion-safe:group-hover:-translate-x-1"
                             />
-
-                            Collection
+                            Back to Collection
                         </Link>
 
-                        <p className="text-right text-[7px] uppercase tracking-[0.22em] text-stone-400 sm:text-[8px]">
+                        <span className="text-xs font-medium text-[#564b40]">
                             Original Artwork
-                        </p>
+                        </span>
                     </div>
-                </section>
+                </div>
 
-                {/* =====================================================
-                    ARTWORK
-                ===================================================== */}
-                <section>
-                    <div className="mx-auto max-w-[1500px] px-5 py-10 sm:px-8 sm:py-14 lg:px-16 lg:py-20">
+                {/* Artwork details */}
+                <section
+                    aria-labelledby="painting-heading"
+                    className="bg-[#faf8f4]"
+                >
+                    <div className="mx-auto max-w-[1400px] px-5 py-12 sm:px-8 sm:py-16 lg:px-16 lg:py-24">
 
-                        <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-16 xl:gap-24">
+                        <div className="grid items-start gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 xl:gap-24">
 
-                            {/* =========================================
-                                IMAGE
-                            ========================================= */}
-                            <div>
-                                <div className="mb-3 flex items-center justify-between">
-                                    <span className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#8a6a48]">
+                            {/* Artwork image */}
+                            <div className="min-w-0">
+                                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[#70512f]">
                                         The Taste of Inspiration
                                     </span>
 
-                                    <span className="text-[7px] uppercase tracking-[0.22em] text-stone-400">
-                                        Original / 2026
+                                    <span className="text-xs text-[#564b40]">
+                                        Original Artwork
                                     </span>
                                 </div>
 
-                                <div className="relative bg-[#e6dfd5]">
+                                <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-[#e8dfd2]">
                                     {artworkImage ? (
                                         <img
                                             src={artworkImage}
-                                            alt={painting.title}
-                                            className="h-auto w-full object-contain"
+                                            alt={`Original painting titled ${painting.title}`}
+                                            loading="eager"
+                                            decoding="async"
+                                            fetchPriority="high"
+                                            className="h-full w-full object-contain"
                                         />
                                     ) : (
-                                        <div className="flex aspect-[4/5] items-center justify-center">
-                                            <span className="text-[8px] uppercase tracking-[0.25em] text-stone-400">
-                                                Artwork coming soon
+                                        <div className="flex flex-col items-center gap-3 p-6 text-center">
+                                            <span className="font-serif text-5xl italic text-[#70512f]">
+                                                Art
                                             </span>
+
+                                            <p className="text-sm text-[#564b40]">
+                                                Artwork coming soon
+                                            </p>
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="mt-3 flex items-center justify-between">
-                                    <span className="text-[7px] uppercase tracking-[0.22em] text-stone-400">
+                                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-b border-[#70512f]/20 pb-4">
+                                    <span className="text-xs text-[#564b40]">
                                         Original Painting
                                     </span>
 
-                                    <span className="text-[7px] uppercase tracking-[0.22em] text-stone-400">
+                                    <span className="text-xs text-[#564b40]">
                                         The Collection
                                     </span>
                                 </div>
                             </div>
 
-                            {/* =========================================
-                                INFORMATION
-                            ========================================= */}
-                            <div>
-                                <div className="flex items-center gap-3">
-                                    <span className="h-px w-8 bg-[#8a6a48]" />
+                            {/* Artwork information */}
+                            <div className="min-w-0 lg:pt-8">
 
-                                    <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
-                                        Original Artwork
-                                    </p>
-                                </div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
+                                    Original Artwork
+                                </p>
 
-                                {/* TITLE */}
-                                <h1 className="mt-6 max-w-xl font-serif text-[13vw] font-light leading-[0.88] tracking-[-0.05em] sm:text-6xl lg:text-7xl xl:text-[5.5rem]">
+                                <h1
+                                    id="painting-heading"
+                                    className="mt-5 font-serif text-[clamp(2.75rem,5.5vw,5.5rem)] font-light leading-[1.06] tracking-[-0.045em]"
+                                >
                                     {painting.title}
                                 </h1>
 
-                                {/* STATUS */}
-                                <div className="mt-7 flex items-center gap-2">
+                                {/* Bidding status */}
+                                <div className="mt-7 flex items-center gap-3">
                                     <span
-                                        className={`h-1.5 w-1.5 rounded-full ${
+                                        aria-hidden="true"
+                                        className={`h-2.5 w-2.5 shrink-0 rounded-full ${
                                             painting.bidding_open
-                                                ? 'bg-[#66765d]'
-                                                : 'bg-stone-400'
+                                                ? 'bg-[#426340]'
+                                                : 'bg-[#756b60]'
                                         }`}
                                     />
 
-                                    <span className="text-[8px] font-semibold uppercase tracking-[0.2em] text-stone-500">
+                                    <span className="text-sm font-medium text-[#564b40]">
                                         {painting.bidding_open
-                                            ? 'Available for private offer'
-                                            : 'Bidding closed'}
+                                            ? 'Available for Private Offers'
+                                            : 'Bidding Currently Closed'}
                                     </span>
                                 </div>
 
-                                {/* DESCRIPTION */}
+                                {/* Description */}
                                 {painting.description && (
-                                    <div className="mt-8 border-t border-[#8a6a48]/20 pt-7">
-                                        <p className="max-w-lg whitespace-pre-line text-[13px] leading-7 text-stone-500 sm:text-sm sm:leading-8">
+                                    <div className="mt-9 border-t border-[#70512f]/20 pt-7">
+                                        <p className="max-w-lg whitespace-pre-line text-base leading-8 text-[#564b40]">
                                             {painting.description}
                                         </p>
                                     </div>
                                 )}
 
-                                {/* PRICE */}
-                                <div className="mt-8 border-y border-[#8a6a48]/20 py-5">
-                                    <div className="flex items-end justify-between gap-6">
+                                {/* Starting price */}
+                                <div className="mt-9 border-y border-[#70512f]/20 py-7">
+                                    <div className="flex flex-wrap items-end justify-between gap-6">
                                         <div>
-                                            <p className="text-[7px] font-semibold uppercase tracking-[0.24em] text-stone-400">
+                                            <p className="text-sm font-medium text-[#564b40]">
                                                 Starting Price
                                             </p>
 
-                                            <p className="mt-2 font-serif text-3xl font-light text-[#8a6a48]">
+                                            <p className="mt-3 font-serif text-4xl font-light text-[#70512f] sm:text-5xl">
                                                 {formatPrice(
-                                                    painting.starting_price,
+                                                    painting.starting_price
                                                 )}
                                             </p>
                                         </div>
 
-                                        <p className="max-w-[170px] text-right text-[10px] leading-5 text-stone-400">
-                                            Offers are handled privately.
+                                        <p className="max-w-[190px] text-sm leading-6 text-[#564b40]">
+                                            All offers are handled privately.
                                         </p>
                                     </div>
                                 </div>
 
-                                {/* SCROLL TO OFFER */}
+                                {/* Make offer CTA */}
                                 {painting.bidding_open && (
                                     <a
                                         href="#private-offer"
-                                        className="group mt-7 inline-flex items-center gap-4 border-b border-[#25221f] pb-2 text-[8px] font-semibold uppercase tracking-[0.24em] transition-colors hover:border-[#8a6a48] hover:text-[#8a6a48]"
+                                        className="group mt-9 inline-flex min-h-12 items-center justify-center gap-3 bg-[#25221f] px-7 py-4 text-sm font-semibold text-white transition-colors hover:bg-[#70512f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
                                     >
                                         Make a Private Offer
 
                                         <ArrowUpRight
-                                            size={14}
-                                            strokeWidth={1.4}
-                                            className="transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
+                                            size={18}
+                                            aria-hidden="true"
+                                            className="transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
                                         />
                                     </a>
                                 )}
@@ -239,279 +290,347 @@ export default function PaintingShow({ painting }: Props) {
                     </div>
                 </section>
 
-                {/* =====================================================
-                    PRIVATE ACQUISITION
-                ===================================================== */}
+                {/* Private acquisition */}
                 <section
                     id="private-offer"
-                    className="border-t border-[#8a6a48]/20 bg-[#e9dfd2]"
+                    aria-labelledby="private-offer-heading"
+                    className="scroll-mt-24 border-t border-[#70512f]/20 bg-[#eee7dc]"
                 >
-                    <div className="mx-auto max-w-[1500px] px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
+                    <div className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
 
                         {painting.bidding_open ? (
-                            <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20 xl:gap-28">
+                            <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 xl:gap-28">
 
-                                {/* =====================================
-                                    INTRO
-                                ===================================== */}
+                                {/* Offer information */}
                                 <div>
-                                    <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
                                         Private Acquisition
                                     </p>
 
-                                    <h2 className="mt-5 max-w-md font-serif text-4xl font-light leading-[0.95] tracking-[-0.035em] sm:text-5xl lg:text-6xl">
+                                    <h2
+                                        id="private-offer-heading"
+                                        className="mt-5 max-w-md font-serif text-[clamp(2.5rem,5vw,4.5rem)] font-light leading-[1.1] tracking-[-0.04em]"
+                                    >
                                         Make this work
-
-                                        <span className="block italic text-[#8a6a48]">
+                                        <span className="block italic text-[#70512f]">
                                             part of your story.
                                         </span>
                                     </h2>
 
-                                    <p className="mt-6 max-w-sm text-[13px] leading-7 text-stone-500 sm:text-sm">
-                                        Submit a private offer for{' '}
-                                        <span className="text-[#25221f]">
+                                    <p className="mt-6 max-w-md text-base leading-8 text-[#564b40]">
+                                        Interested in{' '}
+                                        <span className="font-medium text-[#25221f]">
                                             {painting.title}
                                         </span>
-                                        . Your offer and personal information
-                                        are not shown to other visitors.
+                                        ? Submit your private offer using
+                                        the form.
                                     </p>
 
-                                    <div className="mt-8 border-t border-[#8a6a48]/20 pt-5">
-                                        <p className="text-[7px] uppercase tracking-[0.22em] text-stone-400">
+                                    <p className="mt-4 max-w-md text-base leading-8 text-[#564b40]">
+                                        Your offer and personal information
+                                        are not visible to other visitors.
+                                    </p>
+
+                                    {/* Price detail */}
+                                    <div className="mt-9 max-w-sm border-t border-[#70512f]/25 pt-6">
+                                        <p className="text-sm font-medium text-[#564b40]">
                                             Starting Price
                                         </p>
 
-                                        <p className="mt-2 font-serif text-2xl text-[#8a6a48]">
+                                        <p className="mt-3 font-serif text-3xl font-light text-[#70512f]">
                                             {formatPrice(
-                                                painting.starting_price,
+                                                painting.starting_price
                                             )}
                                         </p>
                                     </div>
 
-                                    <p className="mt-5 max-w-xs text-[10px] leading-5 text-stone-400">
-                                        Submitting an offer does not make an
-                                        automatic payment.
+                                    <p className="mt-6 max-w-sm text-sm leading-7 text-[#564b40]">
+                                        Sending an offer does not
+                                        automatically charge you or complete
+                                        a purchase.
                                     </p>
                                 </div>
 
-                                {/* =====================================
-                                    FORM
-                                ===================================== */}
-                                <div className="border-t border-[#8a6a48]/25 pt-7 lg:border-l lg:border-t-0 lg:pl-16 lg:pt-0">
+                                {/* Offer form */}
+                                <div className="min-w-0 border-t border-[#70512f]/25 pt-8 lg:border-l lg:border-t-0 lg:pl-14 lg:pt-0">
 
-                                    <div className="flex items-end justify-between gap-5 border-b border-[#8a6a48]/20 pb-5">
-                                        <div>
-                                            <p className="text-[7px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
-                                                Private Offer
-                                            </p>
+                                    <div className="border-b border-[#70512f]/25 pb-6">
+                                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
+                                            Private Offer
+                                        </p>
 
-                                            <h3 className="mt-2 font-serif text-3xl font-light sm:text-4xl">
-                                                Your details
-                                            </h3>
-                                        </div>
+                                        <h3 className="mt-3 font-serif text-3xl font-light tracking-[-0.03em] sm:text-4xl">
+                                            Your details
+                                        </h3>
 
-                                        <ArrowUpRight
-                                            size={18}
-                                            strokeWidth={1.2}
-                                            className="text-[#8a6a48]"
-                                        />
+                                        <p className="mt-3 text-base leading-7 text-[#564b40]">
+                                            Fill in the fields below
+                                            to submit your offer.
+                                        </p>
                                     </div>
 
-                                    {/* SUCCESS */}
-                                    {bidSent && (
-                                        <div className="mt-7 border-l-2 border-[#66765d] bg-[#f3eee6] p-5">
-                                            <p className="text-[8px] font-semibold uppercase tracking-[0.25em] text-[#66765d]">
-                                                Offer Received
-                                            </p>
-
-                                            <h3 className="mt-2 font-serif text-xl">
-                                                Thank you for your interest.
-                                            </h3>
-
-                                            <p className="mt-2 max-w-md text-[13px] leading-6 text-stone-500">
-                                                Your private offer for{' '}
-                                                <span className="text-[#25221f]">
-                                                    {painting.title}
-                                                </span>{' '}
-                                                has been received.
-                                            </p>
-                                        </div>
-                                    )}
-
-                                    <form
-                                        onSubmit={submitBid}
-                                        className="mt-7 space-y-6"
-                                    >
-                                        {/* NAME + EMAIL */}
-                                        <div className="grid gap-6 sm:grid-cols-2">
-
-                                            <BidField
-                                                label="Name"
-                                                error={errors.name}
-                                            >
-                                                <input
-                                                    type="text"
-                                                    value={data.name}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            'name',
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    className={inputClass}
-                                                    placeholder="Your name"
-                                                />
-                                            </BidField>
-
-                                            <BidField
-                                                label="Email Address"
-                                                error={errors.email}
-                                            >
-                                                <input
-                                                    type="email"
-                                                    value={data.email}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            'email',
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    className={inputClass}
-                                                    placeholder="name@email.com"
-                                                />
-                                            </BidField>
-                                        </div>
-
-                                        {/* PHONE */}
-                                        <BidField
-                                            label="Phone Number"
-                                            optional
-                                            error={errors.phone}
+                                    {/* Success message */}
+                                    {bidSent ? (
+                                        <div
+                                            role="status"
+                                            aria-live="polite"
+                                            className="mt-8 flex items-start gap-4 border border-[#c8b8a6] bg-[#faf8f4] p-6"
                                         >
-                                            <input
-                                                type="tel"
-                                                value={data.phone}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'phone',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                className={inputClass}
-                                                placeholder="+31 6 ..."
+                                            <CheckCircle2
+                                                size={25}
+                                                aria-hidden="true"
+                                                className="mt-0.5 shrink-0 text-[#426340]"
                                             />
-                                        </BidField>
 
-                                        {/* OFFER */}
-                                        <BidField
-                                            label="Your Offer"
-                                            error={errors.amount}
+                                            <div>
+                                                <h4 className="font-serif text-2xl text-[#25221f]">
+                                                    Offer received
+                                                </h4>
+
+                                                <p className="mt-3 text-base leading-8 text-[#564b40]">
+                                                    Thank you for your interest.
+                                                    Your private offer for{' '}
+                                                    <strong className="font-semibold text-[#25221f]">
+                                                        {painting.title}
+                                                    </strong>{' '}
+                                                    has been received.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <form
+                                            onSubmit={submitBid}
+                                            className="mt-8 space-y-6"
                                         >
-                                            <div className="relative">
-                                                <span className="absolute left-0 top-1/2 -translate-y-1/2 font-serif text-xl text-[#8a6a48]">
-                                                    €
-                                                </span>
+                                            {/* Name and email */}
+                                            <div className="grid gap-6 sm:grid-cols-2">
 
-                                                <input
-                                                    type="number"
-                                                    min={Number(
-                                                        painting.starting_price,
-                                                    )}
-                                                    step="1"
-                                                    value={data.amount}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            'amount',
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    className="w-full border-0 border-b border-[#bdb1a2] bg-transparent py-3 pl-7 pr-0 font-serif text-xl text-[#25221f] outline-none transition-colors focus:border-[#8a6a48] focus:ring-0"
-                                                />
+                                                <BidField
+                                                    label="Name"
+                                                    htmlFor="bid-name"
+                                                    error={errors.name}
+                                                >
+                                                    <input
+                                                        id="bid-name"
+                                                        name="name"
+                                                        type="text"
+                                                        required
+                                                        maxLength={255}
+                                                        autoComplete="name"
+                                                        value={data.name}
+                                                        onChange={(event) =>
+                                                            setData(
+                                                                'name',
+                                                                event.target.value
+                                                            )
+                                                        }
+                                                        aria-invalid={Boolean(errors.name)}
+                                                        aria-describedby={
+                                                            errors.name
+                                                                ? 'bid-name-error'
+                                                                : undefined
+                                                        }
+                                                        className={inputClass}
+                                                        placeholder="Your name"
+                                                    />
+                                                </BidField>
+
+                                                <BidField
+                                                    label="Email Address"
+                                                    htmlFor="bid-email"
+                                                    error={errors.email}
+                                                >
+                                                    <input
+                                                        id="bid-email"
+                                                        name="email"
+                                                        type="email"
+                                                        required
+                                                        maxLength={255}
+                                                        autoComplete="email"
+                                                        value={data.email}
+                                                        onChange={(event) =>
+                                                            setData(
+                                                                'email',
+                                                                event.target.value
+                                                            )
+                                                        }
+                                                        aria-invalid={Boolean(errors.email)}
+                                                        aria-describedby={
+                                                            errors.email
+                                                                ? 'bid-email-error'
+                                                                : undefined
+                                                        }
+                                                        className={inputClass}
+                                                        placeholder="name@example.com"
+                                                    />
+                                                </BidField>
                                             </div>
 
-                                            <p className="mt-2 text-[10px] text-stone-400">
-                                                Minimum{' '}
-                                                {formatPrice(
-                                                    painting.starting_price,
-                                                )}
-                                            </p>
-                                        </BidField>
-
-                                        {/* SUBMIT */}
-                                        <div className="border-t border-[#8a6a48]/20 pt-6">
-                                            <button
-                                                type="submit"
-                                                disabled={processing}
-                                                className="group flex w-full items-center justify-center gap-3 bg-[#25221f] px-6 py-4 text-[8px] font-semibold uppercase tracking-[0.24em] text-white transition-colors hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                                            {/* Phone */}
+                                            <BidField
+                                                label="Phone Number"
+                                                htmlFor="bid-phone"
+                                                optional
+                                                error={errors.phone}
                                             >
-                                                {processing
-                                                    ? 'Sending Offer...'
-                                                    : 'Submit Private Offer'}
+                                                <input
+                                                    id="bid-phone"
+                                                    name="phone"
+                                                    type="tel"
+                                                    maxLength={50}
+                                                    autoComplete="tel"
+                                                    value={data.phone}
+                                                    onChange={(event) =>
+                                                        setData(
+                                                            'phone',
+                                                            event.target.value
+                                                        )
+                                                    }
+                                                    aria-invalid={Boolean(errors.phone)}
+                                                    aria-describedby={
+                                                        errors.phone
+                                                            ? 'bid-phone-error'
+                                                            : undefined
+                                                    }
+                                                    className={inputClass}
+                                                    placeholder="+31 6 12345678"
+                                                />
+                                            </BidField>
 
-                                                {!processing && (
-                                                    <ArrowUpRight
-                                                        size={14}
-                                                        strokeWidth={1.4}
-                                                        className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                                            {/* Offer amount */}
+                                            <BidField
+                                                label="Your Offer"
+                                                htmlFor="bid-amount"
+                                                error={errors.amount}
+                                            >
+                                                <div className="relative">
+                                                    <span
+                                                        aria-hidden="true"
+                                                        className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-serif text-xl text-[#70512f]"
+                                                    >
+                                                        €
+                                                    </span>
+
+                                                    <input
+                                                        id="bid-amount"
+                                                        name="amount"
+                                                        type="number"
+                                                        required
+                                                        min={Number(painting.starting_price)}
+                                                        step="1"
+                                                        value={data.amount}
+                                                        onChange={(event) =>
+                                                            setData(
+                                                                'amount',
+                                                                event.target.value
+                                                            )
+                                                        }
+                                                        aria-invalid={Boolean(errors.amount)}
+                                                        aria-describedby={
+                                                            errors.amount
+                                                                ? 'bid-amount-hint bid-amount-error'
+                                                                : 'bid-amount-hint'
+                                                        }
+                                                        className={`${inputClass} pl-10 font-serif text-xl`}
                                                     />
-                                                )}
-                                            </button>
+                                                </div>
 
-                                            <p className="mt-4 max-w-md text-[10px] leading-5 text-stone-400">
-                                                Your offer is private. Other
-                                                visitors cannot see the amount
-                                                you submit.
-                                            </p>
-                                        </div>
-                                    </form>
+                                                <p
+                                                    id="bid-amount-hint"
+                                                    className="mt-3 text-sm text-[#564b40]"
+                                                >
+                                                    Minimum offer:{' '}
+                                                    {formatPrice(
+                                                        painting.starting_price
+                                                    )}
+                                                </p>
+                                            </BidField>
+
+                                            {/* Submit */}
+                                            <div className="border-t border-[#70512f]/25 pt-7">
+                                                <button
+                                                    type="submit"
+                                                    disabled={processing}
+                                                    className="group inline-flex min-h-12 w-full items-center justify-center gap-3 bg-[#25221f] px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-[#70512f] disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f] sm:w-auto"
+                                                >
+                                                    {processing
+                                                        ? 'Sending Offer...'
+                                                        : 'Submit Private Offer'}
+
+                                                    {!processing && (
+                                                        <ArrowUpRight
+                                                            size={18}
+                                                            aria-hidden="true"
+                                                            className="transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
+                                                        />
+                                                    )}
+                                                </button>
+
+                                                <p className="mt-5 max-w-md text-sm leading-7 text-[#564b40]">
+                                                    Your offer is private.
+                                                    Other visitors cannot
+                                                    see the amount you submit.
+                                                </p>
+                                            </div>
+                                        </form>
+                                    )}
                                 </div>
                             </div>
                         ) : (
-                            /* =========================================
-                                BIDDING CLOSED
-                            ========================================= */
-                            <div className="mx-auto max-w-2xl py-6 text-center">
-                                <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                            /* Bidding closed */
+                            <div className="mx-auto max-w-2xl py-8 text-center">
+                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
                                     Private Acquisition
                                 </p>
 
-                                <h2 className="mt-4 font-serif text-4xl font-light">
+                                <h2
+                                    id="private-offer-heading"
+                                    className="mt-5 font-serif text-3xl font-light leading-tight sm:text-5xl"
+                                >
                                     Bidding is currently closed.
                                 </h2>
 
-                                <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-stone-500">
-                                    Private offers for this artwork are not
-                                    currently being accepted.
+                                <p className="mx-auto mt-6 max-w-md text-base leading-8 text-[#564b40]">
+                                    Private offers for this artwork are
+                                    not currently being accepted.
                                 </p>
+
+                                <Link
+                                    href="/paintings"
+                                    className="mt-8 inline-flex min-h-11 items-center gap-2 border-b border-[#70512f] text-sm font-semibold text-[#70512f] hover:text-[#25221f]"
+                                >
+                                    View the Collection
+                                    <ArrowUpRight
+                                        size={17}
+                                        aria-hidden="true"
+                                    />
+                                </Link>
                             </div>
                         )}
                     </div>
                 </section>
 
-                {/* =====================================================
-                    BACK TO COLLECTION
-                ===================================================== */}
-                <section className="border-t border-[#8a6a48]/20 bg-[#f3eee6]">
-                    <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-6 px-5 py-8 sm:px-8 lg:px-16">
-
-                        <p className="text-[7px] uppercase tracking-[0.22em] text-stone-400">
+                {/* Bottom navigation */}
+                <div className="border-t border-[#70512f]/20 bg-[#faf8f4]">
+                    <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-5 px-5 py-8 sm:px-8 lg:px-16">
+                        <p className="font-serif text-base italic text-[#564b40]">
                             The Taste of Inspiration
                         </p>
 
                         <Link
                             href="/paintings"
-                            className="group inline-flex items-center gap-3 text-[8px] font-semibold uppercase tracking-[0.24em] transition-colors hover:text-[#8a6a48]"
+                            className="group inline-flex min-h-11 items-center gap-3 text-sm font-semibold text-[#70512f] transition-colors hover:text-[#25221f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
                         >
                             Back to Collection
 
                             <ArrowUpRight
-                                size={13}
-                                strokeWidth={1.4}
-                                className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                                size={18}
+                                aria-hidden="true"
+                                className="transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
                             />
                         </Link>
                     </div>
-                </section>
+                </div>
             </main>
 
             <BookCart />
@@ -521,33 +640,31 @@ export default function PaintingShow({ painting }: Props) {
     );
 }
 
-/* =========================================================
-    FORM STYLES
-========================================================= */
-
-const inputClass =
-    'w-full border-0 border-b border-[#bdb1a2] bg-transparent px-0 py-3 text-base text-[#25221f] outline-none transition-colors placeholder:text-stone-400 focus:border-[#8a6a48] focus:ring-0 sm:text-sm';
-
 function BidField({
                       label,
+                      htmlFor,
                       optional = false,
                       error,
                       children,
                   }: {
     label: string;
+    htmlFor: string;
     optional?: boolean;
     error?: string;
-    children: React.ReactNode;
+    children: ReactNode;
 }) {
     return (
         <div>
-            <div className="mb-1 flex items-center justify-between gap-4">
-                <label className="text-[8px] font-semibold uppercase tracking-[0.2em] text-stone-500">
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
+                <label
+                    htmlFor={htmlFor}
+                    className="text-sm font-semibold text-[#25221f]"
+                >
                     {label}
                 </label>
 
                 {optional && (
-                    <span className="text-[7px] uppercase tracking-[0.18em] text-stone-400">
+                    <span className="text-xs text-[#564b40]">
                         Optional
                     </span>
                 )}
@@ -556,7 +673,11 @@ function BidField({
             {children}
 
             {error && (
-                <p className="mt-2 text-xs text-red-700">
+                <p
+                    id={`${htmlFor}-error`}
+                    role="alert"
+                    className="mt-2 text-sm leading-6 text-[#a12626]"
+                >
                     {error}
                 </p>
             )}

@@ -1,10 +1,32 @@
 
 import { motion, useReducedMotion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const steps = ['Food', 'Emotion', 'Art'];
+const steps = [
+    {
+        number: '01',
+        title: 'The Paintings',
+        subtitle: 'Art that expresses',
+        description:
+            'Nour brings emotion and imagination to life through five original paintings. Each work has its own character and story.',
+    },
+    {
+        number: '02',
+        title: 'The Cuisine',
+        subtitle: 'Flavour that connects',
+        description:
+            'Patrick brings his creativity to the table through five culinary creations, exploring flavour, ingredients and presentation.',
+    },
+    {
+        number: '03',
+        title: 'The Book',
+        subtitle: 'Two worlds, one story',
+        description:
+            'The Taste of Inspiration brings these paintings and dishes together, inviting readers to experience art and food in a new way.',
+    },
+];
 
 export default function Journey() {
     const reduceMotion = useReducedMotion();
@@ -12,148 +34,138 @@ export default function Journey() {
     return (
         <section
             id="journey"
-            className="relative overflow-hidden bg-[#f7f3ec] text-[#25221f]"
+            aria-labelledby="journey-heading"
+            className="relative overflow-hidden bg-[#faf8f4] text-[#25221f]"
         >
-            <div className="mx-auto max-w-[1300px] px-5 py-10 sm:px-8 sm:py-12 lg:px-16 lg:py-14">
-
-                {/* TOP DIVIDER */}
-                <div className="flex items-center justify-between gap-4 border-b border-[#8a6a48]/25 pb-4">
-                    <span className="text-[8px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48] sm:text-[9px] sm:tracking-[0.3em]">
+            <div className="mx-auto max-w-[1300px] px-5 py-16 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
+                {/* Section heading */}
+                <div className="flex items-center justify-between gap-4 border-b border-[#70512f]/25 pb-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
                         02 / The Journey
-                    </span>
+                    </p>
 
-                    <span className="text-[8px] uppercase tracking-[0.2em] text-[#8a6a48]/70 sm:text-[9px]">
-                        Art × Food
+                    <span className="text-xs font-medium text-[#564b40]">
+                        Art &amp; Gastronomy
                     </span>
                 </div>
 
-                {/* MAIN CONTENT */}
+                {/* Introduction */}
                 <motion.div
                     initial={
                         reduceMotion
                             ? false
-                            : {
-                                opacity: 0,
-                                y: 24,
-                            }
+                            : { opacity: 0, y: 20 }
                     }
-                    whileInView={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    viewport={{
-                        once: true,
-                        amount: 0.3,
-                    }}
-                    transition={{
-                        duration: 0.9,
-                        ease,
-                    }}
-                    className="flex flex-col items-center py-10 text-center sm:py-12 lg:py-14"
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.8, ease }}
+                    className="mx-auto max-w-3xl py-12 text-center sm:py-16 lg:py-20"
                 >
-                    {/* SMALL LABEL */}
-                    <p className="mb-5 text-[8px] font-medium uppercase tracking-[0.3em] text-[#8a6a48] sm:text-[9px]">
-                        From One Expression to Another
+                    <p className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
+                        Inside The Taste of Inspiration
                     </p>
 
-                    {/* MAIN HEADING */}
-                    <h2 className="max-w-[850px] font-serif text-[clamp(2.3rem,6vw,5.5rem)] font-light leading-[1.08] tracking-[-0.045em]">
-                        Where flavour becomes
-                        <span className="block italic text-[#8a6a48]">
-                            inspiration.
+                    <h2
+                        id="journey-heading"
+                        className="font-serif text-[clamp(2.75rem,6vw,5.5rem)] font-light leading-[1.1] tracking-[-0.045em]"
+                    >
+                        Two creative worlds.
+                        <span className="block italic text-[#70512f]">
+                            One experience.
                         </span>
                     </h2>
 
-                    {/* DECORATIVE LINE */}
-                    <motion.div
-                        initial={
-                            reduceMotion
-                                ? false
-                                : { scaleX: 0 }
-                        }
-                        whileInView={{
-                            scaleX: 1,
-                        }}
-                        viewport={{
-                            once: true,
-                        }}
-                        transition={{
-                            duration: 1,
-                            delay: 0.2,
-                            ease,
-                        }}
-                        style={{
-                            transformOrigin: 'center',
-                        }}
-                        className="mt-7 h-px w-12 bg-[#8a6a48]/60 sm:mt-8"
-                    />
-
-                    {/* JOURNEY STEPS */}
-                    <div className="mt-7 flex flex-wrap items-center justify-center gap-x-3 gap-y-3 sm:mt-8 sm:gap-x-6">
-                        {steps.map((step, index) => (
-                            <motion.div
-                                key={step}
-                                initial={
-                                    reduceMotion
-                                        ? false
-                                        : {
-                                            opacity: 0,
-                                            y: 10,
-                                        }
-                                }
-                                whileInView={{
-                                    opacity: 1,
-                                    y: 0,
-                                }}
-                                viewport={{
-                                    once: true,
-                                }}
-                                transition={{
-                                    duration: 0.6,
-                                    delay: index * 0.15,
-                                    ease,
-                                }}
-                                className="flex items-center gap-3 sm:gap-6"
-                            >
-                                <span
-                                    className={`font-serif text-lg font-light italic sm:text-xl ${
-                                        index === steps.length - 1
-                                            ? 'text-[#8a6a48]'
-                                            : 'text-[#62584c]'
-                                    }`}
-                                >
-                                    {step}
-                                </span>
-
-                                {index < steps.length - 1 && (
-                                    <ArrowRight
-                                        size={15}
-                                        strokeWidth={1.2}
-                                        className="text-[#8a6a48]/60"
-                                        aria-hidden="true"
-                                    />
-                                )}
-                            </motion.div>
-                        ))}
-                    </div>
+                    <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[#564b40] sm:text-lg">
+                        The Taste of Inspiration is a celebration of
+                        creativity in two forms: painting and cooking.
+                        Discover how five artworks and five culinary
+                        creations come together in one book.
+                    </p>
                 </motion.div>
 
-                {/* BOTTOM DIVIDER */}
-                <div className="flex items-center justify-between gap-4 border-t border-[#8a6a48]/25 pt-4">
-                    <span className="text-[8px] uppercase tracking-[0.2em] text-[#8a6a48]/70 sm:text-[9px]">
-                        The Story
-                    </span>
+                {/* Three-part journey */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+                    {steps.map((step, index) => (
+                        <motion.article
+                            key={step.number}
+                            initial={
+                                reduceMotion
+                                    ? false
+                                    : { opacity: 0, y: 20 }
+                            }
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.15 }}
+                            transition={{
+                                duration: 0.7,
+                                delay: index * 0.12,
+                                ease,
+                            }}
+                            className="flex h-full flex-col border border-[#d8cbb9] bg-[#eee7dc] p-6 sm:p-8 lg:p-9"
+                        >
+                            {/* Step number */}
+                            <div className="flex items-center justify-between border-b border-[#70512f]/20 pb-5">
+                                <span className="font-serif text-3xl text-[#70512f]">
+                                    {step.number}
+                                </span>
+
+                                <span className="text-xs font-medium text-[#564b40]">
+                                    / 03
+                                </span>
+                            </div>
+
+                            {/* Title and description */}
+                            <div className="flex-1 pt-8">
+                                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#70512f]">
+                                    {step.subtitle}
+                                </p>
+
+                                <h3 className="mt-3 font-serif text-3xl font-light leading-tight tracking-[-0.03em] sm:text-4xl">
+                                    {step.title}
+                                </h3>
+
+                                <p className="mt-5 text-base leading-8 text-[#564b40]">
+                                    {step.description}
+                                </p>
+                            </div>
+                        </motion.article>
+                    ))}
+                </div>
+
+                {/* Closing statement */}
+                <motion.div
+                    initial={
+                        reduceMotion
+                            ? false
+                            : { opacity: 0, y: 20 }
+                    }
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.8, ease }}
+                    className="mx-auto mt-14 max-w-2xl text-center sm:mt-20"
+                >
+                    <p className="font-serif text-2xl font-light leading-relaxed text-[#25221f] sm:text-3xl">
+                        A book to explore with your eyes,
+                        <span className="italic text-[#70512f]">
+                            {' '}and imagine through your senses.
+                        </span>
+                    </p>
+                </motion.div>
+
+                {/* Bottom navigation */}
+                <div className="mt-14 flex flex-wrap items-center justify-between gap-5 border-t border-[#70512f]/25 pt-6 sm:mt-20">
+                    <p className="text-sm text-[#564b40]">
+                        Five paintings. Five dishes. One book.
+                    </p>
 
                     <a
                         href="#paintings"
-                        className="group inline-flex items-center gap-2 text-[8px] font-semibold uppercase tracking-[0.2em] text-[#8a6a48] transition-colors duration-300 hover:text-[#25221f] sm:text-[9px]"
+                        className="group inline-flex min-h-11 items-center gap-3 border-b border-[#70512f] text-sm font-semibold text-[#70512f] transition-colors hover:text-[#25221f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
                     >
-                        The Paintings
-
-                        <ArrowRight
-                            size={14}
-                            strokeWidth={1.4}
-                            className="transition-transform duration-300 group-hover:translate-x-1"
+                        Explore the Paintings
+                        <ArrowUpRight
+                            size={18}
+                            aria-hidden="true"
+                            className="transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
                         />
                     </a>
                 </div>

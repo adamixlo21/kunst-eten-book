@@ -1,3 +1,4 @@
+
 import { Link } from '@inertiajs/react';
 import { ArrowUpRight } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
@@ -34,7 +35,6 @@ const paintings = [
         slug: 'in-bloom',
         course: 'The Dessert',
         image: '/images/paintings/in-bloom.webp',
-
     },
 ];
 
@@ -44,124 +44,70 @@ export default function PaintingsSection() {
     return (
         <section
             id="paintings"
-            className="relative overflow-hidden bg-[#eee7dc] text-[#25221f]"
+            aria-labelledby="paintings-heading"
+            className="relative overflow-hidden bg-[#faf8f4] text-[#25221f]"
         >
-            <div className="mx-auto max-w-[1500px] px-5 py-16 sm:px-8 sm:py-20 lg:px-16 lg:py-28">
+            <div className="mx-auto max-w-[1500px] px-5 py-16 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
 
-                {/* =====================================================
-                    CHAPTER HEADER
-                ===================================================== */}
-                <motion.div
-                    initial={
-                        reduceMotion
-                            ? false
-                            : {
-                                opacity: 0,
-                                y: 15,
-                            }
-                    }
-                    whileInView={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    viewport={{
-                        once: true,
-                        amount: 0.3,
-                    }}
-                    transition={{
-                        duration: 0.8,
-                        ease,
-                    }}
-                    className="flex items-start justify-between gap-5 border-b border-[#8a6a48]/25 pb-4"
-                >
-                    <div>
-                        <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#8a6a48] sm:text-[9px] sm:tracking-[0.35em]">
-                            03 / The Collection
-                        </p>
+                {/* Section header */}
+                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#70512f]/25 pb-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
+                        02 / The Collection
+                    </p>
 
-                        <p className="mt-1.5 text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px] sm:tracking-[0.28em]">
-                            Five Original Paintings
-                        </p>
-                    </div>
-
-                    <span className="shrink-0 text-[7px] uppercase tracking-[0.2em] text-stone-400 sm:text-[8px] sm:tracking-[0.28em]">
-                        01 — 05
+                    <span className="text-xs font-medium text-[#564b40]">
+                        Five Original Paintings
                     </span>
-                </motion.div>
+                </div>
 
-                {/* =====================================================
-                    TITLE
-                ===================================================== */}
+                {/* Main heading */}
                 <motion.div
                     initial={
                         reduceMotion
                             ? false
-                            : {
-                                opacity: 0,
-                                y: 25,
-                            }
+                            : { opacity: 0, y: 20 }
                     }
-                    whileInView={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    viewport={{
-                        once: true,
-                        amount: 0.3,
-                    }}
-                    transition={{
-                        duration: 0.9,
-                        ease,
-                    }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.8, ease }}
                     className="py-12 sm:py-16 lg:py-20"
                 >
-                    <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-8">
-                        <div>
-                            <p className="mb-3 text-[7px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48] sm:mb-5 sm:text-[8px] sm:tracking-[0.35em]">
-                                The Art
-                            </p>
+                    <h2
+                        id="paintings-heading"
+                        className="font-serif text-[clamp(3rem,7vw,6rem)] font-light leading-[1.05] tracking-[-0.05em]"
+                    >
+                        The
+                        <span className="italic text-[#70512f]">
+                            {' '}Collection.
+                        </span>
+                    </h2>
 
-                            <h2 className="font-serif text-[13vw] font-light leading-[0.9] tracking-[-0.055em] sm:text-6xl lg:text-7xl xl:text-8xl">
-                                The
-                                <span className="ml-2 italic text-[#8a6a48] sm:ml-4 lg:ml-5">
-                                    Collection.
-                                </span>
-                            </h2>
-                        </div>
-
-                        <div className="flex items-center gap-3 sm:gap-5">
-                            <span className="h-px w-7 bg-[#8a6a48]/50 sm:w-10" />
-
-                            <p className="text-[7px] uppercase tracking-[0.22em] text-stone-400 sm:text-[8px] sm:tracking-[0.3em]">
-                                Food → Feeling → Art
-                            </p>
-                        </div>
-                    </div>
+                    <p className="mt-5 max-w-lg text-base leading-8 text-[#564b40] sm:text-lg">
+                        Five original paintings, each with its own
+                        character and expression.
+                    </p>
                 </motion.div>
 
-                {/* =====================================================
-                    MOVING GALLERY
-                    Same gallery on every device
-                ===================================================== */}
+                {/* Moving artwork gallery */}
                 <div className="relative overflow-hidden">
 
-                    {/* EDGE FADES */}
-                    <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-6 bg-gradient-to-r from-[#eee7dc] via-[#eee7dc]/70 to-transparent sm:w-16 lg:w-24" />
+                    {/* Edge fades */}
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-y-0 left-0 z-20 w-6 bg-gradient-to-r from-[#faf8f4] via-[#faf8f4]/75 to-transparent sm:w-16 lg:w-24"
+                    />
 
-                    <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-6 bg-gradient-to-l from-[#eee7dc] via-[#eee7dc]/70 to-transparent sm:w-16 lg:w-24" />
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-y-0 right-0 z-20 w-6 bg-gradient-to-l from-[#faf8f4] via-[#faf8f4]/75 to-transparent sm:w-16 lg:w-24"
+                    />
 
                     <motion.div
-                        initial={{
-                            x: '-50%',
-                        }}
+                        initial={false}
                         animate={
                             reduceMotion
-                                ? {
-                                    x: '-50%',
-                                }
-                                : {
-                                    x: ['-50%', '0%'],
-                                }
+                                ? { x: '-50%' }
+                                : { x: ['-50%', '0%'] }
                         }
                         transition={
                             reduceMotion
@@ -174,7 +120,7 @@ export default function PaintingsSection() {
                         }
                         className="flex w-max"
                     >
-                        {/* FIRST COPY */}
+                        {/* First gallery copy */}
                         <div className="flex shrink-0 gap-4 pr-4 sm:gap-6 sm:pr-6 lg:gap-8 lg:pr-8">
                             {paintings.map((painting, index) => (
                                 <PaintingCard
@@ -185,7 +131,7 @@ export default function PaintingsSection() {
                             ))}
                         </div>
 
-                        {/* SECOND COPY */}
+                        {/* Second gallery copy */}
                         <div className="flex shrink-0 gap-4 pr-4 sm:gap-6 sm:pr-6 lg:gap-8 lg:pr-8">
                             {paintings.map((painting, index) => (
                                 <PaintingCard
@@ -198,56 +144,44 @@ export default function PaintingsSection() {
                     </motion.div>
                 </div>
 
-                {/* =====================================================
-                    BOTTOM
-                ===================================================== */}
+                {/* Bottom CTA */}
                 <motion.div
                     initial={
                         reduceMotion
                             ? false
-                            : {
-                                opacity: 0,
-                                y: 20,
-                            }
+                            : { opacity: 0, y: 20 }
                     }
-                    whileInView={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    viewport={{
-                        once: true,
-                        amount: 0.3,
-                    }}
-                    transition={{
-                        duration: 0.9,
-                        ease,
-                    }}
-                    className="mt-12 border-t border-[#8a6a48]/25 pt-7 sm:mt-16 sm:pt-8 lg:mt-20"
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.8, ease }}
+                    className="mt-12 border-t border-[#70512f]/25 pt-8 sm:mt-16 sm:pt-10 lg:mt-20"
                 >
-                    <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+                    <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center">
                         <div>
-                            <p className="text-[7px] font-semibold uppercase tracking-[0.26em] text-stone-400 sm:text-[8px] sm:tracking-[0.3em]">
-                                03 / The Collection
+                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
+                                Discover the Art
                             </p>
 
-                            <h3 className="mt-3 max-w-xl font-serif text-[1.9rem] font-light leading-[1.05] tracking-[-0.03em] sm:text-4xl">
+                            <h3 className="mt-3 font-serif text-[clamp(1.8rem,4vw,2.8rem)] font-light leading-[1.2] tracking-[-0.035em]">
                                 Five moments.
-                                <span className="block italic text-[#8a6a48] sm:ml-2 sm:inline">
+                                <span className="block italic text-[#70512f]">
                                     Five expressions.
                                 </span>
                             </h3>
                         </div>
 
+                        {/* Visible main button */}
                         <Link
                             href="/paintings"
-                            className="group inline-flex w-fit items-center gap-3 border-b border-[#25221f] pb-2 text-[8px] font-semibold uppercase tracking-[0.24em] transition-colors duration-300 hover:border-[#8a6a48] hover:text-[#8a6a48] sm:tracking-[0.28em]"
+                            className="group inline-flex min-h-12 w-full items-center justify-center gap-3 bg-[#25221f] px-7 py-4 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[#70512f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f] sm:w-auto"
                         >
                             Explore All Paintings
 
                             <ArrowUpRight
-                                size={13}
-                                strokeWidth={1.4}
-                                className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                                size={19}
+                                strokeWidth={1.7}
+                                aria-hidden="true"
+                                className="shrink-0 transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
                             />
                         </Link>
                     </div>
@@ -257,10 +191,6 @@ export default function PaintingsSection() {
     );
 }
 
-/* =========================================================
-    PAINTING CARD
-========================================================= */
-
 function PaintingCard({
                           painting,
                           index,
@@ -269,56 +199,62 @@ function PaintingCard({
     index: number;
 }) {
     return (
-        <article className="group w-[185px] shrink-0 sm:w-[230px] lg:w-[265px] xl:w-[280px]">
+        <article className="w-[195px] shrink-0 sm:w-[235px] lg:w-[265px] xl:w-[280px]">
             <Link
                 href={`/paintings/${painting.slug}`}
-                className="block"
+                className="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
             >
-                {/* IMAGE */}
-                <div className="relative aspect-[4/5] overflow-hidden bg-[#e5ded3]">
+                {/* Artwork image */}
+                <div className="relative aspect-[4/5] overflow-hidden bg-[#eee7dc]">
                     <img
                         src={painting.image}
                         alt={painting.title}
-                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover transition-transform duration-700 motion-safe:group-hover:scale-[1.035]"
                     />
 
-                    {/* NUMBER */}
-                    <div className="absolute left-0 top-0 bg-[#eee7dc] px-3 py-2.5 sm:px-4 sm:py-3">
-                        <span className="text-[7px] font-semibold tracking-[0.25em] text-[#8a6a48] sm:text-[8px] sm:tracking-[0.3em]">
+                    {/* Artwork number */}
+                    <div className="absolute left-0 top-0 bg-[#faf8f4] px-3 py-2.5 sm:px-4 sm:py-3">
+                        <span className="font-serif text-base text-[#70512f] sm:text-lg">
                             {String(index + 1).padStart(2, '0')}
                         </span>
                     </div>
 
-                    {/* HOVER */}
-                    <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                    {/* Hover label */}
+                    <div
+                        aria-hidden="true"
+                        className="absolute inset-0 flex items-end bg-gradient-to-t from-black/65 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+                    >
                         <div className="flex w-full items-center justify-between p-4 text-white sm:p-5">
-                            <span className="text-[7px] font-semibold uppercase tracking-[0.22em] sm:text-[8px] sm:tracking-[0.25em]">
+                            <span className="text-sm font-semibold">
                                 View Artwork
                             </span>
 
                             <ArrowUpRight
-                                size={14}
-                                strokeWidth={1.4}
+                                size={18}
+                                strokeWidth={1.6}
                             />
                         </div>
                     </div>
                 </div>
 
-                {/* CAPTION */}
-                <div className="mt-3 border-t border-[#8a6a48]/20 pt-3 sm:mt-4 sm:pt-4">
-                    <p className="text-[7px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48] sm:tracking-[0.3em]">
+                {/* Artwork caption */}
+                <div className="mt-4 border-t border-[#70512f]/20 pt-4">
+                    <p className="text-xs font-semibold text-[#70512f]">
                         {painting.course}
                     </p>
 
-                    <div className="mt-2 flex items-start justify-between gap-3 sm:gap-4">
-                        <h3 className="font-serif text-lg font-light leading-tight tracking-[-0.025em] sm:text-2xl">
+                    <div className="mt-2 flex items-start justify-between gap-3">
+                        <h3 className="font-serif text-xl font-light leading-tight tracking-[-0.025em] text-[#25221f] sm:text-2xl">
                             {painting.title}
                         </h3>
 
                         <ArrowUpRight
-                            size={13}
-                            strokeWidth={1.3}
-                            className="mt-1 shrink-0 text-[#8a6a48] transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                            size={18}
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                            className="mt-1 shrink-0 text-[#70512f] transition-transform motion-safe:group-hover:translate-x-1"
                         />
                     </div>
                 </div>

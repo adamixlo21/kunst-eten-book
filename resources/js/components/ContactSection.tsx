@@ -2,22 +2,45 @@
 import { useForm } from '@inertiajs/react';
 import {
     ArrowUpRight,
-    CheckCircle2, Instagram,
+    CheckCircle2,
+    Instagram,
     Mail,
-    Phone,
     X,
 } from 'lucide-react';
 import {
     useEffect,
+    useRef,
     useState,
     type FormEvent,
     type ReactNode,
 } from 'react';
 
+const colors = {
+    background: '#e8dfd3',
+    surface: '#faf8f4',
+    dark: '#25221f',
+    gold: '#70512f',
+    body: '#564b40',
+    border: '#c8b8a6',
+};
+
+const inputClass =
+    'w-full min-h-12 border border-[#c8b8a6] bg-[#faf8f4] px-4 py-3 text-base text-[#25221f] outline-none transition-colors placeholder:text-[#746b61] focus:border-[#70512f] focus:ring-2 focus:ring-[#70512f]/20';
+
 export default function ContactSection() {
     const [messageSent, setMessageSent] = useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
+    const dialogRef = useRef<HTMLDivElement>(null);
+
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+        reset,
+    } = useForm({
         name: '',
         email: '',
         phone: '',
@@ -25,326 +48,284 @@ export default function ContactSection() {
         message: '',
     });
 
-    // Allow closing the popup with Escape and prevent
-    // scrolling while the confirmation is visible.
+    // Accessible success dialog.
     useEffect(() => {
         if (!messageSent) return;
 
         const previousOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
+        const previousFocus = document.activeElement as HTMLElement | null;
 
-        const handleEscape = (event: KeyboardEvent) => {
+        document.body.style.overflow = 'hidden';
+        closeButtonRef.current?.focus();
+
+        const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 setMessageSent(false);
+                return;
+            }
+
+            if (event.key !== 'Tab') return;
+
+            const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+                'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])'
+            );
+
+            if (!focusable?.length) return;
+
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (
+                !event.shiftKey &&
+                document.activeElement === last
+            ) {
+                event.preventDefault();
+                first.focus();
             }
         };
 
-        window.addEventListener('keydown', handleEscape);
+        window.addEventListener('keydown', onKeyDown);
 
         return () => {
             document.body.style.overflow = previousOverflow;
-            window.removeEventListener('keydown', handleEscape);
+            window.removeEventListener('keydown', onKeyDown);
+            previousFocus?.focus();
         };
     }, [messageSent]);
 
-    const submit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
+    function submit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
         setMessageSent(false);
 
         post('/contact', {
             preserveScroll: true,
-
             onSuccess: () => {
                 reset();
-
-                // Scroll directly to the top of the page
-                // on both mobile and desktop.
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'auto',
-                });
-
-                // Show the confirmation popup.
                 setMessageSent(true);
             },
         });
-    };
-
-    const closeConfirmation = () => {
-        setMessageSent(false);
-
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-        });
-    };
+    }
 
     return (
         <>
-            {/* SUCCESS CONFIRMATION */}
-            {messageSent && (
-                <div
-                    className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-[#25221f]/60 px-4 py-6 backdrop-blur-sm sm:px-6"
-                    onClick={(event) => {
-                        if (event.target === event.currentTarget) {
-                            closeConfirmation();
-                        }
-                    }}
-                >
-                    <div
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="contact-success-title"
-                        aria-describedby="contact-success-description"
-                        className="relative my-auto w-full max-w-[560px] border border-[#d9cec0] bg-[#f7f3ec] px-6 py-10 text-center shadow-[0_30px_100px_rgba(0,0,0,0.25)] sm:px-12 sm:py-14"
-                    >
-                        {/* Close button */}
-                        <button
-                            type="button"
-                            aria-label="Close confirmation"
-                            onClick={closeConfirmation}
-                            className="absolute right-4 top-4 p-2 text-[#746b61] transition-colors hover:text-[#25221f]"
-                        >
-                            <X size={21} strokeWidth={1.5} />
-                        </button>
-
-                        {/* Success icon */}
-                        <div className="mb-7 flex justify-center">
-                            <div className="flex h-20 w-20 items-center justify-center rounded-full border border-[#66765d]/25 bg-[#66765d]/10">
-                                <CheckCircle2
-                                    size={42}
-                                    strokeWidth={1.2}
-                                    className="text-[#66765d]"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Branding */}
-                        <div className="mb-6 flex items-center justify-center gap-3">
-                            <div className="h-px w-6 bg-[#8a6a48]" />
-
-                            <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#8a6a48] sm:tracking-[0.3em]">
-                                The Taste of Inspiration
-                            </span>
-
-                            <div className="h-px w-6 bg-[#8a6a48]" />
-                        </div>
-
-                        {/* Title */}
-                        <h2
-                            id="contact-success-title"
-                            className="font-serif text-4xl font-light leading-[1.12] tracking-[-0.04em] text-[#25221f] sm:text-5xl"
-                        >
-                            Message sent
-                            <span className="block italic text-[#8a6a48]">
-                                successfully.
-                            </span>
-                        </h2>
-
-                        {/* Description */}
-                        <p
-                            id="contact-success-description"
-                            className="mx-auto mt-6 max-w-sm text-sm leading-7 text-[#746b61]"
-                        >
-                            Thank you for getting in touch!
-                            Your message has been received.
-                            We'll get back to you as soon as possible.
-                        </p>
-
-                        {/* Divider */}
-                        <div className="mx-auto my-8 h-px w-16 bg-[#8a6a48]/40" />
-
-                        {/* Continue button */}
-                        <button
-                            type="button"
-                            onClick={closeConfirmation}
-                            className="group inline-flex w-full items-center justify-center gap-3 bg-[#25221f] px-7 py-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#8a6a48] sm:w-auto"
-                        >
-                            Continue Exploring
-
-                            <ArrowUpRight
-                                size={16}
-                                strokeWidth={1.5}
-                                className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                            />
-                        </button>
-
-                        {/* Bottom text */}
-                        <p className="mt-7 text-[9px] uppercase tracking-[0.2em] text-[#a69a8a]">
-                            Food · Art · Inspiration
-                        </p>
-                    </div>
-                </div>
-            )}
-
-            {/* CONTACT SECTION */}
             <section
                 id="contact"
-                className="bg-[#f7f3ec] text-[#25221f]"
+                aria-labelledby="contact-heading"
+                className="relative overflow-hidden bg-[#e8dfd3] text-[#25221f]"
             >
-                <div className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 lg:px-16 lg:py-24">
-
-                    {/* HEADER */}
-                    <div className="border-b border-[#8a6a48]/20 pb-4">
-                        <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-[#8a6a48]">
+                <div className="mx-auto max-w-[1300px] px-5 py-16 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
+                    {/* Top heading */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#70512f]/25 pb-5">
+                        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
                             Contact
-                        </p>
+                        </span>
+
+                        <span className="text-xs font-medium text-[#564b40]">
+                            The Taste of Inspiration
+                        </span>
                     </div>
 
-                    {/* TITLE */}
-                    <div className="py-10 sm:py-14">
-                        <h2 className="font-serif text-5xl font-light tracking-[-0.04em] sm:text-6xl lg:text-7xl">
-                            Let&apos;s talk.
+                    {/* Title */}
+                    <div className="max-w-3xl py-12 sm:py-16">
+                        <p className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
+                            We'd love to hear from you
+                        </p>
+
+                        <h2
+                            id="contact-heading"
+                            className="font-serif text-[clamp(3.2rem,7vw,6rem)] font-light leading-[1.08] tracking-[-0.05em]"
+                        >
+                            Let's
+                            <span className="italic text-[#70512f]">
+                                {' '}connect.
+                            </span>
                         </h2>
 
-                        <p className="mt-4 max-w-md text-sm leading-7 text-stone-500">
-                            Questions about the book, the artwork or a
-                            collaboration? Send us a message.
+                        <p className="mt-6 max-w-xl text-base leading-8 text-[#564b40] sm:text-lg">
+                            Have a question about the book, an artwork
+                            or a possible collaboration? We'd love
+                            to hear from you.
                         </p>
                     </div>
 
-                    {/* CONTENT */}
-                    <div className="grid border-t border-[#8a6a48]/20 lg:grid-cols-[0.7fr_1.3fr]">
-
-                        {/* CONTACT INFO */}
-                        <div className="py-8 lg:py-12 lg:pr-14">
-                            <h3 className="font-serif text-2xl font-light">
+                    {/* Main content */}
+                    <div className="grid gap-12 border-t border-[#70512f]/25 pt-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:pt-14">
+                        {/* Contact information */}
+                        <div className="lg:pr-8">
+                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
                                 Get in touch
+                            </p>
+
+                            <h3 className="mt-4 font-serif text-3xl font-light leading-tight sm:text-4xl">
+                                Every great story
+                                <span className="block italic text-[#70512f]">
+                                    starts somewhere.
+                                </span>
                             </h3>
 
-                            <div className="mt-7 space-y-6">
+                            <p className="mt-5 max-w-sm text-base leading-8 text-[#564b40]">
+                                Whether you're curious about the project
+                                or interested in working together,
+                                feel free to reach out.
+                            </p>
 
+                            <div className="mt-10 space-y-7">
                                 {/* Email */}
-                                <div className="flex items-center gap-3">
-                                    <Mail
-                                        size={17}
-                                        strokeWidth={1.4}
-                                        className="shrink-0 text-[#8a6a48]"
-                                    />
+                                <div className="flex items-start gap-4">
+                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-[#c8b8a6] bg-[#faf8f4]">
+                                        <Mail
+                                            size={19}
+                                            strokeWidth={1.6}
+                                            className="text-[#70512f]"
+                                            aria-hidden="true"
+                                        />
+                                    </div>
 
-                                    <a
-                                        href="mailto:thetasteofinspiration@gmail.com"
-                                        className="break-all text-sm transition-colors hover:text-[#8a6a48]"
-                                    >
-                                        thetasteofinspiration@gmail.com
-                                    </a>
+                                    <div className="min-w-0">
+                                        <p className="text-sm font-semibold text-[#25221f]">
+                                            Email
+                                        </p>
+
+                                        <a
+                                            href="mailto:thetasteofinspiration@gmail.com"
+                                            className="mt-1 block break-all text-base leading-7 text-[#564b40] underline decoration-[#70512f]/40 underline-offset-4 transition-colors hover:text-[#70512f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
+                                        >
+                                            thetasteofinspiration@gmail.com
+                                        </a>
+                                    </div>
                                 </div>
 
-                                {/*/!* Phone *!/*/}
-                                {/*<div className="flex items-center gap-3">*/}
-                                {/*    <Phone*/}
-                                {/*        size={17}*/}
-                                {/*        strokeWidth={1.4}*/}
-                                {/*        className="shrink-0 text-[#8a6a48]"*/}
-                                {/*    />*/}
+                                {/* Instagram */}
+                                <div className="flex items-start gap-4">
+                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-[#c8b8a6] bg-[#faf8f4]">
+                                        <Instagram
+                                            size={19}
+                                            strokeWidth={1.6}
+                                            className="text-[#70512f]"
+                                            aria-hidden="true"
+                                        />
+                                    </div>
 
-                                {/*    <a*/}
-                                {/*        href="tel:+31600000000"*/}
-                                {/*        className="text-sm transition-colors hover:text-[#8a6a48]"*/}
-                                {/*    >*/}
-                                {/*        +31 6 00 00 00 00*/}
-                                {/*    </a>*/}
-                                {/*</div>*/}
-                                {/* Phone */}
-                                <div className="flex items-center gap-3">
-                                    <Instagram
-                                        size={17}
-                                        strokeWidth={1.4}
-                                        className="shrink-0 text-[#8a6a48]"
-                                    />
+                                    <div className="min-w-0">
+                                        <p className="text-sm font-semibold text-[#25221f]">
+                                            Instagram
+                                        </p>
 
-                                    <a
-                                        href="https://www.instagram.com/thetasteofinspiration_/"
-                                        className="text-sm transition-colors hover:text-[#8a6a48]"
-                                    >
-                                        thetasteofinspiration_
-                                    </a>
+                                        <a
+                                            href="https://www.instagram.com/thetasteofinspiration_/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="mt-1 block break-words text-base leading-7 text-[#564b40] underline decoration-[#70512f]/40 underline-offset-4 transition-colors hover:text-[#70512f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
+                                        >
+                                            @thetasteofinspiration_
+                                        </a>
+                                    </div>
                                 </div>
-
                             </div>
                         </div>
 
-                        {/* FORM */}
-                        <div className="border-t border-[#8a6a48]/20 py-8 lg:border-l lg:border-t-0 lg:py-12 lg:pl-14">
-                            <h3 className="mb-8 font-serif text-3xl font-light">
-                                Send a message
-                            </h3>
+                        {/* Contact form */}
+                        <div className="min-w-0">
+                            <div className="mb-7">
+                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
+                                    Your Message
+                                </p>
+
+                                <h3 className="mt-3 font-serif text-3xl font-light tracking-[-0.03em] sm:text-4xl">
+                                    Send us a message
+                                </h3>
+                            </div>
 
                             <form
                                 onSubmit={submit}
                                 className="space-y-6"
                             >
-                                {/* Name + Email */}
                                 <div className="grid gap-6 sm:grid-cols-2">
-
                                     <Field
-                                        label="Name"
+                                        label="Your name"
                                         htmlFor="contact-name"
                                         error={errors.name}
                                     >
                                         <input
                                             id="contact-name"
-                                            type="text"
                                             name="name"
+                                            type="text"
+                                            autoComplete="name"
                                             required
                                             maxLength={255}
-                                            autoComplete="name"
                                             value={data.name}
-                                            onChange={(e) =>
-                                                setData('name', e.target.value)
+                                            onChange={(event) =>
+                                                setData('name', event.target.value)
                                             }
-                                            className={inputClass}
+                                            aria-invalid={Boolean(errors.name)}
+                                            aria-describedby={
+                                                errors.name
+                                                    ? 'contact-name-error'
+                                                    : undefined
+                                            }
                                             placeholder="Your name"
+                                            className={inputClass}
                                         />
                                     </Field>
 
                                     <Field
-                                        label="Email"
+                                        label="Email address"
                                         htmlFor="contact-email"
                                         error={errors.email}
                                     >
                                         <input
                                             id="contact-email"
-                                            type="email"
                                             name="email"
+                                            type="email"
+                                            autoComplete="email"
                                             required
                                             maxLength={255}
-                                            autoComplete="email"
                                             value={data.email}
-                                            onChange={(e) =>
-                                                setData('email', e.target.value)
+                                            onChange={(event) =>
+                                                setData('email', event.target.value)
                                             }
+                                            aria-invalid={Boolean(errors.email)}
+                                            aria-describedby={
+                                                errors.email
+                                                    ? 'contact-email-error'
+                                                    : undefined
+                                            }
+                                            placeholder="name@example.com"
                                             className={inputClass}
-                                            placeholder="name@email.com"
                                         />
                                     </Field>
-
                                 </div>
 
-                                {/* Phone */}
                                 <Field
-                                    label="Phone"
+                                    label="Phone number"
                                     htmlFor="contact-phone"
                                     optional
                                     error={errors.phone}
                                 >
                                     <input
                                         id="contact-phone"
-                                        type="tel"
                                         name="phone"
-                                        maxLength={50}
+                                        type="tel"
                                         autoComplete="tel"
+                                        maxLength={50}
                                         value={data.phone}
-                                        onChange={(e) =>
-                                            setData('phone', e.target.value)
+                                        onChange={(event) =>
+                                            setData('phone', event.target.value)
                                         }
-                                        className={inputClass}
+                                        aria-invalid={Boolean(errors.phone)}
+                                        aria-describedby={
+                                            errors.phone
+                                                ? 'contact-phone-error'
+                                                : undefined
+                                        }
                                         placeholder="+31 6 12345678"
+                                        className={inputClass}
                                     />
                                 </Field>
 
-                                {/* Subject */}
                                 <Field
                                     label="Subject"
                                     htmlFor="contact-subject"
@@ -355,8 +336,14 @@ export default function ContactSection() {
                                         name="subject"
                                         required
                                         value={data.subject}
-                                        onChange={(e) =>
-                                            setData('subject', e.target.value)
+                                        onChange={(event) =>
+                                            setData('subject', event.target.value)
+                                        }
+                                        aria-invalid={Boolean(errors.subject)}
+                                        aria-describedby={
+                                            errors.subject
+                                                ? 'contact-subject-error'
+                                                : undefined
                                         }
                                         className={inputClass}
                                     >
@@ -377,7 +364,7 @@ export default function ContactSection() {
                                         </option>
 
                                         <option value="Press & Media">
-                                            Press & Media
+                                            Press &amp; Media
                                         </option>
 
                                         <option value="Other">
@@ -386,57 +373,148 @@ export default function ContactSection() {
                                     </select>
                                 </Field>
 
-                                {/* Message */}
                                 <Field
-                                    label="Message"
+                                    label="Your message"
                                     htmlFor="contact-message"
                                     error={errors.message}
                                 >
                                     <textarea
                                         id="contact-message"
                                         name="message"
-                                        rows={4}
+                                        rows={5}
                                         required
                                         maxLength={5000}
                                         value={data.message}
-                                        onChange={(e) =>
-                                            setData('message', e.target.value)
+                                        onChange={(event) =>
+                                            setData('message', event.target.value)
                                         }
+                                        aria-invalid={Boolean(errors.message)}
+                                        aria-describedby={
+                                            errors.message
+                                                ? 'contact-message-error'
+                                                : undefined
+                                        }
+                                        placeholder="Write your message here..."
                                         className={`${inputClass} resize-y`}
-                                        placeholder="Your message..."
                                     />
                                 </Field>
 
-                                {/* Submit button */}
-                                <button
-                                    type="submit"
-                                    disabled={processing}
-                                    className="group inline-flex w-full items-center justify-center gap-3 bg-[#25221f] px-6 py-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
-                                >
-                                    {processing
-                                        ? 'Sending...'
-                                        : 'Send Message'}
+                                <div className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
+                                    <button
+                                        type="submit"
+                                        disabled={processing}
+                                        className="group inline-flex min-h-12 items-center justify-center gap-3 bg-[#25221f] px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-[#70512f] disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
+                                    >
+                                        {processing
+                                            ? 'Sending...'
+                                            : 'Send Message'}
 
-                                    {!processing && (
-                                        <ArrowUpRight
-                                            size={14}
-                                            strokeWidth={1.5}
-                                            className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                                        />
-                                    )}
-                                </button>
+                                        {!processing && (
+                                            <ArrowUpRight
+                                                size={18}
+                                                strokeWidth={1.6}
+                                                aria-hidden="true"
+                                                className="transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
+                                            />
+                                        )}
+                                    </button>
+
+                                    <p className="text-sm leading-6 text-[#564b40]">
+                                        We'll reply as soon as possible.
+                                    </p>
+                                </div>
                             </form>
                         </div>
-
                     </div>
+
+
                 </div>
             </section>
+
+            {/* Success confirmation */}
+            {messageSent && (
+                <div
+                    className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-[#25221f]/65 px-4 py-6 backdrop-blur-sm"
+                    onMouseDown={(event) => {
+                        if (event.target === event.currentTarget) {
+                            setMessageSent(false);
+                        }
+                    }}
+                >
+                    <div
+                        ref={dialogRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="contact-success-title"
+                        aria-describedby="contact-success-description"
+                        className="relative my-auto w-full max-w-[520px] border border-[#c8b8a6] bg-[#faf8f4] px-6 py-12 text-center shadow-2xl sm:px-12"
+                    >
+                        <button
+                            ref={closeButtonRef}
+                            type="button"
+                            aria-label="Close confirmation"
+                            onClick={() => setMessageSent(false)}
+                            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center text-[#564b40] hover:text-[#25221f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#70512f]"
+                        >
+                            <X size={22} aria-hidden="true" />
+                        </button>
+
+                        <div className="mb-7 flex justify-center">
+                            <div className="flex h-20 w-20 items-center justify-center rounded-full border border-[#70512f]/25 bg-[#eee7dc]">
+                                <CheckCircle2
+                                    size={40}
+                                    strokeWidth={1.5}
+                                    className="text-[#70512f]"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                        </div>
+
+                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
+                            The Taste of Inspiration
+                        </p>
+
+
+                        <h2
+                            id="contact-success-title"
+                            className="mt-5 font-serif text-4xl font-normal leading-tight tracking-[-0.04em] text-[#25221f] sm:text-5xl"
+                        >
+                            <span className="block text-[#25221f]">
+                                Message sent
+                            </span>
+
+                            <span className="block italic text-[#70512f]">
+                                successfully.
+                            </span>
+                        </h2>
+
+                        <p
+                            id="contact-success-description"
+                            className="mx-auto mt-6 max-w-sm text-base leading-8 text-[#564b40]"
+                        >
+                            Thank you for getting in touch!
+                            Your message has been received.
+                            We'll get back to you as soon as possible.
+                        </p>
+
+                        <button
+                            type="button"
+                            onClick={() => setMessageSent(false)}
+                            className="mt-9 inline-flex min-h-12 items-center justify-center gap-3 bg-[#25221f] px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-[#70512f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
+                        >
+                            Continue Exploring
+
+                            <ArrowUpRight
+                                size={18}
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </div>
+                </div>
+            )}
         </>
     );
 }
-
-const inputClass =
-    'w-full border-0 border-b border-stone-300 bg-transparent px-0 py-3 text-base text-[#25221f] outline-none placeholder:text-stone-400 focus:border-[#8a6a48] focus:ring-0 sm:text-sm';
 
 function Field({
                    label,
@@ -453,16 +531,16 @@ function Field({
 }) {
     return (
         <div>
-            <div className="mb-1 flex items-center justify-between gap-3">
+            <div className="mb-2 flex items-center justify-between gap-3">
                 <label
                     htmlFor={htmlFor}
-                    className="text-[9px] font-semibold uppercase tracking-[0.2em] text-stone-500"
+                    className="text-sm font-semibold text-[#25221f]"
                 >
                     {label}
                 </label>
 
                 {optional && (
-                    <span className="text-[8px] uppercase tracking-[0.2em] text-stone-400">
+                    <span className="text-xs text-[#564b40]">
                         Optional
                     </span>
                 )}
@@ -471,7 +549,11 @@ function Field({
             {children}
 
             {error && (
-                <p className="mt-2 text-xs text-red-600" role="alert">
+                <p
+                    id={`${htmlFor}-error`}
+                    role="alert"
+                    className="mt-2 text-sm leading-6 text-[#a12626]"
+                >
                     {error}
                 </p>
             )}

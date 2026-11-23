@@ -1,6 +1,6 @@
 
 import { Head, Link } from '@inertiajs/react';
-import { ArrowUpRight, ArrowDown } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 
 import Navbar from '@/components/Navbar';
@@ -53,16 +53,13 @@ function formatPrice(price: string | number) {
     }).format(amount);
 }
 
-
 function getPaintingImage(painting: Painting): string | null {
-    // Prefer the images already included in the website
     const staticImage = paintingImages[painting.slug];
 
     if (staticImage) {
         return staticImage;
     }
 
-    // Otherwise use an image uploaded through Laravel
     const image = painting.image?.trim();
 
     if (!image) {
@@ -84,7 +81,6 @@ function getPaintingImage(painting: Painting): string | null {
     return `/storage/${image}`;
 }
 
-
 export default function PaintingsIndex({ paintings }: Props) {
     const reduceMotion = useReducedMotion();
 
@@ -94,109 +90,58 @@ export default function PaintingsIndex({ paintings }: Props) {
 
     return (
         <BookCartProvider>
-            <Head title="The Collection | The Taste of Inspiration" />
+            <Head>
+                <title>
+                    The Collection | The Taste of Inspiration
+                </title>
+
+                <meta
+                    head-key="description"
+                    name="description"
+                    content="Explore five original paintings by Nour, featured in The Taste of Inspiration. Discover a unique collection where art, creativity and gastronomy meet."
+                />
+            </Head>
 
             <Navbar />
 
-            <main className="min-h-screen overflow-hidden bg-[#f7f3ec] text-[#25221f]">
-
-                {/* INTRODUCTION */}
-                <section className="bg-[#eee7dc]">
-                    <div className="mx-auto max-w-[1300px] px-5 pb-12 pt-32 sm:px-8 sm:pb-16 sm:pt-40 lg:px-16 lg:pb-20">
-
-                        {/* TOP LABEL */}
-                        <div className="flex items-center justify-between gap-4 border-b border-[#8a6a48]/25 pb-4">
-                            <span className="text-[9px] font-semibold uppercase tracking-[0.28em] text-[#8a6a48]">
-                                03 / The Collection
-                            </span>
-
-                            <span className="text-[9px] uppercase tracking-[0.2em] text-[#746b61]">
-                                {String(sortedPaintings.length).padStart(2, '0')} Works
-                            </span>
-                        </div>
-
-                        {/* TITLE */}
-                        <motion.div
-                            initial={
-                                reduceMotion
-                                    ? false
-                                    : { opacity: 0, y: 25 }
-                            }
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.9, ease }}
-                            className="py-12 sm:py-16"
-                        >
-                            <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.28em] text-[#8a6a48]">
-                                An Exhibition in Five Works
-                            </p>
-
-                            <h1 className="font-serif text-[clamp(3.5rem,9vw,7.5rem)] font-light leading-[0.95] tracking-[-0.055em]">
-                                The
-                                <span className="italic text-[#8a6a48]">
-                                    {' '}Collection.
-                                </span>
-                            </h1>
-
-                            <p className="mt-7 max-w-lg font-serif text-xl font-light leading-[1.4] text-[#62584c] sm:text-2xl">
-                                Five moments.
-                                <span className="italic text-[#8a6a48]">
-                                    {' '}Five expressions.
-                                </span>
-                            </p>
-                        </motion.div>
-
-                        {/* BOTTOM */}
-                        <div className="flex items-center justify-between gap-4 border-t border-[#8a6a48]/25 pt-4">
-                            <span className="text-[9px] uppercase tracking-[0.2em] text-[#746b61]">
-                                Original Artworks
-                            </span>
-
-                            <a
-                                href="#collection"
-                                aria-label="Explore the collection"
-                                className="group flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.2em] text-[#8a6a48]"
-                            >
-                                Explore
-
-                                <ArrowDown
-                                    size={14}
-                                    strokeWidth={1.5}
-                                    className="transition-transform duration-300 group-hover:translate-y-1"
-                                />
-                            </a>
-                        </div>
-                    </div>
-                </section>
-
-                {/* COLLECTION */}
+            <main className="min-h-screen overflow-hidden bg-[#faf8f4] text-[#25221f]">
+                {/* COLLECTION - NO INTRO SECTION */}
                 <section
                     id="collection"
+                    aria-labelledby="collection-heading"
                     className="scroll-mt-24"
                 >
-                    <div className="mx-auto max-w-[1300px] px-5 py-12 sm:px-8 sm:py-16 lg:px-16 lg:py-20">
+                    <div className="mx-auto max-w-[1300px] px-5 pb-20 pt-28 sm:px-8 sm:pb-24 sm:pt-32 lg:px-16 lg:pb-28 lg:pt-36">
 
-                        {/* SECTION HEADING */}
-                        <div className="mb-8 flex items-end justify-between gap-4 border-b border-[#8a6a48]/25 pb-5 sm:mb-12">
+                        {/* Collection heading */}
+                        <div className="mb-12 flex flex-wrap items-end justify-between gap-5 border-b border-[#70512f]/25 pb-7 sm:mb-16">
                             <div>
-                                <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
-                                    Discover
+                                <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
+                                    The Taste of Inspiration
                                 </p>
 
-                                <h2 className="font-serif text-2xl font-light tracking-tight sm:text-3xl">
-                                    Original Works
-                                </h2>
+                                <h1
+                                    id="collection-heading"
+                                    className="font-serif text-[clamp(2.75rem,6vw,5.5rem)] font-light leading-[1.05] tracking-[-0.045em]"
+                                >
+                                    Original
+                                    <span className="italic text-[#70512f]">
+                                        {' '}Works.
+                                    </span>
+                                </h1>
                             </div>
 
-                            <span className="text-[9px] uppercase tracking-[0.2em] text-[#746b61]">
-                                {String(sortedPaintings.length).padStart(2, '0')} Artworks
-                            </span>
+                            <p className="pb-1 text-sm font-medium text-[#564b40]">
+                                {String(sortedPaintings.length).padStart(2, '0')}{' '}
+                                {sortedPaintings.length === 1
+                                    ? 'Artwork'
+                                    : 'Artworks'}
+                            </p>
                         </div>
 
                         {sortedPaintings.length > 0 ? (
-
-                            /* TWO-COLUMN GALLERY */
-                            <div className="grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-8 sm:gap-y-14 lg:gap-x-14 lg:gap-y-20">
-
+                            /* Gallery */
+                            <div className="grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-8 sm:gap-y-16 lg:gap-x-14 lg:gap-y-20">
                                 {sortedPaintings.map((painting, index) => {
                                     const artworkImage = getPaintingImage(painting);
                                     const artworkUrl = `/paintings/${painting.slug}`;
@@ -207,10 +152,7 @@ export default function PaintingsIndex({ paintings }: Props) {
                                             initial={
                                                 reduceMotion
                                                     ? false
-                                                    : {
-                                                        opacity: 0,
-                                                        y: 30,
-                                                    }
+                                                    : { opacity: 0, y: 24 }
                                             }
                                             whileInView={{
                                                 opacity: 1,
@@ -221,7 +163,7 @@ export default function PaintingsIndex({ paintings }: Props) {
                                                 amount: 0.1,
                                             }}
                                             transition={{
-                                                duration: 0.8,
+                                                duration: 0.75,
                                                 delay: reduceMotion
                                                     ? 0
                                                     : (index % 2) * 0.12,
@@ -229,102 +171,104 @@ export default function PaintingsIndex({ paintings }: Props) {
                                             }}
                                             className="group min-w-0"
                                         >
-
-                                            {/* IMAGE */}
+                                            {/* Painting image */}
                                             <Link
                                                 href={artworkUrl}
                                                 aria-label={`View ${painting.title}`}
-                                                className="block outline-offset-4"
+                                                className="block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
                                             >
                                                 <div className="relative aspect-[4/5] overflow-hidden bg-[#e8dfd2]">
-
                                                     {artworkImage ? (
                                                         <img
                                                             src={artworkImage}
                                                             alt={painting.title}
                                                             loading="lazy"
-                                                            className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.035] group-focus-within:scale-[1.035]"
+                                                            decoding="async"
+                                                            className="h-full w-full object-contain transition-transform duration-700 motion-safe:group-hover:scale-[1.035] motion-safe:group-focus-within:scale-[1.035]"
                                                         />
                                                     ) : (
-                                                        <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-                                                            <span className="font-serif text-4xl font-light text-[#8a6a48]/30 sm:text-6xl">
+                                                        <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-3 text-center">
+                                                            <span className="font-serif text-4xl text-[#70512f] sm:text-6xl">
                                                                 {String(index + 1).padStart(2, '0')}
                                                             </span>
 
-                                                            <span className="text-center text-[8px] uppercase tracking-[0.2em] text-[#8a6a48]">
+                                                            <span className="text-xs font-medium text-[#564b40]">
                                                                 Artwork Coming Soon
                                                             </span>
                                                         </div>
                                                     )}
 
-                                                    {/* ARTWORK NUMBER */}
-                                                    <div className="absolute left-0 top-0 bg-[#f7f3ec] px-3 py-2 sm:px-4 sm:py-3">
-                                                        <span className="font-serif text-sm text-[#8a6a48] sm:text-lg">
+                                                    {/* Number */}
+                                                    <div className="absolute left-0 top-0 bg-[#faf8f4] px-3 py-2.5 sm:px-5 sm:py-4">
+                                                        <span className="font-serif text-lg text-[#70512f] sm:text-2xl">
                                                             {String(index + 1).padStart(2, '0')}
                                                         </span>
                                                     </div>
 
-                                                    {/* DESKTOP HOVER ARROW */}
-                                                    <div className="absolute bottom-0 right-0 hidden h-12 w-12 translate-y-full items-center justify-center bg-[#25221f] text-[#f7f3ec] transition-transform duration-500 group-hover:translate-y-0 group-focus-within:translate-y-0 sm:flex">
+                                                    {/* Hover action */}
+                                                    <div
+                                                        aria-hidden="true"
+                                                        className="absolute bottom-0 right-0 hidden h-12 w-12 translate-y-full items-center justify-center bg-[#25221f] text-white transition-transform duration-500 group-hover:translate-y-0 group-focus-within:translate-y-0 sm:flex"
+                                                    >
                                                         <ArrowUpRight
-                                                            size={19}
-                                                            strokeWidth={1.4}
+                                                            size={20}
+                                                            strokeWidth={1.6}
                                                         />
                                                     </div>
                                                 </div>
                                             </Link>
 
-                                            {/* INFORMATION */}
-                                            <div className="pt-4 sm:pt-6">
+                                            {/* Painting information */}
+                                            <div className="pt-5 sm:pt-7">
 
-                                                {/* NUMBER / TYPE */}
+                                                {/* Artwork type */}
                                                 <div className="flex flex-wrap items-center justify-between gap-2">
-                                                    <span className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#8a6a48] sm:text-[9px]">
+                                                    <span className="text-xs font-semibold uppercase tracking-[0.1em] text-[#70512f]">
                                                         Artwork {String(index + 1).padStart(2, '0')}
                                                     </span>
 
-                                                    <span className="hidden text-[9px] uppercase tracking-[0.15em] text-[#746b61] sm:block">
+                                                    <span className="hidden text-xs text-[#564b40] sm:block">
                                                         Original Painting
                                                     </span>
                                                 </div>
 
-                                                {/* TITLE */}
+                                                {/* Title */}
                                                 <Link
                                                     href={artworkUrl}
-                                                    className="mt-3 block"
+                                                    className="mt-3 block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
                                                 >
-                                                    <h3 className="font-serif text-[clamp(1.35rem,3vw,2.7rem)] font-light leading-[1.12] tracking-[-0.035em] transition-colors duration-300 group-hover:text-[#8a6a48]">
+                                                    <h2 className="font-serif text-[clamp(1.5rem,3vw,2.7rem)] font-light leading-[1.15] tracking-[-0.035em] transition-colors hover:text-[#70512f]">
                                                         {painting.title}
-                                                    </h3>
+                                                    </h2>
                                                 </Link>
 
-                                                {/* PRICE AND STATUS */}
-                                                <div className="mt-5 border-t border-[#8a6a48]/20 pt-4 sm:mt-7 sm:pt-5">
+                                                {/* Price and status */}
+                                                <div className="mt-6 border-t border-[#70512f]/20 pt-5 sm:mt-7">
+                                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
-                                                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-
-                                                        {/* PRICE */}
+                                                        {/* Price */}
                                                         <div>
-                                                            <p className="mb-1 text-[8px] uppercase tracking-[0.15em] text-[#746b61]">
+                                                            <p className="mb-2 text-xs font-medium text-[#564b40]">
                                                                 Starting Price
                                                             </p>
 
-                                                            <p className="font-serif text-lg font-light text-[#8a6a48] sm:text-2xl">
+                                                            <p className="font-serif text-xl font-light text-[#70512f] sm:text-2xl">
                                                                 {formatPrice(painting.starting_price)}
                                                             </p>
                                                         </div>
 
-                                                        {/* STATUS */}
+                                                        {/* Bidding status */}
                                                         <div className="flex items-center gap-2">
                                                             <span
-                                                                className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                                                                aria-hidden="true"
+                                                                className={`h-2 w-2 shrink-0 rounded-full ${
                                                                     painting.bidding_open
-                                                                        ? 'bg-[#66765d]'
-                                                                        : 'bg-stone-400'
+                                                                        ? 'bg-[#426340]'
+                                                                        : 'bg-[#756b60]'
                                                                 }`}
                                                             />
 
-                                                            <span className="text-[9px] uppercase tracking-[0.12em] text-[#62584c]">
+                                                            <span className="text-xs font-medium text-[#564b40]">
                                                                 {painting.bidding_open
                                                                     ? 'Open for Offers'
                                                                     : 'Bidding Closed'}
@@ -333,10 +277,10 @@ export default function PaintingsIndex({ paintings }: Props) {
                                                     </div>
                                                 </div>
 
-                                                {/* ACTION */}
+                                                {/* Action */}
                                                 <Link
                                                     href={artworkUrl}
-                                                    className="group/link mt-5 inline-flex items-center gap-2 border-b border-[#8a6a48] pb-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#8a6a48] transition-colors duration-300 hover:border-[#25221f] hover:text-[#25221f] sm:mt-7 sm:gap-3 sm:tracking-[0.2em]"
+                                                    className="group/link mt-6 inline-flex min-h-11 items-center gap-2 border-b border-[#70512f] text-sm font-semibold text-[#70512f] transition-colors hover:border-[#25221f] hover:text-[#25221f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f] sm:mt-7"
                                                 >
                                                     <span>
                                                         {painting.bidding_open
@@ -345,9 +289,10 @@ export default function PaintingsIndex({ paintings }: Props) {
                                                     </span>
 
                                                     <ArrowUpRight
-                                                        size={14}
-                                                        strokeWidth={1.5}
-                                                        className="shrink-0 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                                                        size={17}
+                                                        strokeWidth={1.6}
+                                                        aria-hidden="true"
+                                                        className="shrink-0 transition-transform motion-safe:group-hover/link:-translate-y-0.5 motion-safe:group-hover/link:translate-x-0.5"
                                                     />
                                                 </Link>
                                             </div>
@@ -355,12 +300,10 @@ export default function PaintingsIndex({ paintings }: Props) {
                                     );
                                 })}
                             </div>
-
                         ) : (
-
-                            /* EMPTY COLLECTION */
+                            /* Empty collection */
                             <div className="py-20 text-center">
-                                <p className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
+                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
                                     Coming Soon
                                 </p>
 
@@ -368,7 +311,7 @@ export default function PaintingsIndex({ paintings }: Props) {
                                     The collection is being prepared.
                                 </h2>
 
-                                <p className="mx-auto mt-4 max-w-sm text-sm leading-7 text-[#62584c]">
+                                <p className="mx-auto mt-5 max-w-md text-base leading-8 text-[#564b40]">
                                     Our original artworks will be available
                                     to explore here soon.
                                 </p>
@@ -377,77 +320,92 @@ export default function PaintingsIndex({ paintings }: Props) {
                     </div>
                 </section>
 
-                {/* PRIVATE ACQUISITION */}
+                {/* Private acquisition */}
                 {sortedPaintings.length > 0 && (
-                    <section className="bg-[#eee7dc]">
-                        <div className="mx-auto max-w-[1300px] px-5 py-12 sm:px-8 sm:py-16 lg:px-16">
+                    <section
+                        aria-labelledby="acquisition-heading"
+                        className="bg-[#eee7dc]"
+                    >
+                        <div className="mx-auto max-w-[1300px] px-5 py-16 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
 
-                            <div className="flex items-center justify-between gap-4 border-b border-[#8a6a48]/25 pb-4">
-                                <span className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#8a6a48]">
+                            {/* Section label */}
+                            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#70512f]/25 pb-5">
+                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#70512f]">
                                     Private Acquisition
-                                </span>
+                                </p>
 
-                                <span className="text-[9px] uppercase tracking-[0.15em] text-[#746b61]">
+                                <span className="text-xs text-[#564b40]">
                                     Original Art
                                 </span>
                             </div>
 
+                            {/* Content */}
                             <motion.div
                                 initial={
                                     reduceMotion
                                         ? false
                                         : { opacity: 0, y: 20 }
                                 }
-                                whileInView={{
-                                    opacity: 1,
-                                    y: 0,
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{
+                                    once: true,
+                                    amount: 0.2,
                                 }}
-                                viewport={{ once: true, amount: 0.25 }}
-                                transition={{ duration: 0.8, ease }}
-                                className="grid gap-7 py-10 lg:grid-cols-[1fr_0.8fr] lg:items-center lg:gap-16"
+                                transition={{
+                                    duration: 0.8,
+                                    ease,
+                                }}
+                                className="grid gap-10 py-12 lg:grid-cols-[1fr_0.85fr] lg:items-center lg:gap-20 lg:py-16"
                             >
+                                {/* Heading */}
                                 <div>
-                                    <h2 className="font-serif text-[clamp(2.3rem,5vw,4.5rem)] font-light leading-[1.05] tracking-[-0.04em]">
+                                    <h2
+                                        id="acquisition-heading"
+                                        className="font-serif text-[clamp(2.5rem,5vw,4.5rem)] font-light leading-[1.1] tracking-[-0.04em]"
+                                    >
                                         Art that becomes
-                                        <span className="block italic text-[#8a6a48]">
+                                        <span className="block italic text-[#70512f]">
                                             part of your story.
                                         </span>
                                     </h2>
                                 </div>
 
-                                <div className="lg:border-l lg:border-[#8a6a48]/25 lg:pl-12">
-                                    <p className="max-w-md text-sm leading-7 text-[#62584c]">
+                                {/* Description */}
+                                <div className="lg:border-l lg:border-[#70512f]/25 lg:pl-12">
+                                    <p className="max-w-md text-base leading-8 text-[#564b40]">
                                         Selected original artworks are available
                                         through private offers. Choose a painting
                                         to discover more and submit your offer.
                                     </p>
 
-                                    <p className="mt-3 text-xs leading-6 text-[#746b61]">
+                                    <p className="mt-5 max-w-md text-sm leading-7 text-[#564b40]">
                                         All offers and bidder information
                                         remain private.
                                     </p>
 
                                     <a
                                         href="#collection"
-                                        className="group mt-6 inline-flex items-center gap-3 border-b border-[#8a6a48] pb-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#8a6a48] transition-colors hover:border-[#25221f] hover:text-[#25221f]"
+                                        className="group mt-8 inline-flex min-h-11 items-center gap-3 border-b border-[#70512f] text-sm font-semibold text-[#70512f] transition-colors hover:border-[#25221f] hover:text-[#25221f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#70512f]"
                                     >
                                         Explore the Collection
 
                                         <ArrowUpRight
-                                            size={15}
-                                            strokeWidth={1.5}
-                                            className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                                            size={18}
+                                            strokeWidth={1.6}
+                                            aria-hidden="true"
+                                            className="transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
                                         />
                                     </a>
                                 </div>
                             </motion.div>
 
-                            <div className="flex items-center justify-between gap-4 border-t border-[#8a6a48]/25 pt-4">
-                                <span className="text-[9px] uppercase tracking-[0.2em] text-[#746b61]">
+                            {/* Bottom detail */}
+                            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#70512f]/25 pt-6">
+                                <span className="text-xs text-[#564b40]">
                                     The Taste of Inspiration
                                 </span>
 
-                                <span className="text-right text-[9px] uppercase tracking-[0.2em] text-[#8a6a48]">
+                                <span className="text-xs font-medium text-[#70512f]">
                                     Food · Art · Inspiration
                                 </span>
                             </div>
