@@ -326,7 +326,83 @@
                             {{ $order->postal_code }} {{ $order->city }}
                         </div>
                     </td>
+                </tr><!-- MY ORDERS -->
+                <tr>
+                    <td
+                        class="email-padding"
+                        align="center"
+                        style="padding: 0 40px 40px; text-align: center;"
+                    >
+                        <h2
+                            style="
+                                margin: 0 0 14px;
+                                color: #292722;
+                                font-family: Georgia, 'Times New Roman', serif;
+                                font-size: 24px;
+                                font-weight: normal;
+                                line-height: 1.4;
+                            "
+                        >
+                            Your order, anytime.
+                        </h2>
+
+                        <p
+                            style="
+                                margin: 0 0 24px;
+                                color: #625e57;
+                                font-size: 14px;
+                                line-height: 1.8;
+                            "
+                        >
+                            View your order details, delivery updates and
+                            available tracking information through My Orders.
+                            No account or password is required.
+                        </p>
+
+                        <table
+                            cellpadding="0"
+                            cellspacing="0"
+                            border="0"
+                            role="presentation"
+                            align="center"
+                        >
+                            <tr>
+                                <td
+                                    align="center"
+                                    bgcolor="#70512f"
+                                    style="background-color: #70512f;"
+                                >
+                                    <a
+                                        href="{{ route('orders.index') }}"
+                                        style="
+                            display: inline-block;
+                            padding: 16px 32px;
+                            color: #ffffff;
+                            font-size: 14px;
+                            font-weight: 600;
+                            text-decoration: none;
+                        "
+                                    >
+                                        View my orders
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <p
+                            style="
+                                margin: 18px 0 0;
+                                color: #625e57;
+                                font-size: 12px;
+                                line-height: 1.8;
+                            "
+                        >
+                            Simply use the email address you provided during
+                            checkout to receive a secure access link.
+                        </p>
+                    </td>
                 </tr>
+
 
                 <!-- MESSAGE -->
                 <tr>

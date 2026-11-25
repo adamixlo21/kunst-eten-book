@@ -48,18 +48,29 @@ export default function Footer() {
                                     The Journey
                                 </a>
 
-                                <Link
+                                <a
                                     href="/paintings"
                                     className="transition-colors hover:text-white"
                                 >
                                     Paintings
-                                </Link>
+                                </a>
 
                                 <a
                                     href="/#book"
                                     className="transition-colors hover:text-white"
                                 >
                                     The Book
+                                </a>
+                                <a href="/orders">
+                                    My Orders
+                                </a>
+
+                                <a href="/withdrawal">
+                                    Withdraw from your order
+                                </a>
+
+                                <a href="/withdrawal-form">
+                                    Withdrawal form
                                 </a>
                             </nav>
                         </div>

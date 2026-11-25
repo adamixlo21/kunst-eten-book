@@ -2,14 +2,8 @@
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 
-
-
-//use App\Http\Controllers\DashboardController;
-//use App\Http\Controllers\Teams\TeamInvitationController;
-//use App\Http\Middleware\EnsureTeamMembership;
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -25,6 +19,10 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PaintingController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\BookWaitlistController;
+use App\Http\Controllers\OrderAccessController;
+use App\Http\Controllers\MyOrdersController;
+use App\Http\Controllers\WithdrawalController;
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -41,17 +39,10 @@ Route::get('/checkout', function (Request $request) {
 Route::get('/payment/return/{order}', [OrderController::class, 'paymentReturn'])
     ->name('payment.return');
 
-Route::get('/checkout/success/{order}', function (Order $order) {
-    return Inertia::render('checkout-success', [
-        'order' => [
-            'id' => $order->id,
-            'name' => $order->name,
-            'quantity' => $order->quantity,
-            'total_price' => $order->total_price,
-            'status' => $order->status,
-        ],
-    ]);
-})->name('checkout.success');
+Route::get('/checkout/success/{order}', [
+    OrderController::class,
+    'checkoutSuccess',
+])->name('checkout.success');
 
 Route::post('/mollie/webhook', [OrderController::class, 'webhook'])
     ->name('mollie.webhook');
@@ -107,6 +98,60 @@ Route::post('/book-waitlist', [
     BookWaitlistController::class,
     'store',
 ])->name('book-waitlist.store');
+
+// Passwordless customer order access
+
+Route::get('/orders', [MyOrdersController::class, 'index'])
+    ->name('orders.index');
+
+Route::post('/orders/access', [OrderAccessController::class, 'requestLink'])
+    ->middleware('throttle:5,15')
+    ->name('orders.access.request');
+
+Route::get('/orders/access/confirm', [OrderAccessController::class, 'confirmation'])
+    ->name('orders.access.confirm');
+
+Route::get('/orders/access/{token}', [OrderAccessController::class, 'access'])
+    ->where('token', '[A-Za-z0-9]{64}')
+    ->middleware('throttle:20,1')
+    ->name('orders.access');
+
+Route::post('/orders/access/verify', [OrderAccessController::class, 'verify'])
+    ->middleware('throttle:10,1')
+    ->name('orders.access.verify');
+
+Route::post('/orders/logout', [OrderAccessController::class, 'logout'])
+    ->name('orders.logout');
+
+Route::get('/orders/{order}', [MyOrdersController::class, 'show'])
+    ->whereNumber('order')
+    ->name('orders.show');
+
+
+// Online withdrawal
+
+Route::get('/withdrawal', [
+    WithdrawalController::class,
+    'index',
+])->name('withdrawal.index');
+
+Route::post('/withdrawal', [
+    WithdrawalController::class,
+    'store',
+])
+    ->middleware('throttle:10,1')
+    ->name('withdrawal.store');
+
+Route::get('/withdrawal/confirmation', [
+    WithdrawalController::class,
+    'confirmation',
+])->name('withdrawal.confirmation');
+
+Route::get('/withdrawal-form', [
+    WithdrawalController::class,
+    'form',
+])->name('withdrawal.form');
+
 
 
 Route::middleware(['auth', 'admin'])

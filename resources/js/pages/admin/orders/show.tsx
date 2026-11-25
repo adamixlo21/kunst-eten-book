@@ -34,6 +34,15 @@ type Order = {
     fulfillment_status: FulfillmentStatus;
     mollie_payment_id?: string | null;
     created_at: string;
+
+    // Delivery tracking
+    shipping_carrier: string | null;
+    tracking_number: string | null;
+    tracking_url: string | null;
+    shipped_at: string | null;
+    delivered_at: string | null;
+
+    // Shipping email
     shipping_email_status: 'pending' | 'sending' | 'sent';
     shipping_email_sent_at: string | null;
 };
@@ -42,9 +51,11 @@ type Props = {
     order: Order;
     errors?: {
         fulfillment_status?: string;
+        shipping_carrier?: string;
+        tracking_number?: string;
+        tracking_url?: string;
     };
 };
-
 const fulfillmentOptions: {
     value: FulfillmentStatus;
     label: string;
@@ -110,12 +121,27 @@ export default function OrderShow({ order, errors }: Props) {
         order.fulfillment_status ?? 'unfulfilled',
     );
 
+    const [shippingCarrier, setShippingCarrier] = useState(
+        order.shipping_carrier ?? '',
+    );
+
+    const [trackingNumber, setTrackingNumber] = useState(
+        order.tracking_number ?? '',
+    );
+
+    const [trackingUrl, setTrackingUrl] = useState(
+        order.tracking_url ?? '',
+    );
+
     const [saving, setSaving] = useState(false);
 
     const isPaid = order.status === 'paid';
 
     const hasChanges =
-        fulfillment !== (order.fulfillment_status ?? 'unfulfilled');
+        fulfillment !== (order.fulfillment_status ?? 'unfulfilled') ||
+        shippingCarrier !== (order.shipping_carrier ?? '') ||
+        trackingNumber !== (order.tracking_number ?? '') ||
+        trackingUrl !== (order.tracking_url ?? '');
 
     const updateFulfillment = () => {
         if (!isPaid || !hasChanges || saving) return;
@@ -124,18 +150,44 @@ export default function OrderShow({ order, errors }: Props) {
             `/admin/orders/${order.id}/fulfillment`,
             {
                 fulfillment_status: fulfillment,
+                shipping_carrier: shippingCarrier || null,
+                tracking_number: trackingNumber || null,
+                tracking_url: trackingUrl || null,
             },
             {
                 preserveScroll: true,
+
                 onStart: () => setSaving(true),
+
                 onFinish: () => setSaving(false),
-                onError: () => {
-                    // Validation feedback is displayed below.
+
+                onSuccess: (page) => {
+                    const savedOrder = page.props.order as Order;
+
+                    if (savedOrder) {
+                        setFulfillment(
+                            savedOrder.fulfillment_status
+                        );
+
+                        setShippingCarrier(
+                            savedOrder.shipping_carrier ?? ''
+                        );
+
+                        setTrackingNumber(
+                            savedOrder.tracking_number ?? ''
+                        );
+
+                        setTrackingUrl(
+                            savedOrder.tracking_url ?? ''
+                        );
+                    }
                 },
             },
         );
     };
 
+    const inputClass =
+        'mt-2 min-h-11 w-full border border-[#8a6a48]/25 bg-white px-3 py-3 text-sm text-[#25221f] outline-none transition focus:border-[#8a6a48] focus:ring-1 focus:ring-[#8a6a48] disabled:opacity-60';
     return (
         <>
             <Head
@@ -339,6 +391,163 @@ export default function OrderShow({ order, errors }: Props) {
                                 })}
                             </div>
 
+                            {/* DELIVERY TRACKING */}
+                            <div className="mt-7 border-t border-[#8a6a48]/20 pt-6">
+                                <div className="flex items-center gap-2">
+                                    <Truck
+                                        size={18}
+                                        className="text-[#8a6a48]"
+                                        aria-hidden="true"
+                                    />
+
+                                    <h3 className="font-serif text-xl font-light">
+                                        Delivery Tracking
+                                    </h3>
+                                </div>
+
+                                <p className="mt-3 text-sm leading-6 text-[#746b61]">
+                                    Add the delivery information that customers
+                                    can view through My Orders.
+                                </p>
+
+                                <div className="mt-6 space-y-5">
+                                    {/* Shipping carrier */}
+                                    <div>
+                                        <label
+                                            htmlFor="shipping-carrier"
+                                            className="text-xs font-medium text-[#62584c]"
+                                        >
+                                            Shipping carrier
+                                        </label>
+
+                                        <input
+                                            id="shipping-carrier"
+                                            type="text"
+                                            value={shippingCarrier}
+                                            onChange={(event) =>
+                                                setShippingCarrier(event.target.value)
+                                            }
+                                            disabled={!isPaid || saving}
+                                            placeholder="e.g. PostNL, DHL or DPD"
+                                            maxLength={100}
+                                            className={inputClass}
+                                        />
+
+                                        {errors?.shipping_carrier && (
+                                            <p className="mt-2 text-xs text-red-700">
+                                                {errors.shipping_carrier}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Tracking number */}
+                                    <div>
+                                        <label
+                                            htmlFor="tracking-number"
+                                            className="text-xs font-medium text-[#62584c]"
+                                        >
+                                            Tracking number
+                                        </label>
+
+                                        <input
+                                            id="tracking-number"
+                                            type="text"
+                                            value={trackingNumber}
+                                            onChange={(event) =>
+                                                setTrackingNumber(event.target.value)
+                                            }
+                                            disabled={!isPaid || saving}
+                                            placeholder="Enter tracking number"
+                                            maxLength={255}
+                                            className={inputClass}
+                                        />
+
+                                        {errors?.tracking_number && (
+                                            <p className="mt-2 text-xs text-red-700">
+                                                {errors.tracking_number}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Tracking URL */}
+                                    <div>
+                                        <label
+                                            htmlFor="tracking-url"
+                                            className="text-xs font-medium text-[#62584c]"
+                                        >
+                                            Tracking URL
+                                        </label>
+
+                                        <input
+                                            id="tracking-url"
+                                            type="url"
+                                            value={trackingUrl}
+                                            onChange={(event) =>
+                                                setTrackingUrl(event.target.value)
+                                            }
+                                            disabled={!isPaid || saving}
+                                            placeholder="https://..."
+                                            maxLength={2048}
+                                            className={inputClass}
+                                        />
+
+                                        {errors?.tracking_url && (
+                                            <p className="mt-2 text-xs text-red-700">
+                                                {errors.tracking_url}
+                                            </p>
+                                        )}
+
+                                        <p className="mt-2 text-xs leading-5 text-[#746b61]">
+                                            Use the secure tracking link provided by
+                                            the delivery company.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Shipment dates */}
+                                {(order.shipped_at || order.delivered_at) && (
+                                    <div className="mt-6 space-y-4 border-t border-[#8a6a48]/20 pt-5">
+                                        {order.shipped_at && (
+                                            <div>
+                                                <p className="text-xs text-[#746b61]">
+                                                    Marked as shipped
+                                                </p>
+
+                                                <p className="mt-1 text-sm font-medium">
+                                                    {formatDate(order.shipped_at)}
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {order.delivered_at && (
+                                            <div>
+                                                <p className="text-xs text-[#746b61]">
+                                                    Marked as delivered
+                                                </p>
+
+                                                <p className="mt-1 text-sm font-medium">
+                                                    {formatDate(order.delivered_at)}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {fulfillment === 'shipped' &&
+                                    order.shipping_email_status === 'pending' && (
+                                        <p className="mt-5 flex items-start gap-2 text-xs leading-6 text-[#70512f]">
+                                            <Mail
+                                                size={16}
+                                                className="mt-1 shrink-0"
+                                                aria-hidden="true"
+                                            />
+
+                                            Saving this order as shipped will send a
+                                            shipping confirmation email to the customer.
+                                        </p>
+                                    )}
+                            </div>
+
                             {!isPaid && (
                                 <p className="mt-5 flex items-start gap-2 text-xs leading-6 text-amber-800">
                                     <Clock3 size={17} className="mt-1 shrink-0" />
@@ -360,7 +569,7 @@ export default function OrderShow({ order, errors }: Props) {
                                 className="mt-6 inline-flex w-full items-center justify-center gap-2 bg-[#25221f] px-5 py-3.5 text-xs font-medium text-white transition hover:bg-[#8a6a48] disabled:cursor-not-allowed disabled:opacity-40"
                             >
                                 <Package size={16} />
-                                {saving ? 'Saving...' : 'Save Fulfillment Status'}
+                                {saving ? 'Saving...' : 'Save Fulfillment & Tracking'}
                             </button>
 
                             {order.fulfillment_status === 'completed' && (

@@ -27,6 +27,10 @@ class OrderController extends Controller
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
+        $validated['email'] = mb_strtolower(
+            trim($validated['email'])
+        );
+
 //        $price = 249.99;
         $price = 0;
 
@@ -37,6 +41,19 @@ class OrderController extends Controller
             'total_price' => $total,
             'status' => 'pending',
         ]);
+
+        // Remember which orders belong to this checkout session.
+        $checkoutOrders = $request->session()->get(
+            'checkout_order_ids',
+            []
+        );
+
+        $checkoutOrders[] = $order->id;
+
+        $request->session()->put(
+            'checkout_order_ids',
+            array_values(array_unique($checkoutOrders))
+        );
 
         $paymentData = [
             'amount' => [
@@ -68,29 +85,98 @@ class OrderController extends Controller
         return Inertia::location($payment->getCheckoutUrl());
     }
 
-    public function paymentReturn(Order $order)
+    public function paymentReturn(Request $request, Order $order)
     {
+        $checkoutOrders = $request->session()->get(
+            'checkout_order_ids',
+            []
+        );
+
+        // Only allow access to orders created in this session.
+        if (!in_array($order->id, $checkoutOrders, true)) {
+            return redirect()
+                ->route('orders.index')
+                ->with(
+                    'error',
+                    'Please use your email address to securely access your order.'
+                );
+        }
+
         if (!$order->mollie_payment_id) {
             return redirect()
-                ->route('checkout.success')
+                ->route('checkout.success', [
+                    'order' => $order->id,
+                ])
                 ->with('error', 'No payment was found.');
         }
 
-        $payment = Mollie::api()->payments->get(
-            $order->mollie_payment_id
+        try {
+            $payment = Mollie::api()->payments->get(
+                $order->mollie_payment_id
+            );
+
+            if ($payment->isPaid()) {
+                $this->processPaidOrder($order);
+
+                return redirect()->route('checkout.success', [
+                    'order' => $order->id,
+                ]);
+            }
+
+            return redirect()
+                ->route('checkout.success', [
+                    'order' => $order->id,
+                ])
+                ->with(
+                    'error',
+                    'The payment has not yet been completed.'
+                );
+
+        } catch (Throwable $exception) {
+            Log::error('Payment verification failed', [
+                'order_id' => $order->id,
+                'error' => $exception->getMessage(),
+            ]);
+
+            return redirect()
+                ->route('checkout.success', [
+                    'order' => $order->id,
+                ])
+                ->with(
+                    'error',
+                    'We could not verify your payment at this time. Please check My Orders later.'
+                );
+        }
+    }
+
+    public function checkoutSuccess(Request $request, Order $order)
+    {
+        $checkoutOrders = $request->session()->get(
+            'checkout_order_ids',
+            []
         );
 
-        if ($payment->isPaid()) {
-            $this->processPaidOrder($order);
-
-            return redirect()->route('checkout.success', [
-                'order' => $order->id,
-            ]);
+        if (!in_array($order->id, $checkoutOrders, true)) {
+            return redirect()
+                ->route('orders.index')
+                ->with(
+                    'error',
+                    'Please use your email address to securely access your order.'
+                );
         }
 
-        return redirect()
-            ->route('checkout.success')
-            ->with('error', 'The payment has not yet been completed.');
+        return Inertia::render('checkout-success', [
+            'order' => [
+                'id' => $order->id,
+                'name' => $order->name,
+                'quantity' => $order->quantity,
+                'total_price' => $order->total_price,
+                'status' => $order->status,
+            ],
+        ])
+            ->toResponse($request)
+            ->header('Cache-Control', 'no-store, private')
+            ->header('Referrer-Policy', 'no-referrer');
     }
 
     public function webhook(Request $request)

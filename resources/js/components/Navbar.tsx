@@ -66,6 +66,13 @@ export default function Navbar() {
                         <span className="absolute -bottom-2 left-0 h-px w-0 bg-[#8a6a48] transition-all duration-300 group-hover:w-full" />
                     </a>
 
+                    <a
+                        href="/orders"
+                        className="text-sm text-[#70512f] transition-colors hover:text-[#25221f]"
+                    >
+                        My Orders
+                    </a>
+
                     {/* PRE-LAUNCH CTA */}
                     <a
                         href="/#book"
@@ -150,6 +157,12 @@ export default function Navbar() {
                     >
                         Contact
                     </a>
+                    <a
+                        href="/orders"
+                        className="text-sm text-[#70512f] transition-colors hover:text-[#25221f]"
+                    >
+                        My Orders
+                    </a>
 
                     {/* PRE-LAUNCH CTA */}
                     <a
@@ -160,6 +173,7 @@ export default function Navbar() {
                         Join the Waitlist
                         <ArrowUpRight size={17} />
                     </a>
+
 
                     <div className="mt-7 text-center">
                         <p className="text-[9px] font-medium uppercase tracking-[0.25em] text-stone-400">

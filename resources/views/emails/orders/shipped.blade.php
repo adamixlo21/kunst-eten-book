@@ -124,6 +124,117 @@
                             {{ $order->postal_code }} {{ $order->city }}
                         </p>
 
+                        <!-- DELIVERY TRACKING -->
+                        <h3 style="margin:30px 0 14px;font-family:Georgia,serif;font-size:21px;font-weight:normal;color:#25221f;">
+                            Track your delivery
+                        </h3>
+
+                        @if ($order->shipping_carrier || $order->tracking_number || $order->tracking_url)
+
+                            <table
+                                role="presentation"
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                style="background-color:#f7f3ec;border:1px solid #e2d9cd;"
+                            >
+                                <tr>
+                                    <td style="padding:24px;">
+
+                                        @if ($order->shipping_carrier)
+                                            <p style="margin:0 0 12px;font-size:14px;line-height:1.8;color:#62584c;">
+                                                <strong>Delivery company:</strong><br>
+                                                {{ $order->shipping_carrier }}
+                                            </p>
+                                        @endif
+
+                                        @if ($order->tracking_number)
+                                            <p style="margin:0 0 12px;font-size:14px;line-height:1.8;color:#62584c;word-break:break-all;">
+                                                <strong>Tracking number:</strong><br>
+                                                {{ $order->tracking_number }}
+                                            </p>
+                                        @endif
+
+                                        @if (
+                                            $order->tracking_url
+                                            && filter_var($order->tracking_url, FILTER_VALIDATE_URL)
+                                            && parse_url($order->tracking_url, PHP_URL_SCHEME) === 'https'
+                                        )
+                                            <table
+                                                role="presentation"
+                                                cellpadding="0"
+                                                cellspacing="0"
+                                                border="0"
+                                                style="margin-top:20px;"
+                                            >
+                                                <tr>
+                                                    <td
+                                                        align="center"
+                                                        bgcolor="#70512f"
+                                                        style="background-color:#70512f;"
+                                                    >
+                                                        <a
+                                                            href="{{ $order->tracking_url }}"
+                                                            style="display:inline-block;padding:15px 26px;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;"
+                                                        >
+                                                            Track your delivery
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        @endif
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                        @else
+
+                            <p style="margin:0;font-size:14px;line-height:1.8;color:#62584c;">
+                                Tracking information is not currently available.
+                                You can check your order through My Orders for
+                                any available updates.
+                            </p>
+
+                        @endif
+
+                        <!-- MY ORDERS -->
+                        <h3 style="margin:30px 0 14px;font-family:Georgia,serif;font-size:21px;font-weight:normal;color:#25221f;">
+                            Your order, anytime.
+                        </h3>
+
+                        <p style="margin:0 0 20px;font-size:14px;line-height:1.8;color:#62584c;">
+                            View your order details and delivery information
+                            through My Orders. No account or password is required.
+                        </p>
+
+                        <table
+                            role="presentation"
+                            cellpadding="0"
+                            cellspacing="0"
+                            border="0"
+                        >
+                            <tr>
+                                <td
+                                    align="center"
+                                    style="border:1px solid #70512f;"
+                                >
+                                    <a
+                                        href="{{ route('orders.index') }}"
+                                        style="display:inline-block;padding:14px 25px;color:#70512f;font-size:14px;font-weight:600;text-decoration:none;"
+                                    >
+                                        View my orders
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <p style="margin:15px 0 0;font-size:12px;line-height:1.8;color:#62584c;">
+                            Use the email address provided during checkout
+                            to receive a secure access link.
+                        </p>
+
                         <!-- NEXT STEPS -->
                         <h3 style="margin:30px 0 12px;font-family:Georgia,serif;font-size:21px;font-weight:normal;color:#25221f;">
                             What happens next?

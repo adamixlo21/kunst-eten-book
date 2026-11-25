@@ -12,7 +12,7 @@ use App\Mail\OrderShipped;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Validation\ValidationException;
 
 
 
@@ -62,14 +62,31 @@ class OrderController extends Controller
                     'completed',
                 ]),
             ],
+
+            'shipping_carrier' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
+
+            'tracking_number' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'tracking_url' => [
+                'nullable',
+                'url:https',
+                'max:2048',
+            ],
         ]);
 
         $newStatus = $validated['fulfillment_status'];
 
-        // Lock the order while checking and updating its status.
-        // Do not hold the database lock while calling Resend.
         $shouldSendEmail = DB::transaction(function () use (
             $order,
+            $validated,
             $newStatus
         ) {
             $lockedOrder = Order::query()
@@ -78,21 +95,76 @@ class OrderController extends Controller
                 ->firstOrFail();
 
             if ($lockedOrder->status !== 'paid') {
-                throw \Illuminate\Validation\ValidationException::withMessages([
+                throw ValidationException::withMessages([
                     'fulfillment_status' =>
                         'Only paid orders can be fulfilled.',
                 ]);
             }
 
+            // Prevent accidental backwards status changes.
+            $statusOrder = [
+                'unfulfilled' => 0,
+                'processing' => 1,
+                'shipped' => 2,
+                'completed' => 3,
+            ];
+
+            $currentStatus = $lockedOrder->fulfillment_status
+                ?? 'unfulfilled';
+
+            if ($statusOrder[$newStatus] < $statusOrder[$currentStatus]) {
+                throw ValidationException::withMessages([
+                    'fulfillment_status' =>
+                        'Fulfillment cannot be moved backwards.',
+                ]);
+            }
+
+            if (
+                $newStatus === 'completed'
+                && !in_array($currentStatus, ['shipped', 'completed'], true)
+            ) {
+                throw ValidationException::withMessages([
+                    'fulfillment_status' =>
+                        'The order must be shipped before it can be completed.',
+                ]);
+            }
+
+            // Save tracking information when provided.
+            foreach ([
+                         'shipping_carrier',
+                         'tracking_number',
+                         'tracking_url',
+                     ] as $field) {
+                if (array_key_exists($field, $validated)) {
+                    $lockedOrder->{$field} = $validated[$field];
+                }
+            }
+
             $lockedOrder->fulfillment_status = $newStatus;
 
+            // Record the first shipment date.
+            if (
+                $newStatus === 'shipped'
+                && !$lockedOrder->shipped_at
+            ) {
+                $lockedOrder->shipped_at = now();
+            }
+
+            // Record the confirmed delivery date.
+            if (
+                $newStatus === 'completed'
+                && !$lockedOrder->delivered_at
+            ) {
+                $lockedOrder->delivered_at = now();
+            }
+
+            // Claim the shipping email before sending it.
             $shouldSend =
                 $newStatus === 'shipped'
                 && $lockedOrder->shipping_email_status === 'pending'
                 && $lockedOrder->shipping_email_sent_at === null;
 
             if ($shouldSend) {
-                // Claim the email before attempting delivery.
                 $lockedOrder->shipping_email_status = 'sending';
             }
 
@@ -104,12 +176,11 @@ class OrderController extends Controller
         if (!$shouldSendEmail) {
             return back()->with(
                 'success',
-                'Order fulfillment updated successfully.'
+                'Fulfillment and tracking information updated successfully.'
             );
         }
 
-        // The sending state prevents concurrent requests
-        // from claiming this email again.
+        // Send the email outside the database transaction.
         try {
             $order->refresh();
 
@@ -121,18 +192,17 @@ class OrderController extends Controller
                 'shipping_email_status' => 'sent',
                 'shipping_email_sent_at' => now(),
             ]);
-        } catch (\Throwable $e) {
+        } catch (\Throwable $exception) {
             Log::error('Shipping email delivery uncertain or failed', [
                 'order_id' => $order->id,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
-            // Leave status as "sending" rather than automatically retry.
-            // Resend might have accepted the email before the error.
             return back()->with(
                 'warning',
-                'The order was marked as shipped, but email delivery '
-                .'could not be confirmed. Check Resend before retrying.'
+                'The order and tracking information were saved, '
+                .'but email delivery could not be confirmed. '
+                .'Check Resend before retrying.'
             );
         }
 
@@ -141,6 +211,5 @@ class OrderController extends Controller
             'Order marked as shipped and confirmation email sent.'
         );
     }
-
 
 }
