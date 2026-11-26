@@ -11,6 +11,8 @@ import Footer from '@/components/Footer';
 import ContactSection from '@/components/ContactSection';
 import Story from '@/components/Story';
 import Journey from '@/components/Journey';
+import BookCart from "@/components/BookCart";
+import BookSection from "@/components/BookSection";
 
 
 export default function Home() {
@@ -32,17 +34,16 @@ export default function Home() {
 
                 <Story />
 
-                {/*<Journey />*/}
-
                 <PaintingsSection />
 
-                <BookWaitlistSection />
+                <BookSection/>
 
                 <ContactSection />
 
             </main>
 
             <Footer/>
+            <BookCart/>
         </BookCartProvider>
     );
 }

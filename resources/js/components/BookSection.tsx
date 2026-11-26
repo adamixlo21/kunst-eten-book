@@ -1,14 +1,18 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage  } from '@inertiajs/react';
 import { ArrowUpRight, ShoppingBag } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
-
 import { useBookCart } from '@/components/BookCartContext';
 
+
 const ease = [0.16, 1, 0.3, 1] as const;
+
 
 export default function BookSection() {
     const { quantity, setQuantity, openCart } = useBookCart();
     const reduceMotion = useReducedMotion();
+    const { bookPrice } = usePage<{
+        bookPrice: number;
+    }>().props;
 
     const handleOrder = () => {
         if (quantity === 0) {
@@ -332,8 +336,7 @@ export default function BookSection() {
                                 </p>
 
                                 <p className="mt-1 font-serif text-2xl font-light sm:text-3xl">
-                                    {/*€249.99*/}
-                                    0,00
+                                    €{Number(bookPrice).toFixed(2)}
                                 </p>
                             </div>
                         </div>

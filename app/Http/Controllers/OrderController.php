@@ -14,7 +14,10 @@ use Mollie\Laravel\Facades\Mollie;
 use Throwable;
 
 class OrderController extends Controller
+
 {
+
+    public const BOOK_PRICE = 249.99;
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -31,8 +34,7 @@ class OrderController extends Controller
             trim($validated['email'])
         );
 
-//        $price = 249.99;
-        $price = 0;
+        $price = self::BOOK_PRICE;
 
         $total = $price * $validated['quantity'];
 

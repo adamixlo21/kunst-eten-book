@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\PaintingController as AdminPaintingController;
 use App\Http\Controllers\Admin\BidController as AdminBidController;
 use App\Http\Controllers\Admin\BookWaitlistController as AdminBookWaitlistController;
+use App\Http\Controllers\Admin\WithdrawalController as AdminWithdrawalController;
 
 
 use App\Http\Controllers\HomeController;
@@ -225,6 +226,29 @@ Route::middleware(['auth', 'admin'])
             'sendOne',
         ])->middleware('throttle:10,1')
             ->name('book-waitlist.send-one');
+
+        // Withdrawal management
+
+        Route::get('/withdrawals', [AdminWithdrawalController::class, 'index'])
+            ->name('withdrawals.index');
+
+        Route::get('/withdrawals/{withdrawal}', [AdminWithdrawalController::class, 'show'])
+            ->name('withdrawals.show');
+
+        Route::patch('/withdrawals/{withdrawal}/order', [AdminWithdrawalController::class, 'linkOrder'])
+            ->name('withdrawals.link-order');
+
+        Route::patch('/withdrawals/{withdrawal}/verify', [AdminWithdrawalController::class, 'verify'])
+            ->name('withdrawals.verify');
+
+        Route::patch('/withdrawals/{withdrawal}/status', [AdminWithdrawalController::class, 'updateStatus'])
+            ->name('withdrawals.update-status');
+
+        Route::patch('/withdrawals/{withdrawal}/evidence', [AdminWithdrawalController::class, 'registerEvidence'])
+            ->name('withdrawals.register-evidence');
+
+        Route::patch('/withdrawals/{withdrawal}/notes', [AdminWithdrawalController::class, 'updateNotes'])
+            ->name('withdrawals.update-notes');
 
 
     });

@@ -22,6 +22,9 @@ class Withdrawal extends Model
         'closed_at',
         'admin_notes',
         'confirmation_email_sent_at',
+        'verified_at',
+        'verified_by',
+        'return_evidence_received_at',
     ];
 
     protected $casts = [
@@ -30,6 +33,8 @@ class Withdrawal extends Model
         'return_received_at' => 'datetime',
         'closed_at' => 'datetime',
         'confirmation_email_sent_at' => 'datetime',
+        'verified_at' => 'datetime',
+        'return_evidence_received_at' => 'datetime',
     ];
 
     public function order(): BelongsTo

@@ -27,7 +27,7 @@ interface CheckoutFieldProps {
 }
 
 // const BOOK_PRICE = 249.99;
-const BOOK_PRICE = 0.00;
+const BOOK_PRICE =  249.99;
 
 
 const formatPrice = (amount: number) =>

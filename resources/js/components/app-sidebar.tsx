@@ -1,6 +1,5 @@
 
 import { Link, usePage } from '@inertiajs/react';
-import { Users } from 'lucide-react';
 
 import {
     LayoutDashboard,
@@ -11,6 +10,8 @@ import {
     Mail,
     Image,
     Gavel,
+    Users,
+    RotateCcw,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -50,6 +51,11 @@ export function AppSidebar() {
             icon: ShoppingBag,
         },
         {
+            title: 'Withdrawals',
+            href: '/admin/withdrawals',
+            icon: RotateCcw,
+        },
+        {
             title: 'Paintings',
             href: '/admin/paintings',
             icon: Image,
@@ -76,7 +82,6 @@ export function AppSidebar() {
             icon: LockKeyhole,
         },
     ];
-
     return (
         <Sidebar
             collapsible="icon"

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Http\Controllers\OrderController;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -53,6 +54,8 @@ class HandleInertiaRequests extends Middleware
             $user?->is_admin
                 ? Contact::where('is_read', false)->count()
                 : 0,
+            'bookPrice' => OrderController::BOOK_PRICE,
+
         ];
     }
 }
