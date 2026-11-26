@@ -141,3 +141,73 @@
         @apply bg-background text-foreground;
     }
 }
+/* Paintings gallery */
+
+@keyframes paintings-scroll-right {
+    from {
+        transform: translate3d(-50%, 0, 0);
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.paintings-gallery {
+    overflow: hidden;
+    padding-block: 5px;
+}
+
+.paintings-track {
+    animation: paintings-scroll-right 65s linear infinite;
+    will-change: transform;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .paintings-track {
+        animation-duration: 50s;
+    }
+}
+
+/* Pause on desktop hover */
+@media (hover: hover) and (pointer: fine) {
+    .paintings-gallery:hover .paintings-track {
+        animation-play-state: paused;
+    }
+}
+
+/* Manual browsing */
+.paintings-gallery-static,
+.paintings-gallery:focus-within {
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.paintings-gallery-static .paintings-track,
+.paintings-gallery:focus-within .paintings-track {
+    animation: none;
+    transform: none;
+    will-change: auto;
+}
+
+.paintings-gallery:focus-within .paintings-copy {
+    display: none;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .paintings-gallery {
+        overflow-x: auto;
+    }
+
+    .paintings-track {
+        animation: none;
+        transform: none;
+        will-change: auto;
+    }
+
+    .paintings-copy {
+        display: none;
+    }
+}

@@ -1,6 +1,7 @@
 
+import { useState } from 'react';
 import { Link } from '@inertiajs/react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Pause, Play } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -40,6 +41,8 @@ const paintings = [
 
 export default function PaintingsSection() {
     const reduceMotion = useReducedMotion();
+    const [paused, setPaused] = useState(false);
+
 
     return (
         <section
@@ -89,59 +92,59 @@ export default function PaintingsSection() {
                 </motion.div>
 
                 {/* Moving artwork gallery */}
-                <div className="relative overflow-hidden">
+                <div className="relative">
 
-                    {/* Edge fades */}
+                    {/* Left edge fade */}
                     <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute inset-y-0 left-0 z-20 w-6 bg-gradient-to-r from-[#faf8f4] via-[#faf8f4]/75 to-transparent sm:w-16 lg:w-24"
+                        className="pointer-events-none absolute inset-y-0 left-0 z-20 w-8 bg-gradient-to-r from-[#faf8f4] via-[#faf8f4]/60 to-transparent sm:w-16 lg:w-24"
+                    />
+
+                    {/* Right edge fade */}
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-[#faf8f4] via-[#faf8f4]/60 to-transparent sm:w-16 lg:w-24"
                     />
 
                     <div
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-y-0 right-0 z-20 w-6 bg-gradient-to-l from-[#faf8f4] via-[#faf8f4]/75 to-transparent sm:w-16 lg:w-24"
-                    />
-
-                    <motion.div
-                        initial={false}
-                        animate={
-                            reduceMotion
-                                ? { x: '-50%' }
-                                : { x: ['-50%', '0%'] }
-                        }
-                        transition={
-                            reduceMotion
-                                ? undefined
-                                : {
-                                    duration: 32,
-                                    ease: 'linear',
-                                    repeat: Infinity,
-                                }
-                        }
-                        className="flex w-max"
+                        className={`paintings-gallery ${
+                            paused || reduceMotion
+                                ? 'paintings-gallery-static'
+                                : ''
+                        }`}
                     >
-                        {/* First gallery copy */}
-                        <div className="flex shrink-0 gap-4 pr-4 sm:gap-6 sm:pr-6 lg:gap-8 lg:pr-8">
-                            {paintings.map((painting, index) => (
-                                <PaintingCard
-                                    key={`first-${painting.slug}`}
-                                    painting={painting}
-                                    index={index}
-                                />
-                            ))}
-                        </div>
+                        <div className="paintings-track flex w-max">
 
-                        {/* Second gallery copy */}
-                        <div className="flex shrink-0 gap-4 pr-4 sm:gap-6 sm:pr-6 lg:gap-8 lg:pr-8">
-                            {paintings.map((painting, index) => (
-                                <PaintingCard
-                                    key={`second-${painting.slug}`}
-                                    painting={painting}
-                                    index={index}
-                                />
-                            ))}
+                            {/* First gallery copy */}
+                            <div className="flex shrink-0 gap-4 pr-4 sm:gap-6 sm:pr-6 lg:gap-8 lg:pr-8">
+                                {paintings.map((painting, index) => (
+                                    <PaintingCard
+                                        key={`first-${painting.slug}`}
+                                        painting={painting}
+                                        index={index}
+                                    />
+                                ))}
+                            </div>
+
+                            {/* Second gallery copy */}
+                            {!paused && !reduceMotion && (
+                                <div
+                                    aria-hidden="true"
+                                    className="paintings-copy flex shrink-0 gap-4 pr-4 sm:gap-6 sm:pr-6 lg:gap-8 lg:pr-8"
+                                >
+                                    {paintings.map((painting, index) => (
+                                        <PaintingCard
+                                            key={`second-${painting.slug}`}
+                                            painting={painting}
+                                            index={index}
+                                            duplicate
+                                        />
+                                    ))}
+                                </div>
+                            )}
+
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* Bottom CTA */}
@@ -194,9 +197,11 @@ export default function PaintingsSection() {
 function PaintingCard({
                           painting,
                           index,
+                          duplicate = false,
                       }: {
     painting: (typeof paintings)[number];
     index: number;
+    duplicate?: boolean;
 }) {
     return (
         <article className="w-[195px] shrink-0 sm:w-[235px] lg:w-[265px] xl:w-[280px]">

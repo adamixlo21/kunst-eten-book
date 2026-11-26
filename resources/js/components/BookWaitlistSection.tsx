@@ -131,16 +131,37 @@ export default function BookWaitlistSection() {
                                 className="mt-1 shrink-0 text-[#426340]"
                             />
 
-                            <div>
+                            <div className="min-w-0">
                                 <h3 className="font-serif text-2xl leading-tight text-[#25221f]">
                                     You're on the list!
                                 </h3>
 
-                                <p className="mt-3 text-base leading-8 text-[#564b40]">
-                                    Thank you for your interest.
-                                    We'll let you know when the book
-                                    becomes available.
+                                <p className="mt-3 text-base leading-7 text-[#564b40]">
+                                    Thank you for joining the waitlist.
+                                    You'll receive a confirmation email shortly,
+                                    and we'll let you know when the book launches.
                                 </p>
+
+                                <div className="mt-5 flex items-start gap-3 border-t border-[#70512f]/20 pt-5">
+                                    <Mail
+                                        size={20}
+                                        strokeWidth={1.6}
+                                        aria-hidden="true"
+                                        className="mt-0.5 shrink-0 text-[#70512f]"
+                                    />
+
+                                    <div>
+                                        <p className="text-sm font-semibold text-[#70512f]">
+                                            Check your inbox
+                                        </p>
+
+                                        <p className="mt-1 text-sm leading-6 text-[#564b40]">
+                                            Can't find our email? Please check your
+                                            spam or junk folder and mark it as
+                                            not spam.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ) : (
@@ -265,17 +286,19 @@ export default function BookWaitlistSection() {
                                 </div>
                             )}
 
-                            {/* Privacy note */}
-                            <div className="mt-6 flex items-center gap-3 border-t border-[#70512f]/20 pt-5">
+                            {/* Email notice */}
+                            <div className="mt-6 flex items-start gap-3 border-t border-[#70512f]/20 pt-5">
                                 <Mail
                                     size={18}
                                     strokeWidth={1.6}
                                     aria-hidden="true"
-                                    className="shrink-0 text-[#70512f]"
+                                    className="mt-1 shrink-0 text-[#70512f]"
                                 />
 
                                 <p className="text-sm leading-6 text-[#564b40]">
-                                    Only book updates. No spam.
+                                    You'll receive a confirmation email after joining.
+                                    Please check your spam or junk folder if it
+                                    doesn't appear in your inbox.
                                 </p>
                             </div>
                         </form>
