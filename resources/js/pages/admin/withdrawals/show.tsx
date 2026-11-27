@@ -37,8 +37,14 @@ type Withdrawal = {
 
     refunds: {
         id: number;
+        reference: string;
+        mollie_refund_id: string | null;
         amount: string;
+        currency: string;
+        description: string | null;
         status: string;
+        refunded_at: string | null;
+        created_at: string;
     }[];
 };
 
@@ -120,11 +126,7 @@ function ErrorMessage({ message }: {
     ) : null;
 }
 
-export default function WithdrawalShow({
-                                           withdrawal,
-                                       }: {
-    withdrawal: Withdrawal;
-}) {
+export default function WithdrawalShow({withdrawal,}: { withdrawal: Withdrawal; }) {
     const endpoint = `/admin/withdrawals/${withdrawal.id}`;
 
     const orderForm = useForm({
@@ -202,6 +204,25 @@ export default function WithdrawalShow({
             (total, refund) => total + Number(refund.amount),
             0,
         );
+    const refundForm = useForm<{
+        confirmed: boolean;
+        refund?: string;
+    }>({
+        confirmed: false,
+    });
+
+    const syncRefundForm = useForm({});
+
+    const hasActiveRefund = withdrawal.refunds.some(
+        (refund) =>
+            !['failed', 'canceled'].includes(refund.status),
+    );
+
+    const canIssueRefund =
+        isVerified
+        && withdrawal.status === 'refund_pending'
+        && canPrepareRefund
+        && !hasActiveRefund;
 
     return (
         <>
@@ -581,16 +602,167 @@ export default function WithdrawalShow({
                                     value={formatPrice(refundedAmount)}
                                 />
 
-                                {withdrawal.status === 'refund_pending' && (
-                                    <div className="bg-[#eee7dc] p-4 text-sm leading-6 text-[#70512f]">
-                                        This withdrawal is ready for refund review.
-                                    </div>
+                                {/* Create refund */}
+                                {canIssueRefund && (
+                                    <form
+                                        className="border-t border-[#70512f]/15 pt-5"
+                                        onSubmit={(event) => {
+                                            event.preventDefault();
+
+                                            refundForm.post(`${endpoint}/refunds`, {
+                                                preserveScroll: true,
+                                                onSuccess: () => refundForm.reset(),
+                                            });
+                                        }}
+                                    >
+                                        <div className="bg-[#eee7dc] p-5">
+                                            <p className="text-xs font-semibold uppercase tracking-wider text-[#70512f]">
+                                                Full refund amount
+                                            </p>
+
+                                            <p className="mt-3 font-serif text-3xl text-[#25221f]">
+                                                {formatPrice(
+                                                    withdrawal.order?.total_price ?? 0
+                                                )}
+                                            </p>
+
+                                            <p className="mt-3 text-sm leading-6 text-[#746b61]">
+                                                The refund will be issued through
+                                                the original payment method.
+                                            </p>
+                                        </div>
+
+                                        <div className="mt-4 border border-amber-200 bg-amber-50 p-4">
+                                            <p className="text-sm font-semibold text-amber-800">
+                                                Test mode
+                                            </p>
+
+                                            <p className="mt-2 text-xs leading-6 text-amber-800">
+                                                Live refunds are currently disabled.
+                                            </p>
+                                        </div>
+
+                                        <label className="mt-6 flex items-start gap-3">
+                                            <input
+                                                type="checkbox"
+                                                checked={refundForm.data.confirmed}
+                                                onChange={(event) =>
+                                                    refundForm.setData(
+                                                        'confirmed',
+                                                        event.target.checked
+                                                    )
+                                                }
+                                                className="mt-1 h-4 w-4 accent-[#70512f]"
+                                            />
+
+                                            <span className="text-sm leading-6">
+                        I confirm that I want to issue
+                        a full refund for this order.
+                    </span>
+                                        </label>
+
+                                        <ErrorMessage
+                                            message={refundForm.errors.confirmed}
+                                        />
+
+                                        <ErrorMessage
+                                            message={refundForm.errors.refund}
+                                        />
+
+                                        <button
+                                            type="submit"
+                                            disabled={
+                                                refundForm.processing
+                                                || !refundForm.data.confirmed
+                                            }
+                                            className={buttonClass}
+                                        >
+                                            {refundForm.processing
+                                                ? 'Submitting refund...'
+                                                : 'Process refund through Mollie'}
+                                        </button>
+                                    </form>
                                 )}
 
-                                <p className="text-sm leading-7 text-[#746b61]">
-                                    Refund processing through Mollie
-                                    will be available in the next phase.
-                                </p>
+                                {/* Refund history */}
+                                {withdrawal.refunds.length > 0 && (
+                                    <div className="space-y-4 border-t border-[#70512f]/15 pt-5">
+                                        <h3 className="font-serif text-xl">
+                                            Refund History
+                                        </h3>
+
+                                        {withdrawal.refunds.map((refund) => (
+                                            <div
+                                                key={refund.id}
+                                                className="space-y-4 border border-[#70512f]/20 bg-[#faf8f4] p-5"
+                                            >
+                                                <Detail
+                                                    label="Amount"
+                                                    value={formatPrice(refund.amount)}
+                                                />
+
+                                                <Detail
+                                                    label="Status"
+                                                    value={formatStatus(refund.status)}
+                                                />
+
+                                                <Detail
+                                                    label="Mollie refund ID"
+                                                    value={
+                                                        refund.mollie_refund_id
+                                                        ?? 'Not available'
+                                                    }
+                                                />
+
+                                                <Detail
+                                                    label="Created"
+                                                    value={formatDate(refund.created_at)}
+                                                />
+
+                                                <Detail
+                                                    label="Refund confirmed"
+                                                    value={formatDate(refund.refunded_at)}
+                                                />
+
+                                                {refund.status === 'uncertain' && (
+                                                    <p
+                                                        role="alert"
+                                                        className="bg-amber-50 p-3 text-sm leading-6 text-amber-800"
+                                                    >
+                                                        The refund result is uncertain.
+                                                        Synchronize with Mollie and review
+                                                        the payment in your Mollie dashboard.
+                                                        Do not issue another refund.
+                                                    </p>
+                                                )}
+
+                                                {refund.status === 'refunded' ? (
+                                                    <p className="text-sm font-medium text-emerald-800">
+                                                        Refund completed successfully.
+                                                    </p>
+                                                ) : (
+                                                    <button
+                                                        type="button"
+                                                        disabled={syncRefundForm.processing}
+                                                        onClick={() =>
+                                                            syncRefundForm.patch(
+                                                                `${endpoint}/refunds/${refund.id}/sync`,
+                                                                {
+                                                                    preserveScroll: true,
+                                                                },
+                                                            )
+                                                        }
+                                                        className="min-h-11 w-full border border-[#70512f] px-4 py-3 text-sm font-medium text-[#70512f] hover:bg-[#eee7dc] disabled:opacity-50"
+                                                    >
+                                                        {syncRefundForm.processing
+                                                            ? 'Synchronizing...'
+                                                            : 'Synchronize with Mollie'}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </Section>
 

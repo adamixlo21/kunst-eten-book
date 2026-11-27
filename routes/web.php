@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\PaintingController as AdminPaintingController;
 use App\Http\Controllers\Admin\BidController as AdminBidController;
 use App\Http\Controllers\Admin\BookWaitlistController as AdminBookWaitlistController;
 use App\Http\Controllers\Admin\WithdrawalController as AdminWithdrawalController;
+use App\Http\Controllers\Admin\RefundController as AdminRefundController;
 
 
 use App\Http\Controllers\HomeController;
@@ -249,6 +250,24 @@ Route::middleware(['auth', 'admin'])
 
         Route::patch('/withdrawals/{withdrawal}/notes', [AdminWithdrawalController::class, 'updateNotes'])
             ->name('withdrawals.update-notes');
+
+
+        // Refund management
+
+        Route::post('/withdrawals/{withdrawal}/refunds', [
+            AdminRefundController::class,
+            'store',
+        ])
+            ->middleware('throttle:5,1')
+            ->name('refunds.store');
+
+        Route::patch('/withdrawals/{withdrawal}/refunds/{refund}/sync', [
+            AdminRefundController::class,
+            'synchronize',
+        ])
+            ->middleware('throttle:20,1')
+            ->name('refunds.synchronize');
+
 
 
     });

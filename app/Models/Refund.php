@@ -18,6 +18,7 @@ class Refund extends Model
         'description',
         'refunded_at',
         'confirmation_email_sent_at',
+        'confirmation_email_status',
     ];
 
     protected $casts = [

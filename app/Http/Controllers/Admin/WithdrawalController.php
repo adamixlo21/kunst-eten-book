@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -75,13 +76,24 @@ class WithdrawalController extends Controller
         ]);
     }
 
+    /**
+     * Associate an order with a withdrawal.
+     */
     public function linkOrder(
         Request $request,
         Withdrawal $withdrawal
     ) {
-        $validated = $request->validate([
-            'order_id' => ['required', 'integer', 'exists:orders,id'],
-        ]);
+        $validated = $this->validateWithdrawalRequest(
+            $request,
+            $withdrawal,
+            [
+                'order_id' => [
+                    'required',
+                    'integer',
+                    'exists:orders,id',
+                ],
+            ]
+        );
 
         DB::transaction(function () use ($withdrawal, $validated) {
             $order = Order::query()
@@ -99,7 +111,7 @@ class WithdrawalController extends Controller
                 || $notice->status !== 'submitted'
                 || $notice->refunds()->exists()
             ) {
-                throw ValidationException::withMessages([
+                $this->validationError($withdrawal, [
                     'order_id' => 'This withdrawal cannot be reassigned.',
                 ]);
             }
@@ -110,26 +122,40 @@ class WithdrawalController extends Controller
             ]);
         });
 
-        return back()->with('success', 'Order linked successfully.');
+        return $this->redirectToWithdrawal(
+            $withdrawal,
+            'Order associated successfully.'
+        );
     }
 
+    /**
+     * Verify the withdrawal.
+     */
     public function verify(
         Request $request,
         Withdrawal $withdrawal
     ) {
-        $request->validate([
-            'confirmed' => ['required', 'accepted'],
-        ]);
+        $this->validateWithdrawalRequest(
+            $request,
+            $withdrawal,
+            [
+                'confirmed' => ['required', 'accepted'],
+            ]
+        );
 
         $orderId = $withdrawal->order_id;
 
         if (!$orderId) {
-            throw ValidationException::withMessages([
+            $this->validationError($withdrawal, [
                 'confirmed' => 'Link an order before verification.',
             ]);
         }
 
-        DB::transaction(function () use ($request, $withdrawal, $orderId) {
+        DB::transaction(function () use (
+            $request,
+            $withdrawal,
+            $orderId
+        ) {
             $order = Order::query()
                 ->whereKey($orderId)
                 ->lockForUpdate()
@@ -148,7 +174,7 @@ class WithdrawalController extends Controller
                 (int) $notice->order_id !== (int) $order->id
                 || $notice->status !== 'submitted'
             ) {
-                throw ValidationException::withMessages([
+                $this->validationError($withdrawal, [
                     'confirmed' => 'Review the associated order again.',
                 ]);
             }
@@ -160,8 +186,9 @@ class WithdrawalController extends Controller
                 ->exists();
 
             if ($duplicate) {
-                throw ValidationException::withMessages([
-                    'confirmed' => 'Another verified withdrawal exists for this order. Review the original notice.',
+                $this->validationError($withdrawal, [
+                    'confirmed' =>
+                        'Another verified withdrawal exists for this order. Review the original notice.',
                 ]);
             }
 
@@ -171,33 +198,47 @@ class WithdrawalController extends Controller
             ]);
         });
 
-        return back()->with('success', 'Withdrawal verified.');
+        return $this->redirectToWithdrawal(
+            $withdrawal,
+            'Withdrawal verified.'
+        );
     }
 
+    /**
+     * Update withdrawal status.
+     */
     public function updateStatus(
         Request $request,
         Withdrawal $withdrawal
     ) {
-        $validated = $request->validate([
-            'status' => [
-                'required',
-                Rule::in([
-                    'awaiting_return',
-                    'return_received',
-                    'refund_pending',
-                ]),
-            ],
-        ]);
+        $validated = $this->validateWithdrawalRequest(
+            $request,
+            $withdrawal,
+            [
+                'status' => [
+                    'required',
+                    Rule::in([
+                        'awaiting_return',
+                        'return_received',
+                        'refund_pending',
+                    ]),
+                ],
+            ]
+        );
 
         $orderId = $withdrawal->order_id;
 
         if (!$orderId) {
-            throw ValidationException::withMessages([
+            $this->validationError($withdrawal, [
                 'status' => 'An associated order is required.',
             ]);
         }
 
-        DB::transaction(function () use ($withdrawal, $validated, $orderId) {
+        DB::transaction(function () use (
+            $withdrawal,
+            $validated,
+            $orderId
+        ) {
             $order = Order::query()
                 ->whereKey($orderId)
                 ->lockForUpdate()
@@ -212,7 +253,7 @@ class WithdrawalController extends Controller
                 !$notice->verified_at
                 || (int) $notice->order_id !== (int) $order->id
             ) {
-                throw ValidationException::withMessages([
+                $this->validationError($withdrawal, [
                     'status' => 'Verify the associated order first.',
                 ]);
             }
@@ -229,12 +270,18 @@ class WithdrawalController extends Controller
                     'return_received',
                     'refund_pending',
                 ],
+
                 'awaiting_return' => [
                     'return_received',
                     'refund_pending',
                 ],
-                'return_received' => ['refund_pending'],
+
+                'return_received' => [
+                    'refund_pending',
+                ],
+
                 'refund_pending' => [],
+
                 'closed' => [],
             ];
 
@@ -243,7 +290,7 @@ class WithdrawalController extends Controller
                 $transitions[$notice->status] ?? [],
                 true
             )) {
-                throw ValidationException::withMessages([
+                $this->validationError($withdrawal, [
                     'status' => 'This status change is not allowed.',
                 ]);
             }
@@ -254,12 +301,14 @@ class WithdrawalController extends Controller
 
             if ($newStatus === 'refund_pending') {
                 if ($order->status !== 'paid') {
-                    throw ValidationException::withMessages([
-                        'status' => 'The order must have a confirmed payment.',
+                    $this->validationError($withdrawal, [
+                        'status' =>
+                            'The order must have a confirmed payment.',
                     ]);
                 }
 
-                $requiresReturn = $order->shipped_at !== null
+                $requiresReturn =
+                    $order->shipped_at !== null
                     || in_array(
                         $order->fulfillment_status,
                         ['shipped', 'completed'],
@@ -271,8 +320,9 @@ class WithdrawalController extends Controller
                     && !$notice->return_received_at
                     && !$notice->return_evidence_received_at
                 ) {
-                    throw ValidationException::withMessages([
-                        'status' => 'Register the return or evidence of return first.',
+                    $this->validationError($withdrawal, [
+                        'status' =>
+                            'Register the return or evidence of return first.',
                     ]);
                 }
             }
@@ -281,16 +331,30 @@ class WithdrawalController extends Controller
             $notice->save();
         });
 
-        return back()->with('success', 'Withdrawal status updated.');
+        return $this->redirectToWithdrawal(
+            $withdrawal,
+            'Withdrawal status updated.'
+        );
     }
 
+    /**
+     * Register evidence that the customer returned the order.
+     */
     public function registerEvidence(
         Request $request,
         Withdrawal $withdrawal
     ) {
-        $validated = $request->validate([
-            'evidence_notes' => ['required', 'string', 'max:2000'],
-        ]);
+        $validated = $this->validateWithdrawalRequest(
+            $request,
+            $withdrawal,
+            [
+                'evidence_notes' => [
+                    'required',
+                    'string',
+                    'max:2000',
+                ],
+            ]
+        );
 
         DB::transaction(function () use ($withdrawal, $validated) {
             $notice = Withdrawal::query()
@@ -298,9 +362,13 @@ class WithdrawalController extends Controller
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            if (!$notice->verified_at || $notice->status === 'closed') {
-                throw ValidationException::withMessages([
-                    'evidence_notes' => 'This withdrawal cannot be updated.',
+            if (
+                !$notice->verified_at
+                || $notice->status === 'closed'
+            ) {
+                $this->validationError($withdrawal, [
+                    'evidence_notes' =>
+                        'This withdrawal cannot be updated.',
                 ]);
             }
 
@@ -313,8 +381,9 @@ class WithdrawalController extends Controller
             );
 
             if (mb_strlen($notes) > 10000) {
-                throw ValidationException::withMessages([
-                    'evidence_notes' => 'Internal notes limit exceeded.',
+                $this->validationError($withdrawal, [
+                    'evidence_notes' =>
+                        'Internal notes limit exceeded.',
                 ]);
             }
 
@@ -322,21 +391,90 @@ class WithdrawalController extends Controller
             $notice->save();
         });
 
-        return back()->with('success', 'Return evidence recorded.');
+        return $this->redirectToWithdrawal(
+            $withdrawal,
+            'Return evidence recorded.'
+        );
     }
 
+    /**
+     * Save administrator notes.
+     */
     public function updateNotes(
         Request $request,
         Withdrawal $withdrawal
     ) {
-        $validated = $request->validate([
-            'admin_notes' => ['nullable', 'string', 'max:10000'],
-        ]);
+        $validated = $this->validateWithdrawalRequest(
+            $request,
+            $withdrawal,
+            [
+                'admin_notes' => [
+                    'nullable',
+                    'string',
+                    'max:10000',
+                ],
+            ]
+        );
 
         $withdrawal->update([
             'admin_notes' => $validated['admin_notes'] ?? null,
         ]);
 
-        return back()->with('success', 'Internal notes saved.');
+        return $this->redirectToWithdrawal(
+            $withdrawal,
+            'Internal notes saved.'
+        );
+    }
+
+    /**
+     * Always redirect to the admin withdrawal details page.
+     */
+    private function redirectToWithdrawal(
+        Withdrawal $withdrawal,
+        string $message
+    ) {
+        return redirect()
+            ->route('admin.withdrawals.show', [
+                'withdrawal' => $withdrawal->id,
+            ])
+            ->with('success', $message);
+    }
+
+    /**
+     * Validate requests with an explicit redirect destination.
+     */
+    private function validateWithdrawalRequest(
+        Request $request,
+        Withdrawal $withdrawal,
+        array $rules
+    ): array {
+        try {
+            return Validator::make(
+                $request->all(),
+                $rules
+            )->validate();
+
+        } catch (ValidationException $exception) {
+            throw $exception->redirectTo(
+                route('admin.withdrawals.show', [
+                    'withdrawal' => $withdrawal->id,
+                ])
+            );
+        }
+    }
+
+    /**
+     * Return business validation errors to the correct page.
+     */
+    private function validationError(
+        Withdrawal $withdrawal,
+        array $messages
+    ): never {
+        throw ValidationException::withMessages($messages)
+            ->redirectTo(
+                route('admin.withdrawals.show', [
+                    'withdrawal' => $withdrawal->id,
+                ])
+            );
     }
 }
